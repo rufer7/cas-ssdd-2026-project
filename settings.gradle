@@ -1,0 +1,4 @@
+rootProject.name = 'event-hub'
+
+include 'backend'
+include 'frontend'
