@@ -1,5 +1,7 @@
 # cas-ssdd-2026-project
 
+[![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://github.com/rufer7/cas-ssdd-2026-project/blob/main/LICENSE)
+
 Project for CAS Secure Software Design &amp; Development at ZHAW School of Engineering.
 
 ## TODOs
