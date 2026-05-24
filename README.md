@@ -2,6 +2,8 @@
 
 [![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://github.com/rufer7/cas-ssdd-2026-project/blob/main/LICENSE)
 
+[![CI/CD](https://github.com/rufer7/cas-ssdd-2026-project/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/rufer7/cas-ssdd-2026-project/actions/workflows/ci-cd.yml)
+
 Project for CAS Secure Software Design &amp; Development at ZHAW School of Engineering.
 
 ## TODOs
