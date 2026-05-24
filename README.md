@@ -26,3 +26,24 @@ protection against common web vulnerabilities.
 ## Requirements and Design Considerations
 
 > Specific requirements (functionality) and design considerations
+
+## Getting Started
+
+> [!IMPORTANT]  
+> Java 25 is required (see for example https://openjdk.org/install/)
+
+To build and run the project, follow these steps:
+
+1. Clone the repository to your local machine
+1. Navigate to the project directory
+1. Use the following commands to build and run the application
+
+   ```bash
+   .\gradlew build
+   .\gradlew bootRun
+   ```
+
+Once the application is running, you can access the following URLs:
+
+- http://localhost:8080/h2-console
+- http://localhost:8080/api/events
