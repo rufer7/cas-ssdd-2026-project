@@ -58,3 +58,4 @@ jobs:
           deploy_url: ${{ secrets.RENDER_DEPLOYMENT_HOOK_URL }}
         run: |
           curl "$deploy_url"
+
