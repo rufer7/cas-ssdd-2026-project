@@ -17,6 +17,5 @@ class EventServiceTest {
         List<EventDto> eventDtos = classUndertest.getEvents();
         assertNotNull(eventDtos);
         assertFalse(eventDtos.isEmpty());
-
     }
 }
