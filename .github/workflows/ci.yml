@@ -33,7 +33,7 @@ jobs:
         run: ./gradlew build
 
       - name: Publish test report
-        uses: dorny/test-reporter@v3
+        uses: dorny/test-reporter@v3.0.0
         if: |
           always() &&
           (github.event_name != 'pull_request' ||
