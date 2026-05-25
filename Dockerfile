@@ -6,8 +6,8 @@ WORKDIR /workspace
 
 COPY gradlew .
 COPY gradle gradle/
-COPY *.gradle *.gradle.kts ./
-COPY backend/*.gradle.kts backend/
+COPY settings.gradle .
+COPY backend/build.gradle.kts backend/
 
 
 RUN chmod +x gradlew
