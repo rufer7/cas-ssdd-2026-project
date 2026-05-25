@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:18
-    container_name: event-hub-db
+    container_name: eventhub-db
     environment:
       POSTGRES_DB: app
       POSTGRES_USER: app
@@ -19,7 +19,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: debug
-    image: event-hub:debug
+    image: eventhub:debug
     container_name: event-hub
     depends_on:
       db:
