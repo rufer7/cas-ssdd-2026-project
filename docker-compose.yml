@@ -20,7 +20,7 @@ services:
       dockerfile: Dockerfile
       target: debug
     image: eventhub:debug
-    container_name: event-hub
+    container_name: eventhub
     depends_on:
       db:
         condition: service_healthy
