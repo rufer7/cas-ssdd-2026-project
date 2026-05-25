@@ -1,5 +1,9 @@
 # cas-ssdd-2026-project
 
+[![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://github.com/rufer7/cas-ssdd-2026-project/blob/main/LICENSE)
+
+[![CI/CD](https://github.com/rufer7/cas-ssdd-2026-project/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/rufer7/cas-ssdd-2026-project/actions/workflows/ci-cd.yml)
+
 Project for CAS Secure Software Design &amp; Development at ZHAW School of Engineering.
 
 ## TODOs
@@ -21,8 +25,57 @@ protection against common web vulnerabilities.
 
 ## Project Description
 
-> tbd
+This project targets the event management domain and is about the implementation of a secure full-stack event management application for two user groups: regular users and administrators. Regular users can authenticate, browse published events, search for relevant events, and write comments to events. Additionally, users can also create personal notes. Administrators have extended permissions to manage events including creating, updating, and deleting events (incl. featured image for events), while also having the same capabilities as regular users in terms of commenting and interacting with events.
+
+The main focus of the application is on security aspects, ensuring that all functionalities are implemented with best practices in mind to protect against common web vulnerabilities. The deployed application will be pentested by the other students on the last day of the course.
 
 ## Requirements and Design Considerations
 
-> Specific requirements (functionality) and design considerations
+- API: The application will expose a RESTful API for all functionalities, allowing for easy integration with various frontend technologies
+- Login functionality: Open ID Connect (OIDC) will be used for authentication, providing a secure and standardized way to manage user identities and access control via an external identity provider (i.e. Entra ID)
+- Role-based access control (RBAC): The application will implement RBAC to differentiate between regular users and administrators, ensuring that only authorized users can access specific functionalities
+- Secret user data: Personal notes created by users will be stored encrypted to ensure that sensitive information is protected at rest
+- File upload: Administrators will be able to upload featured images for events, with proper validation and security measures in place to prevent malicious file uploads
+- Blog/comment functionality: Users will be able to write comments on events, with input validation and sanitization to prevent XSS and other injection attacks
+- Input-dependent database queries: The search functionality will be implemented with prepared statements to prevent SQL injection
+
+### Entities
+
+- `User`
+  - `Username`
+  - `ExternalId` (from OIDC provider)
+  - `Role` (e.g., regular user, administrator)
+- `Event`
+  - `Title`
+  - `Description`
+  - `From`
+  - `To`
+  - `Location`
+  - `CreatedBy`
+  - `CreatedAt`
+  - `ModifiedBy`
+  - `ModifiedAt`
+  - `FeaturedImage`
+- `Comment`
+  - `Content`
+  - `CreatedBy`
+  - `CreatedAt`
+  - `ModifiedBy`
+  - `ModifiedAt`
+- `Note`
+  - `Content`
+  - `CreatedBy`
+  - `CreatedAt`
+  - `ModifiedBy`
+  - `ModifiedAt`
+
+## Technologies
+
+- `Backend`: [Java Spring Boot](https://spring.io/projects/spring-boot)
+- [OPTIONAL] `Frontend`: [Vaadin](https://vaadin.com/) or any other frontend technology of choice
+- `Database`: [PostgreSQL](https://www.postgresql.org/)
+- `Authentication`: [Open ID Connect (OIDC)](https://openid.net/connect/)
+- `Identity Provider`: [Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id)
+- `Hosting`: [Render](https://render.com/)
+- `Version Control`: [GitHub](https://github.com/)
+- `SAST`: [SonarQube Cloud](https://sonarcloud.io/)
