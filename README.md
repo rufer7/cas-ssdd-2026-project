@@ -136,7 +136,7 @@ Once the application is running, you can access the following URL:
 
 ## Update gradle.lockfile and verification-metadata.xml
 
-To update the `gradle.lockfile` and `verification-metadata.xml` files, you can use the following command:
+To update the `gradle.lockfile` and `verification-metadata.xml` files, you can use the following commands:
 
 ```bash
 ./gradlew --write-verification-metadata sha256 dependencies
