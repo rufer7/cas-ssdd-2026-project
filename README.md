@@ -127,3 +127,7 @@ To build the project and run the application locally using Docker, follow these 
    docker build -t cas-ssdd-2026-project .
    docker compose up --build
    ```
+
+Once the application is running, you can access the following URL:
+
+- http://localhost:8080/api/events
