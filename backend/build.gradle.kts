@@ -44,8 +44,8 @@ dependencies {
 
 sonar {
   properties {
-    property "sonar.projectKey", "rufer7_cas-ssdd-2026-project"
-    property "sonar.organization", "rufer7"
+    property("sonar.projectKey", "rufer7_cas-ssdd-2026-project")
+    property("sonar.organization", "rufer7")
   }
 }
 
