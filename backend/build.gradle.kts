@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "4.0.6"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("org.sonarqube") version "7.3.0.8198"
 }
 
 group = "ch.ssdd"
@@ -39,6 +40,13 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+sonar {
+  properties {
+    property "sonar.projectKey", "rufer7_cas-ssdd-2026-project"
+    property "sonar.organization", "rufer7"
+  }
 }
 
 tasks.withType<Test> {
