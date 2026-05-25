@@ -96,6 +96,8 @@ The main focus of the application is on security aspects, ensuring that all func
 > [!IMPORTANT]
 > Java 25 is required (see for example https://openjdk.org/install/)
 
+### Standalone
+
 To build the project and run the application locally, follow these steps:
 
 1. Clone the repository to your local machine
@@ -131,3 +133,12 @@ To build the project and run the application locally using Docker, follow these 
 Once the application is running, you can access the following URL:
 
 - http://localhost:8080/api/events
+
+## Update gradle.lockfile and verification-metadata.xml
+
+To update the `gradle.lockfile` and `verification-metadata.xml` files, you can use the following command:
+
+```bash
+./gradlew --write-verification-metadata sha256 dependencies
+./gradlew build --write-locks
+```
