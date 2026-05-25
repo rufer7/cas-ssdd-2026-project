@@ -10,7 +10,7 @@ COPY settings.gradle .
 COPY backend/build.gradle.kts backend/
 
 
-RUN chmod +x gradlew
+RUN sed -i 's/\r$//' gradlew && chmod +x gradlew
 RUN ./gradlew :backend:dependencies --no-daemon
 COPY backend/src backend/src
 
