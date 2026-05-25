@@ -90,3 +90,24 @@ The main focus of the application is on security aspects, ensuring that all func
 - `Hosting`: [Render](https://render.com/)
 - `Version Control`: [GitHub](https://github.com/)
 - `SAST`: [SonarQube Cloud](https://sonarcloud.io/)
+
+## Getting Started
+
+> [!IMPORTANT]  
+> Java 25 is required (see for example https://openjdk.org/install/)
+
+To build and run the project, follow these steps:
+
+1. Clone the repository to your local machine
+1. Navigate to the project directory
+1. Use the following commands to build and run the application
+
+   ```bash
+   .\gradlew build
+   .\gradlew bootRun
+   ```
+
+Once the application is running, you can access the following URLs:
+
+- http://localhost:8080/h2-console
+- http://localhost:8080/api/events
