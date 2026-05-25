@@ -57,4 +57,4 @@ jobs:
         env:
           deploy_url: ${{ secrets.RENDER_DEPLOYMENT_HOOK_URL }}
         run: |
-          curl -X POST "$deploy_url"
+          curl --fail-with-body -X POST "$deploy_url"
