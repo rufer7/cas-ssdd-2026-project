@@ -2,19 +2,15 @@
 # Build stage
 # =========================
 FROM eclipse-temurin:25-jdk AS build
-
 WORKDIR /workspace
 
-
 COPY gradlew .
-RUN ls -la
-COPY gradle gradle
-COPY settings.gradle .
-COPY backend/build.gradle.kts backend/build.gradle.kts
+COPY gradle gradle/
+COPY *.gradle *.gradle.kts ./
+COPY backend/*.gradle.kts backend/
 
 
 RUN chmod +x gradlew
-
 RUN ./gradlew :backend:dependencies --no-daemon
 COPY backend/src backend/src
 
@@ -25,7 +21,6 @@ RUN ./gradlew :backend:bootJar --no-daemon
 # Debug stage
 # =========================
 FROM eclipse-temurin:25-jdk AS debug
-
 WORKDIR /app
 
 RUN useradd -m appuser
@@ -41,15 +36,15 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 # =========================
 # Production stage
 # =========================
-FROM gcr.io/distroless/java25-debian12 AS prod
+FROM gcr.io/distroless/java25-debian13:nonroot AS prod
 
 WORKDIR /app
 
-USER 1000
+USER 65532
 
 ENV SPRING_PROFILES_ACTIVE=prod
 
 COPY --from=build /workspace/backend/build/libs/*.jar app.jar
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
