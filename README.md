@@ -111,3 +111,19 @@ Once the application is running, you can access the following URLs:
 
 - http://localhost:8080/h2-console
 - http://localhost:8080/api/events
+
+### Docker
+
+> [!IMPORTANT]
+> Docker or a similar containerization tool is required to build and run the application using Docker.
+
+To build the project and run the application locally using Docker, follow these steps:
+
+1. Clone the repository to your local machine
+1. Navigate to the project directory
+1. Use the following commands to build and run the application
+
+   ```bash
+   docker build -t cas-ssdd-2026-project .
+   docker compose up --build
+   ```
