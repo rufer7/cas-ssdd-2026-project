@@ -18,6 +18,10 @@ repositories {
 	mavenCentral()
 }
 
+dependencyLocking {
+	lockAllConfigurations()
+}
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-h2console")
 	implementation("org.springframework.boot:spring-boot-starter-flyway")

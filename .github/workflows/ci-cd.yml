@@ -60,6 +60,7 @@ jobs:
   trigger-deployment:
     name: Trigger Deployment to Render.com
     runs-on: ubuntu-latest
+    environment: Lab
     needs: buildTestAndAnalyze
     if: github.event_name == 'release'
 
