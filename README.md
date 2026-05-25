@@ -93,10 +93,10 @@ The main focus of the application is on security aspects, ensuring that all func
 
 ## Getting Started
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > Java 25 is required (see for example https://openjdk.org/install/)
 
-To build and run the project, follow these steps:
+To build the project and run the application locally, follow these steps:
 
 1. Clone the repository to your local machine
 1. Navigate to the project directory
