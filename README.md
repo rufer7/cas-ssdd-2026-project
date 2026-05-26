@@ -82,6 +82,52 @@ The main focus of the application is on security aspects, ensuring that all func
   - `ModifiedBy`
   - `ModifiedAt`
 
+### Entity Relationship Diagram (ERD)
+
+```mermaid
+erDiagram
+  USER {
+    uuid id
+    string username
+    string externalId
+    enum role
+  }
+
+  EVENT {
+    string title
+    string description
+    datetime from
+    datetime to
+    string location
+    uuid createdBy
+    datetime createdAt
+    uuid modifiedBy
+    datetime modifiedAt
+    string featuredImage
+  }
+
+  COMMENT {
+    string content
+    uuid createdBy
+    datetime createdAt
+    uuid modifiedBy
+    datetime modifiedAt
+  }
+
+  NOTE {
+    string content
+    uuid createdBy
+    datetime createdAt
+    uuid modifiedBy
+    datetime modifiedAt
+  }
+
+  USER ||--o{ EVENT : creates
+  USER ||--o{ COMMENT : writes
+  USER ||--o{ NOTE : owns
+  EVENT ||--o{ COMMENT : has
+```
+
 ## Technologies
 
 - `Backend`: [Java Spring Boot](https://spring.io/projects/spring-boot)
