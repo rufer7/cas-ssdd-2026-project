@@ -3,6 +3,8 @@
 [![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://github.com/rufer7/cas-ssdd-2026-project/blob/main/LICENSE)
 
 [![CI/CD](https://github.com/rufer7/cas-ssdd-2026-project/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/rufer7/cas-ssdd-2026-project/actions/workflows/ci-cd.yml)
+[![Automatic Dependency Submission](https://github.com/rufer7/cas-ssdd-2026-project/actions/workflows/dependency-graph/auto-submission/badge.svg)](https://github.com/rufer7/cas-ssdd-2026-project/actions/workflows/dependency-graph/auto-submission)
+[![Dependabot Updates](https://github.com/rufer7/cas-ssdd-2026-project/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/rufer7/cas-ssdd-2026-project/actions/workflows/dependabot/dependabot-updates)
 
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=bugs)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
