@@ -49,54 +49,6 @@ public record Event(
 
         comments = comments == null ? List.of() : List.copyOf(comments);
 
-        validate();
-    }
-
-    public Event addComment(Comment comment) {
-        Objects.requireNonNull(comment, "Comment cannot be null");
-
-        var updatedComments = new ArrayList<>(comments);
-        updatedComments.add(comment);
-
-        return new Event(
-                title,
-                description,
-                from,
-                to,
-                location,
-                createdBy,
-                createdAt,
-                modifiedBy,
-                modifiedAt,
-                featuredImage,
-                updatedComments);
-    }
-
-    public Event removeComment(Comment comment) {
-        Objects.requireNonNull(comment, "Comment cannot be null");
-
-        if (!comments.contains(comment)) {
-            return this;
-        }
-
-        var updatedComments = new ArrayList<>(comments);
-        updatedComments.remove(comment);
-
-        return new Event(
-                title,
-                description,
-                from,
-                to,
-                location,
-                createdBy,
-                createdAt,
-                modifiedBy,
-                modifiedAt,
-                featuredImage,
-                updatedComments);
-    }
-
-    private void validate() {
         if (title.isBlank()) {
             throw new IllegalArgumentException("Event title cannot be blank");
         }
@@ -137,5 +89,49 @@ public record Event(
                 throw new IllegalArgumentException("Event comments cannot contain null elements");
             }
         }
+    }
+
+    public Event withComment(Comment comment) {
+        Objects.requireNonNull(comment, "Comment cannot be null");
+
+        var updatedComments = new ArrayList<>(comments);
+        updatedComments.add(comment);
+
+        return new Event(
+                title,
+                description,
+                from,
+                to,
+                location,
+                createdBy,
+                createdAt,
+                modifiedBy,
+                modifiedAt,
+                featuredImage,
+                updatedComments);
+    }
+
+    public Event withoutComment(Comment comment) {
+        Objects.requireNonNull(comment, "Comment cannot be null");
+
+        if (!comments.contains(comment)) {
+            return this;
+        }
+
+        var updatedComments = new ArrayList<>(comments);
+        updatedComments.remove(comment);
+
+        return new Event(
+                title,
+                description,
+                from,
+                to,
+                location,
+                createdBy,
+                createdAt,
+                modifiedBy,
+                modifiedAt,
+                featuredImage,
+                updatedComments);
     }
 }

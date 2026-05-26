@@ -20,10 +20,6 @@ public record User(
         Objects.requireNonNull(createdAt, "CreatedAt cannot be null");
         Objects.requireNonNull(modifiedAt, "ModifiedAt cannot be null");
 
-        validate();
-    }
-
-    private void validate() {
         if (username.isBlank()) {
             throw new IllegalArgumentException("Username cannot be blank");
         }

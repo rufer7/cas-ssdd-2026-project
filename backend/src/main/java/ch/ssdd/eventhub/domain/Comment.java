@@ -21,10 +21,6 @@ public record Comment(
         Objects.requireNonNull(modifiedBy, "Comment modifiedBy cannot be null");
         Objects.requireNonNull(modifiedAt, "Comment modifiedAt cannot be null");
 
-        validate();
-    }
-
-    private void validate() {
         if (content.isBlank()) {
             throw new IllegalArgumentException("Comment content cannot be blank");
         }

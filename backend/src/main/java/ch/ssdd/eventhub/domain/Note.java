@@ -20,10 +20,6 @@ public record Note(
         Objects.requireNonNull(modifiedBy, "Note modifiedBy cannot be null");
         Objects.requireNonNull(modifiedAt, "Note modifiedAt cannot be null");
 
-        validate();
-    }
-
-    private void validate() {
         if (content.isBlank()) {
             throw new IllegalArgumentException("Note content cannot be blank");
         }
