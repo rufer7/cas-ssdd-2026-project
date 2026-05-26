@@ -42,7 +42,7 @@ This project targets the event management domain and is about the implementation
 
 The main focus of the application is on security aspects, ensuring that all functionalities are implemented with best practices in mind to protect against common web vulnerabilities. The deployed application will be pentested by the other students on the last day of the course.
 
-## Requirements and Design Considerations
+## Requirements and Design Decisions
 
 - API: The application will expose a RESTful API for all functionalities, allowing for easy integration with various frontend technologies
 - Login functionality: Open ID Connect (OIDC) will be used for authentication, providing a secure and standardized way to manage user identities and access control via an external identity provider (i.e. Entra ID)
@@ -52,42 +52,11 @@ The main focus of the application is on security aspects, ensuring that all func
 - Blog/comment functionality: Users will be able to write comments on events, with input validation and sanitization to prevent XSS and other injection attacks
 - Input-dependent database queries: The search functionality will be implemented with prepared statements to prevent SQL injection
 
-### Entities
-
-- `User`
-  - `Username`
-  - `ExternalId` (from OIDC provider)
-  - `Role` (e.g., regular user, administrator)
-- `Event`
-  - `Title`
-  - `Description`
-  - `From`
-  - `To`
-  - `Location`
-  - `CreatedBy`
-  - `CreatedAt`
-  - `ModifiedBy`
-  - `ModifiedAt`
-  - `FeaturedImage`
-- `Comment`
-  - `Content`
-  - `CreatedBy`
-  - `CreatedAt`
-  - `ModifiedBy`
-  - `ModifiedAt`
-- `Note`
-  - `Content`
-  - `CreatedBy`
-  - `CreatedAt`
-  - `ModifiedBy`
-  - `ModifiedAt`
-
-### Entity Relationship Diagram (ERD)
+### Domain Model
 
 ```mermaid
 erDiagram
   USER {
-    uuid id
     string username
     string externalId
     enum role
@@ -99,26 +68,26 @@ erDiagram
     datetime from
     datetime to
     string location
-    uuid createdBy
+    User createdBy
     datetime createdAt
-    uuid modifiedBy
+    User modifiedBy
     datetime modifiedAt
-    string featuredImage
+    bytea featuredImage
   }
 
   COMMENT {
     string content
-    uuid createdBy
+    User createdBy
     datetime createdAt
-    uuid modifiedBy
+    User modifiedBy
     datetime modifiedAt
   }
 
   NOTE {
     string content
-    uuid createdBy
+    User createdBy
     datetime createdAt
-    uuid modifiedBy
+    User modifiedBy
     datetime modifiedAt
   }
 
@@ -128,10 +97,12 @@ erDiagram
   EVENT ||--o{ COMMENT : has
 ```
 
+### Design Decisions
+
 ## Technologies
 
 - `Backend`: [Java Spring Boot](https://spring.io/projects/spring-boot)
-- [OPTIONAL] `Frontend`: [Vaadin](https://vaadin.com/) or any other frontend technology of choice
+- [OPTIONAL] `Frontend`: [Vue.js](https://vuejs.org/) or any other frontend technology of choice
 - `Database`: [PostgreSQL](https://www.postgresql.org/)
 - `Authentication`: [Open ID Connect (OIDC)](https://openid.net/connect/)
 - `Identity Provider`: [Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id)
