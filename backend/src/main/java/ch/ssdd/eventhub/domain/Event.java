@@ -26,6 +26,10 @@ public record Event(
         Objects.requireNonNull(modifiedBy, "Event modifiedBy cannot be null");
         Objects.requireNonNull(modifiedAt, "Event modifiedAt cannot be null");
 
+        validate();
+    }
+
+    private void validate() {
         if (title.isBlank()) {
             throw new IllegalArgumentException("Event title cannot be blank");
         }
@@ -57,9 +61,8 @@ public record Event(
             throw new IllegalArgumentException("Event createdAt must be before or equal to modifiedAt");
         }
 
-        if (!CommonValidators.isCreatedAtNotInFuture(createdAt)) {
+        if (!CommonValidators.isNotInFuture(createdAt)) {
             throw new IllegalArgumentException("Event createdAt cannot be in the future");
         }
     }
-
 }

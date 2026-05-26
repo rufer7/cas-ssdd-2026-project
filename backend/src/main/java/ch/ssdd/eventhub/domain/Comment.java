@@ -17,6 +17,10 @@ public record Comment(
         Objects.requireNonNull(modifiedBy, "Comment modifiedBy cannot be null");
         Objects.requireNonNull(modifiedAt, "Comment modifiedAt cannot be null");
 
+        validate();
+    }
+
+    private void validate() {
         if (content.isBlank()) {
             throw new IllegalArgumentException("Comment content cannot be blank");
         }
@@ -30,7 +34,7 @@ public record Comment(
             throw new IllegalArgumentException("Comment createdAt must be before or equal to modifiedAt");
         }
 
-        if (!CommonValidators.isCreatedAtNotInFuture(createdAt)) {
+        if (!CommonValidators.isNotInFuture(createdAt)) {
             throw new IllegalArgumentException("Comment createdAt cannot be in the future");
         }
     }

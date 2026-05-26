@@ -17,6 +17,10 @@ public record Note(
         Objects.requireNonNull(modifiedBy, "Note modifiedBy cannot be null");
         Objects.requireNonNull(modifiedAt, "Note modifiedAt cannot be null");
 
+        validate();
+    }
+
+    private void validate() {
         if (content.isBlank()) {
             throw new IllegalArgumentException("Note content cannot be blank");
         }
@@ -30,7 +34,7 @@ public record Note(
             throw new IllegalArgumentException("Note createdAt must be before or equal to modifiedAt");
         }
 
-        if (!CommonValidators.isCreatedAtNotInFuture(createdAt)) {
+        if (!CommonValidators.isNotInFuture(createdAt)) {
             throw new IllegalArgumentException("Note createdAt cannot be in the future");
         }
     }
