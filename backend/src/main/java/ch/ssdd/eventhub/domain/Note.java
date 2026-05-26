@@ -3,6 +3,9 @@ package ch.ssdd.eventhub.domain;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import ch.ssdd.eventhub.domain.common.CommonValidators;
+import ch.ssdd.eventhub.domain.common.Constants;
+
 public record Note(
         String content,
         User createdBy,
