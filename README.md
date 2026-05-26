@@ -60,6 +60,8 @@ erDiagram
     string username
     string externalId
     enum role
+    datetime createdAt
+    datetime modifiedAt
   }
 
   EVENT {
@@ -98,6 +100,16 @@ erDiagram
 ```
 
 ### Design Decisions
+
+> [!NOTE]
+> The following design decisions relate to the domain model and its implementation
+
+- The `User` record will have an `externalId` field to store the unique identifier from the external identity provider (Entra ID), allowing for seamless integration with OIDC authentication
+- The `Role` field in the `User` record will be an enum to clearly define the different user roles (`USER`, `ADMIN`) and facilitate role-based access control - `ADMIN` role includes user permissions
+- The `Event` record acts as a aggregate root with `Comment` records being associated with it. This allows for a clear separation of concerns and encapsulation of related data
+- The `Note` record is associated with the `User` record, allowing users to have their own personal notes that are not directly related to events
+- All records will include `createdAt`, and `modifiedAt` fields to track the creation and modification history of each record
+- All records except `User` will include `createdBy` and `modifiedBy` fields to track which user created or modified the record
 
 ## Technologies
 
