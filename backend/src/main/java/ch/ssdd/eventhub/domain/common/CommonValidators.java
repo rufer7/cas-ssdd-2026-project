@@ -1,6 +1,8 @@
-package ch.ssdd.eventhub.domain;
+package ch.ssdd.eventhub.domain.common;
 
 import java.time.LocalDateTime;
+
+import ch.ssdd.eventhub.domain.Constants;
 
 public class CommonValidators {
     static boolean isValidStringLength(String str) {
