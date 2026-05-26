@@ -1,5 +1,8 @@
+import org.gradle.testing.jacoco.tasks.JacocoReport
+
 plugins {
 	java
+	jacoco
 	id("org.springframework.boot") version "4.0.6"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("org.sonarqube") version "7.3.0.8198"
@@ -54,6 +57,18 @@ sonar {
   }
 }
 
+tasks.named<JacocoReport>("jacocoTestReport") {
+	dependsOn(tasks.named("test"))
+	reports {
+		xml.required.set(true)
+	}
+}
+
+tasks.named("sonar") {
+	dependsOn(tasks.named("jacocoTestReport"))
+}
+
 tasks.withType<Test> {
 	useJUnitPlatform()
+	finalizedBy(tasks.named("jacocoTestReport"))
 }

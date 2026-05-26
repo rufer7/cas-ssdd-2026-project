@@ -33,10 +33,10 @@ public class EventEntity {
     @Column(nullable = false, length = 4000)
     private String description;
 
-    @Column(name = "from", nullable = false)
+    @Column(name = "from_date_time", nullable = false)
     private LocalDateTime from;
 
-    @Column(name = "to", nullable = false)
+    @Column(name = "to_date_time", nullable = false)
     private LocalDateTime to;
 
     @Column(nullable = false, length = 255)
