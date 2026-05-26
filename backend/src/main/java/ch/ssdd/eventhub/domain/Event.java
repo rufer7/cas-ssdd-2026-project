@@ -1,6 +1,8 @@
 package ch.ssdd.eventhub.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public record Event(
@@ -13,7 +15,23 @@ public record Event(
         LocalDateTime createdAt,
         User modifiedBy,
         LocalDateTime modifiedAt,
-        byte[] featuredImage) {
+        byte[] featuredImage,
+        List<Comment> comments) {
+
+    public Event(
+            String title,
+            String description,
+            LocalDateTime from,
+            LocalDateTime to,
+            String location,
+            User createdBy,
+            LocalDateTime createdAt,
+            User modifiedBy,
+            LocalDateTime modifiedAt,
+            byte[] featuredImage) {
+        this(title, description, from, to, location, createdBy, createdAt, modifiedBy, modifiedAt, featuredImage,
+                List.of());
+    }
 
     public Event {
         Objects.requireNonNull(title, "Event title cannot be null");
@@ -26,7 +44,49 @@ public record Event(
         Objects.requireNonNull(modifiedBy, "Event modifiedBy cannot be null");
         Objects.requireNonNull(modifiedAt, "Event modifiedAt cannot be null");
 
+        comments = comments == null ? List.of() : List.copyOf(comments);
+
         validate();
+    }
+
+    public Event addComment(Comment comment) {
+        Objects.requireNonNull(comment, "Comment cannot be null");
+
+        var updatedComments = new ArrayList<>(comments);
+        updatedComments.add(comment);
+
+        return new Event(
+                title,
+                description,
+                from,
+                to,
+                location,
+                createdBy,
+                createdAt,
+                modifiedBy,
+                modifiedAt,
+                featuredImage,
+                updatedComments);
+    }
+
+    public Event removeComment(Comment comment) {
+        Objects.requireNonNull(comment, "Comment cannot be null");
+
+        var updatedComments = new ArrayList<>(comments);
+        updatedComments.remove(comment);
+
+        return new Event(
+                title,
+                description,
+                from,
+                to,
+                location,
+                createdBy,
+                createdAt,
+                modifiedBy,
+                modifiedAt,
+                featuredImage,
+                updatedComments);
     }
 
     private void validate() {
@@ -63,6 +123,12 @@ public record Event(
 
         if (!CommonValidators.isNotInFuture(createdAt)) {
             throw new IllegalArgumentException("Event createdAt cannot be in the future");
+        }
+
+        for (var comment : comments) {
+            if (comment == null) {
+                throw new IllegalArgumentException("Event comments cannot contain null elements");
+            }
         }
     }
 }
