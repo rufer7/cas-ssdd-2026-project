@@ -1,24 +1,50 @@
-# syntax=docker/dockerfile:1
-
+# =========================
+# Build stage
+# =========================
 FROM eclipse-temurin:25-jdk AS build
-WORKDIR /app
+WORKDIR /workspace
 
-# Copy Gradle wrapper and build configuration first to leverage Docker caching for dependencies
-COPY gradlew gradlew.bat settings.gradle ./
-COPY gradle ./gradle
-COPY backend/build.gradle.kts backend/settings.gradle.kts ./backend/
+COPY gradlew .
+COPY gradle gradle/
+COPY settings.gradle .
+COPY backend/build.gradle.kts backend/
 
-RUN chmod +x ./gradlew
 
-COPY backend/src ./backend/src
+RUN sed -i 's/\r$//' gradlew && chmod +x gradlew
+RUN ./gradlew :backend:dependencies --no-daemon
+COPY backend/src backend/src
 
+# Build bootJar
 RUN ./gradlew :backend:bootJar --no-daemon
 
-FROM eclipse-temurin:25-jdk AS runtime
+# =========================
+# Debug stage
+# =========================
+FROM eclipse-temurin:25-jdk AS debug
 WORKDIR /app
 
-COPY --from=build /app/backend/build/libs/*.jar app.jar
+RUN useradd -m appuser
+USER appuser
+
+ENV SPRING_PROFILES_ACTIVE=docker
+
+COPY --from=build /workspace/backend/build/libs/*.jar app.jar
 
 EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+# =========================
+# Production stage
+# =========================
+FROM gcr.io/distroless/java25-debian13:nonroot AS prod
+
+WORKDIR /app
+
+USER 65532
+
+ENV SPRING_PROFILES_ACTIVE=prod
+
+COPY --from=build /workspace/backend/build/libs/*.jar app.jar
+
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","app.jar"]

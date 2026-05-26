@@ -95,10 +95,12 @@ The main focus of the application is on security aspects, ensuring that all func
 
 ## Getting Started
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > Java 25 is required (see for example https://openjdk.org/install/)
 
-To build and run the project, follow these steps:
+### Standalone
+
+To build the project and run the application locally, follow these steps:
 
 1. Clone the repository to your local machine
 1. Navigate to the project directory
@@ -113,3 +115,32 @@ Once the application is running, you can access the following URLs:
 
 - http://localhost:8080/h2-console
 - http://localhost:8080/api/events
+
+### Docker
+
+> [!IMPORTANT]
+> Docker or a similar containerization tool is required to build and run the application using Docker.
+
+To build the project and run the application locally using Docker, follow these steps:
+
+1. Clone the repository to your local machine
+1. Navigate to the project directory
+1. Use the following commands to build and run the application
+
+   ```bash
+   docker build -t cas-ssdd-2026-project .
+   docker compose up --build
+   ```
+
+Once the application is running, you can access the following URL:
+
+- http://localhost:8080/api/events
+
+## Update gradle.lockfile and verification-metadata.xml
+
+To update the `gradle.lockfile` and `verification-metadata.xml` files, you can use the following commands:
+
+```bash
+./gradlew --write-verification-metadata sha256 dependencies
+./gradlew build --write-locks
+```
