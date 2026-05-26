@@ -72,6 +72,10 @@ public record Event(
     public Event removeComment(Comment comment) {
         Objects.requireNonNull(comment, "Comment cannot be null");
 
+        if (!comments.contains(comment)) {
+            return this;
+        }
+
         var updatedComments = new ArrayList<>(comments);
         updatedComments.remove(comment);
 
