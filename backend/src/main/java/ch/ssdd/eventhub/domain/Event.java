@@ -2,6 +2,7 @@ package ch.ssdd.eventhub.domain;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -133,5 +134,47 @@ public record Event(
                 modifiedAt,
                 featuredImage,
                 updatedComments);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return Objects.equals(title, event.title)
+                && Objects.equals(description, event.description)
+                && Objects.equals(from, event.from)
+                && Objects.equals(to, event.to)
+                && Objects.equals(location, event.location)
+                && Objects.equals(createdBy, event.createdBy)
+                && Objects.equals(createdAt, event.createdAt)
+                && Objects.equals(modifiedBy, event.modifiedBy)
+                && Objects.equals(modifiedAt, event.modifiedAt)
+                && Arrays.equals(featuredImage, event.featuredImage)
+                && Objects.equals(comments, event.comments);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(title, description, from, to, location, createdBy, createdAt, modifiedBy, modifiedAt, comments);
+        result = 31 * result + Arrays.hashCode(featuredImage);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{"
+                + "title=" + title
+                + ", description=" + description
+                + ", from=" + from
+                + ", to=" + to
+                + ", location=" + location
+                + ", createdBy=" + createdBy
+                + ", createdAt=" + createdAt
+                + ", modifiedBy=" + modifiedBy
+                + ", modifiedAt=" + modifiedAt
+                + ", featuredImage=" + Arrays.toString(featuredImage)
+                + ", comments=" + comments
+                + '}';
     }
 }
