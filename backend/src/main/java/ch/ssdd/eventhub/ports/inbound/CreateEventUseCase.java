@@ -13,6 +13,6 @@ public interface CreateEventUseCase {
             LocalDateTime from,
             LocalDateTime to,
             String location,
-            User createdBy
+            String username
     );
 }

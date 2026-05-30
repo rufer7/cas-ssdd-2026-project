@@ -8,6 +8,5 @@ public record CreateEventRequest(
         LocalDateTime from,
         LocalDateTime to,
         String location,
-        String username,
-        String externalId
+        String username
 ) {}

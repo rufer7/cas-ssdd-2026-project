@@ -22,21 +22,13 @@ public class EventRestController {
     @PostMapping
     public Event create(@RequestBody CreateEventRequest request) {
 
-        User user = new User(
-                request.username(),
-                request.externalId(),
-                Role.USER, // dummy for assignment
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-
         return createEventUseCase.create(
                 request.title(),
                 request.description(),
                 request.from(),
                 request.to(),
                 request.location(),
-                user
+                request.username()
         );
     }
 }
