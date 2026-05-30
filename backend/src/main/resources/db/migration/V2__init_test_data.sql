@@ -1,11 +1,11 @@
 -- ==========================================
--- 1. INSERT USERS (Admins and Standard Users)
+-- 1. INSERT USERS
 -- ==========================================
 
 -- Admin User
 INSERT INTO users (id, username, external_id, role, created_at, modified_at)
 VALUES (
-           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'::uuid,
+           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d',
            'alice_admin',
            'entra-id-99991',
            'ADMIN',
@@ -16,7 +16,7 @@ VALUES (
 -- Standard User 1
 INSERT INTO users (id, username, external_id, role, created_at, modified_at)
 VALUES (
-           'b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e'::uuid,
+           'b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e',
            'bob_jones',
            'entra-id-99992',
            'USER',
@@ -27,7 +27,7 @@ VALUES (
 -- Standard User 2
 INSERT INTO users (id, username, external_id, role, created_at, modified_at)
 VALUES (
-           'c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f'::uuid,
+           'c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f',
            'charlie_brown',
            'entra-id-99993',
            'USER',
@@ -40,37 +40,35 @@ VALUES (
 -- 2. INSERT EVENTS
 -- ==========================================
 
--- Event 1: Tech Conference (Created by Admin, Modified by Admin)
+-- Event 1: Tech Conference
 INSERT INTO events (id, title, location, description, from_date_time, to_date_time, featured_image, created_at, modified_at, created_by_id, modified_by_id)
 VALUES (
-           'e1f2a3b4-c5d6-7e8f-9a0b-1c2d3e4f5a6b'::uuid,
+           'e1f2a3b4-c5d6-7e8f-9a0b-1c2d3e4f5a6b',
            'Annual Tech Innovation Summit',
            'Convention Center, Hall A',
-           $$A three-day summit exploring the future of AI, cloud architecture, and open-source ecosystems.
-           Includes hands-on workshops and networking dinners.$$,
+           'A three-day summit exploring the future of AI, cloud architecture, and open-source ecosystems.',
            '2026-09-10 09:00:00.000000',
            '2026-09-12 17:00:00.000000',
-           '\xdeadbeef'::bytea, -- Valid PostgreSQL hex byte literal representation
+           NULL, -- Left as NULL so both H2 and Postgres process the binary type identically
            '2026-03-15 11:00:00.000000',
            '2026-03-16 14:25:00.000000',
-           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'::uuid,
-           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'::uuid
+           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d',
+           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'
        );
 
--- Event 2: Team Building (Created by Bob, No modifications)
+-- Event 2: Team Building
 INSERT INTO events (id, title, location, description, from_date_time, to_date_time, featured_image, created_at, modified_at, created_by_id, modified_by_id)
 VALUES (
-           'f2a3b4c5-d6e7-8f9a-0b1c-2d3e4f5a6b7c'::uuid,
+           'f2a3b4c5-d6e7-8f9a-0b1c-2d3e4f5a6b7c',
            'Summer Team Barbecue',
            'Riverside Park, Pavilion 3',
-           $$Casual get-together for team building, food, and outdoor games.
-           Bring your families along! $$,
+           'Casual get-together for team building, food, and outdoor games. Families welcome!',
            '2026-07-18 12:00:00.000000',
            '2026-07-18 18:00:00.000000',
            NULL,
            '2026-04-10 16:45:10.000000',
            NULL,
-           'b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e'::uuid,
+           'b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e',
            NULL
        );
 
@@ -79,40 +77,28 @@ VALUES (
 -- 3. INSERT COMMENTS
 -- ==========================================
 
--- Comment on Tech Conference by Bob
+-- Comment on Tech Conference
 INSERT INTO comments (id, event_id, content, created_at, modified_at, created_by_id, modified_by_id)
 VALUES (
-           '1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d'::uuid,
-           'e1f2a3b4-c5d6-7e8f-9a0b-1c2d3e4f5a6b'::uuid,
+           '1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d',
+           'e1f2a3b4-c5d6-7e8f-9a0b-1c2d3e4f5a6b',
            'Will there be remote streaming options for international teams?',
            '2026-03-20 09:15:00.000000',
            NULL,
-           'b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e'::uuid,
+           'b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e',
            NULL
        );
 
--- Comment response on Tech Conference by Admin (Alice)
+-- Comment response from Admin
 INSERT INTO comments (id, event_id, content, created_at, modified_at, created_by_id, modified_by_id)
 VALUES (
-           '2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e'::uuid,
-           'e1f2a3b4-c5d6-7e8f-9a0b-1c2d3e4f5a6b'::uuid,
+           '2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e',
+           'e1f2a3b4-c5d6-7e8f-9a0b-1c2d3e4f5a6b',
            'Yes, we will provide a live link closer to the event date.',
            '2026-03-20 10:30:12.000000',
            '2026-03-20 10:35:00.000000',
-           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'::uuid,
-           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'::uuid
-       );
-
--- Comment on Barbecue by Charlie
-INSERT INTO comments (id, event_id, content, created_at, modified_at, created_by_id, modified_by_id)
-VALUES (
-           '3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f'::uuid,
-           'f2a3b4c5-d6e7-8f9a-0b1c-2d3e4f5a6b7c'::uuid,
-           'I will bring the vegetarian burgers!',
-           '2026-04-12 13:00:00.000000',
-           NULL,
-           'c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f'::uuid,
-           NULL
+           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d',
+           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'
        );
 
 
@@ -120,24 +106,12 @@ VALUES (
 -- 4. INSERT PERSONAL NOTES
 -- ==========================================
 
--- Note by Admin Alice
 INSERT INTO notes (id, content, created_at, modified_at, created_by_id, modified_by_id)
 VALUES (
-           '9f8e7d6c-5b4a-3f2e-1d0c-9b8a7f6e5d4c'::uuid,
+           '9f8e7d6c-5b4a-3f2e-1d0c-9b8a7f6e5d4c',
            'Review Q3 event budgets before the next board meeting.',
            '2026-01-20 17:00:00.000000',
            NULL,
-           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'::uuid,
+           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d',
            NULL
-       );
-
--- Note by Bob (Personal, modified later)
-INSERT INTO notes (id, content, created_at, modified_at, created_by_id, modified_by_id)
-VALUES (
-           '8e7d6c5b-4a3f-2e1d-0c9b-8a7f6e5d4c3b'::uuid,
-           'Need to buy charcoal and napkins for the barbecue.',
-           '2026-04-11 11:20:00.000000',
-           '2026-04-15 14:00:00.000000',
-           'b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e'::uuid,
-           'b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e'::uuid
        );
