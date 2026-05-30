@@ -28,14 +28,14 @@ public class EventRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EventDTO>> get() {
+    public ResponseEntity<List<EventDTO>> getAllEvents() {
         List<Event> events = loadEventUseCase.loadAllEvents();
         List<EventDTO> eventDTOs = events.stream().map(EventDTO::of).toList();
         return new ResponseEntity<>(eventDTOs, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<EventDTO> create(@RequestBody CreateEventRequest request) {
+    public ResponseEntity<EventDTO> createEvent(@RequestBody CreateEventRequest request) {
 
         Event event = createEventUseCase.create(
                 request.title(),
