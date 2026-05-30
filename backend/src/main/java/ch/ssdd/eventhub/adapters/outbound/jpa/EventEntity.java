@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import ch.ssdd.eventhub.domain.Event;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -65,6 +66,31 @@ public class EventEntity {
     private List<CommentEntity> comments = new ArrayList<>();
 
     protected EventEntity() {
+    }
+
+    public EventEntity(Event event) {
+        this.title = event.title();
+        this.description = event.description();
+        this.from = event.from();
+        this.to = event.to();
+        this.location = event.location();
+        this.createdAt = event.createdAt();
+        this.modifiedAt = event.modifiedAt();
+    }
+
+    public Event toEvent() {
+        return new Event(
+                this.title,
+                this.description,
+                this.from,
+                this.to,
+                this.location,
+                null,
+                this.createdAt,
+                null,
+                this.modifiedAt,
+                null
+        );
     }
 
     public UUID getId() {
