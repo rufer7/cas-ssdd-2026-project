@@ -1,13 +1,15 @@
 package ch.ssdd.eventhub.adapters.inbound.rest;
 
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateEventRequest;
+import ch.ssdd.eventhub.adapters.inbound.rest.dto.EventDTO;
 import ch.ssdd.eventhub.domain.Event;
-import ch.ssdd.eventhub.domain.Role;
-import ch.ssdd.eventhub.domain.User;
 import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/events")
@@ -20,9 +22,9 @@ public class EventRestController {
     }
 
     @PostMapping
-    public Event create(@RequestBody CreateEventRequest request) {
+    public ResponseEntity<EventDTO> create(@RequestBody CreateEventRequest request) {
 
-        return createEventUseCase.create(
+        Event event = createEventUseCase.create(
                 request.title(),
                 request.description(),
                 request.from(),
@@ -30,5 +32,6 @@ public class EventRestController {
                 request.location(),
                 request.username()
         );
+        return new ResponseEntity<>(EventDTO.of(event), HttpStatus.OK);
     }
 }
