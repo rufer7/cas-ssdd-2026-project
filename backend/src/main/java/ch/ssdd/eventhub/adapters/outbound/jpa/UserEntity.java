@@ -1,6 +1,7 @@
 package ch.ssdd.eventhub.adapters.outbound.jpa;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 import ch.ssdd.eventhub.domain.Role;
@@ -41,12 +42,14 @@ public class UserEntity {
     protected UserEntity() {
     }
 
-    public UserEntity(String username, String externalId, Role role) {
-        this.username = username;
-        this.externalId = externalId;
-        this.role = role;
-        this.createdAt = LocalDateTime.now();
-        this.modifiedAt = LocalDateTime.now();
+    public UserEntity(User user) {
+        Objects.requireNonNull(user, "User cannot be null");
+
+        this.username = user.username();
+        this.externalId = user.externalId();
+        this.role = user.role();
+        this.createdAt = user.createdAt();
+        this.modifiedAt = user.modifiedAt();
     }
 
     public User toUser() {

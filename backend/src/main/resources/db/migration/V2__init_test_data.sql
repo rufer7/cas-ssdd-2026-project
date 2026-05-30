@@ -67,9 +67,9 @@ VALUES (
            '2026-07-18 18:00:00.000000',
            NULL,
            '2026-04-10 16:45:10.000000',
-           NULL,
+           '2026-04-10 16:45:10.000000',
            'b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e',
-           NULL
+           'b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e'
        );
 
 
@@ -84,9 +84,9 @@ VALUES (
            'e1f2a3b4-c5d6-7e8f-9a0b-1c2d3e4f5a6b',
            'Will there be remote streaming options for international teams?',
            '2026-03-20 09:15:00.000000',
-           NULL,
+           '2026-03-20 09:15:00.000000',
            'b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e',
-           NULL
+           'b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e'
        );
 
 -- Comment response from Admin
@@ -111,7 +111,7 @@ VALUES (
            '9f8e7d6c-5b4a-3f2e-1d0c-9b8a7f6e5d4c',
            'Review Q3 event budgets before the next board meeting.',
            '2026-01-20 17:00:00.000000',
-           NULL,
+           '2026-01-20 17:00:00.000000',
            'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d',
-           NULL
+           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'
        );
