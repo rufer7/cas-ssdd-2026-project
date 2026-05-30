@@ -15,7 +15,7 @@ RUN ./gradlew :backend:dependencies --no-daemon
 COPY backend/src backend/src
 
 # Build bootJar
-RUN ./gradlew :backend:bootJar --no-daemon
+RUN ./gradlew :backend:clean :backend:bootJar --no-daemon
 
 # =========================
 # Debug stage
