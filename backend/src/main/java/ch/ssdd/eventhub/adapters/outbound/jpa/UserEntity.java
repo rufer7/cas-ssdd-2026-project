@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import ch.ssdd.eventhub.domain.Role;
+import ch.ssdd.eventhub.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -38,6 +39,24 @@ public class UserEntity {
     private LocalDateTime modifiedAt;
 
     protected UserEntity() {
+    }
+
+    public UserEntity(String username, String externalId, Role role) {
+        this.username = username;
+        this.externalId = externalId;
+        this.role = role;
+        this.createdAt = LocalDateTime.now();
+        this.modifiedAt = LocalDateTime.now();
+    }
+
+    public User toUser() {
+        return new User(
+                this.username,
+                this.externalId,
+                this.role,
+                this.createdAt,
+                this.modifiedAt
+        );
     }
 
     public UUID getId() {

@@ -1,10 +1,5 @@
 package ch.ssdd.eventhub.adapters.outbound.jpa;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import ch.ssdd.eventhub.domain.Event;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
@@ -19,6 +14,11 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "events")
@@ -85,9 +85,9 @@ public class EventEntity {
                 this.from,
                 this.to,
                 this.location,
-                null,
+                this.createdBy.toUser(),
                 this.createdAt,
-                null,
+                this.modifiedBy.toUser(),
                 this.modifiedAt,
                 null
         );
