@@ -165,6 +165,32 @@ Once the application is running, you can access the following URL:
 
 - http://localhost:8080/api/events
 
+### Authentication (Microsoft Entra ID via OIDC)
+
+Authentication is delegated to Microsoft Entra ID. The backend is configured as
+an OAuth2 resource server via the `spring-cloud-azure-starter-active-directory`
+starter and validates incoming bearer tokens against the configured Entra ID
+tenant.
+
+Behaviour:
+
+- `/api/**` without a bearer token → `401 Unauthorized`
+- `/api/admin/**` with a bearer token that does not carry the `Admin` app role → `403 Forbidden`
+- `/api/**` with a valid bearer token → `200 OK`
+
+Required environment variables (sourced by `application.properties`):
+
+| Variable                  | Description                                                                         |
+|---------------------------|-------------------------------------------------------------------------------------|
+| `ENTRA_ID_ENABLED`        | Toggles the Entra ID auto-configuration (default `true`; `false` in local profile). |
+| `ENTRA_ID_TENANT_ID`      | Entra ID tenant (directory) ID.                                                     |
+| `ENTRA_ID_CLIENT_ID`      | Application (client) ID of the registered app.                                      |
+| `ENTRA_ID_CLIENT_SECRET`  | Client secret of the registered app.                                                |
+| `ENTRA_ID_APP_ID_URI`     | Application ID URI exposed by the app registration (e.g. `api://<client-id>`).      |
+
+App roles defined in the app registration (e.g. `Admin`, `User`) are surfaced by
+Spring Security as authorities prefixed with `APPROLE_` (e.g. `APPROLE_Admin`).
+
 ## Update gradle.lockfile and verification-metadata.xml
 
 To update the `gradle.lockfile` and `verification-metadata.xml` files, you can use the following commands:
