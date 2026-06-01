@@ -1,6 +1,8 @@
 package ch.ssdd.eventhub;
 
 import com.jayway.jsonpath.JsonPath;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,12 +16,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+import org.flywaydb.core.Flyway;
+
+@SpringBootTest(properties = "spring.flyway.clean-disabled=false")
 @AutoConfigureMockMvc
 class EventIntegrationTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @BeforeEach
+    void clearDatabase(@Autowired Flyway flyway) {
+        flyway.clean();
+        flyway.migrate();
+    }
 
     @Test
     void shouldCreateAndFetchEvent() throws Exception {
@@ -43,9 +53,9 @@ class EventIntegrationTest {
         int initialCount = JsonPath.parse(initialJson).read("$.length()", Integer.class);
 
         mockMvc.perform(post("/api/events")
-                        .with(csrf())
-                        .contentType("application/json")
-                        .content(request))
+                .with(csrf())
+                .contentType("application/json")
+                .content(request))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Integration Test Event"));
 
