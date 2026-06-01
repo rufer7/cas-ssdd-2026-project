@@ -4,7 +4,7 @@ import ch.ssdd.eventhub.domain.Event;
 
 import java.util.List;
 
-public interface LoadEventUseCase {
+public interface LoadAllEventsUseCase {
 
     List<Event> loadAllEvents();
 }
