@@ -4,6 +4,8 @@ import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateEventRequestDto;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.EventResponseDto;
 import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
