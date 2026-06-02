@@ -1,9 +1,11 @@
-package ch.ssdd.eventhub.adapters.outbound.jpa;
+package ch.ssdd.eventhub.adapters.outbound.persistence;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 import ch.ssdd.eventhub.domain.Role;
+import ch.ssdd.eventhub.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -38,6 +40,25 @@ public class UserEntity {
     private LocalDateTime modifiedAt;
 
     protected UserEntity() {
+    }
+
+    public UserEntity(User user) {
+        Objects.requireNonNull(user, "User cannot be null");
+
+        this.username = user.username();
+        this.externalId = user.externalId();
+        this.role = user.role();
+        this.createdAt = user.createdAt();
+        this.modifiedAt = user.modifiedAt();
+    }
+
+    public User toUser() {
+        return new User(
+                this.username,
+                this.externalId,
+                this.role,
+                this.createdAt,
+                this.modifiedAt);
     }
 
     public UUID getId() {
@@ -83,5 +104,4 @@ public class UserEntity {
     public void setModifiedAt(LocalDateTime modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
-
 }
