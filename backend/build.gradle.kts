@@ -37,8 +37,9 @@ dependencies {
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.flywaydb:flyway-database-postgresql")
 
-	// Source: https://mvnrepository.com/artifact/com.azure.spring/spring-cloud-azure-starter-active-directory
-	implementation("com.azure.spring:spring-cloud-azure-starter-active-directory:7.2.0")
+	implementation("com.azure.spring:spring-cloud-azure-starter-active-directory")
+
+	implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")

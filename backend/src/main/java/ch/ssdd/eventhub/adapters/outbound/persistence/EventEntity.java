@@ -1,9 +1,8 @@
-package ch.ssdd.eventhub.adapters.outbound.jpa;
+package ch.ssdd.eventhub.adapters.outbound.persistence;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,9 +13,12 @@ import jakarta.persistence.Table;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import ch.ssdd.eventhub.domain.Event;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -42,14 +44,18 @@ public class EventEntity {
     @Column(nullable = false, length = 255)
     private String location;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    // TODO: check if we can use @ManyToOne(fetch = FetchType.LAZY, optional =
+    // false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "created_by_id", nullable = false)
     private UserEntity createdBy;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    // TODO: check if we can use @ManyToOne(fetch = FetchType.LAZY, optional =
+    // false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "modified_by_id", nullable = false)
     private UserEntity modifiedBy;
 
@@ -64,6 +70,38 @@ public class EventEntity {
     private List<CommentEntity> comments = new ArrayList<>();
 
     protected EventEntity() {
+    }
+
+    public EventEntity(Event event, UserEntity createdBy, UserEntity modifiedBy) {
+        Objects.requireNonNull(event, "Event cannot be null");
+        Objects.requireNonNull(createdBy, "createdBy cannot be null");
+        Objects.requireNonNull(modifiedBy, "modifiedBy cannot be null");
+
+        this.title = event.title();
+        this.description = event.description();
+        this.from = event.from();
+        this.to = event.to();
+        this.location = event.location();
+        this.createdAt = event.createdAt();
+        this.modifiedAt = event.modifiedAt();
+
+        this.createdBy = createdBy;
+        this.modifiedBy = modifiedBy;
+
+    }
+
+    public Event toEvent() {
+        return new Event(
+                this.title,
+                this.description,
+                this.from,
+                this.to,
+                this.location,
+                this.createdBy.toUser(),
+                this.createdAt,
+                this.modifiedBy.toUser(),
+                this.modifiedAt,
+                null);
     }
 
     public UUID getId() {

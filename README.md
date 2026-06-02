@@ -6,16 +6,16 @@
 [![Automatic Dependency Submission](https://github.com/rufer7/cas-ssdd-2026-project/actions/workflows/dependency-graph/auto-submission/badge.svg)](https://github.com/rufer7/cas-ssdd-2026-project/actions/workflows/dependency-graph/auto-submission)
 [![Dependabot Updates](https://github.com/rufer7/cas-ssdd-2026-project/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/rufer7/cas-ssdd-2026-project/actions/workflows/dependabot/dependabot-updates)
 
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=bugs)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=coverage)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=rufer7_cas-ssdd-2026-project&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=rufer7_cas-ssdd-2026-project)
 
 Project for CAS Secure Software Design &amp; Development at ZHAW School of Engineering.
 

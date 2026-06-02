@@ -1,4 +1,4 @@
-package ch.ssdd.eventhub.adapters.outbound.jpa;
+package ch.ssdd.eventhub.adapters.outbound.persistence;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -14,8 +14,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "notes")
-public class NoteEntity {
+@Table(name = "comments")
+public class CommentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -23,6 +23,10 @@ public class NoteEntity {
 
     @Column(nullable = false, length = 4000)
     private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "event_id", nullable = false)
+    private EventEntity event;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "created_by_id", nullable = false)
@@ -38,7 +42,7 @@ public class NoteEntity {
     @Column(nullable = false)
     private LocalDateTime modifiedAt;
 
-    protected NoteEntity() {
+    protected CommentEntity() {
     }
 
     public UUID getId() {
@@ -51,6 +55,14 @@ public class NoteEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public EventEntity getEvent() {
+        return event;
+    }
+
+    public void setEvent(EventEntity event) {
+        this.event = event;
     }
 
     public UserEntity getCreatedBy() {
