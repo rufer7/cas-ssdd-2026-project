@@ -26,17 +26,20 @@ class EventTest {
     void shouldThrowWhenTitleIsBlank() {
         LocalDateTime now = LocalDateTime.now();
 
+        LocalDateTime plusOneDay = now.plusDays(1);
+        LocalDateTime plusTwoDays = now.plusDays(2);
+        User dummyUser = dummyUser();
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
                 () -> new Event(
                         "",
                         "Description",
-                        now.plusDays(1),
-                        now.plusDays(2),
+                        plusOneDay,
+                        plusTwoDays,
                         "Zurich",
-                        dummyUser(),
+                        dummyUser,
                         now,
-                        dummyUser(),
+                        dummyUser,
                         now,
                         null
                 )
@@ -49,17 +52,20 @@ class EventTest {
     void shouldThrowWhenTitleIsNull() {
         LocalDateTime now = LocalDateTime.now();
 
+        LocalDateTime plusOneDay = now.plusDays(1);
+        LocalDateTime plusTwoDay = now.plusDays(2);
+        User dummyUser = dummyUser();
         assertThrows(
                 NullPointerException.class,
                 () -> new Event(
                         null,
                         "Description",
-                        now.plusDays(1),
-                        now.plusDays(2),
+                        plusOneDay,
+                        plusTwoDay,
                         "Zurich",
-                        dummyUser(),
+                        dummyUser,
                         now,
-                        dummyUser(),
+                        dummyUser,
                         now,
                         null
                 )
@@ -70,17 +76,20 @@ class EventTest {
     void shouldThrowWhenFromIsAfterTo() {
         LocalDateTime now = LocalDateTime.now();
 
+        LocalDateTime plusThree = now.plusDays(3);
+        LocalDateTime plusOne = now.plusDays(1);
+        User dummyUser = dummyUser();
         assertThrows(
                 IllegalArgumentException.class,
                 () -> new Event(
                         "Title",
                         "Description",
-                        now.plusDays(3),
-                        now.plusDays(1),
+                        plusThree,
+                        plusOne,
                         "Zurich",
-                        dummyUser(),
+                        dummyUser,
                         now,
-                        dummyUser(),
+                        dummyUser,
                         now,
                         null
                 )

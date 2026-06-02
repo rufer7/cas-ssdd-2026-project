@@ -92,13 +92,15 @@ class EventCreationServiceTest {
                 .thenReturn(Optional.empty());
 
         // when + then
+        LocalDateTime plusOne = LocalDateTime.now().plusDays(1);
+        LocalDateTime plusTwo = LocalDateTime.now().plusDays(2);
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
                 () -> service.create(
                         "Event",
                         "Desc",
-                        LocalDateTime.now().plusDays(1),
-                        LocalDateTime.now().plusDays(2),
+                        plusOne,
+                        plusTwo,
                         "Zurich",
                         "missing"
                 )

@@ -102,13 +102,14 @@ class UserTest {
     void shouldThrowWhenCreatedAfterModified() {
         LocalDateTime now = LocalDateTime.now();
 
+        LocalDateTime plusOne = now.plusDays(1);
         assertThrows(
                 IllegalArgumentException.class,
                 () -> new User(
                         "john",
                         "ext-123",
                         Role.USER,
-                        now.plusDays(1),
+                        plusOne,
                         now
                 )
         );
@@ -118,14 +119,15 @@ class UserTest {
     void shouldThrowWhenCreatedInFuture() {
         LocalDateTime now = LocalDateTime.now();
 
+        LocalDateTime plusTen = now.plusDays(10);
         assertThrows(
                 IllegalArgumentException.class,
                 () -> new User(
                         "john",
                         "ext-123",
                         Role.USER,
-                        now.plusDays(10),
-                        now.plusDays(10)
+                        plusTen,
+                        plusTen
                 )
         );
     }
