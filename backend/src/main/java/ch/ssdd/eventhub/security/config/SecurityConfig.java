@@ -27,7 +27,6 @@ public class SecurityConfig {
                                 .preload(true)
                                 .maxAgeInSeconds(31536000))
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
-                        .contentTypeOptions((contentTypeOptions) -> contentTypeOptions.disable())
                         .referrerPolicy(referrer -> referrer.policy(
                                 ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
                         .addHeaderWriter(new StaticHeadersWriter(
