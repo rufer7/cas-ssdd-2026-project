@@ -136,6 +136,44 @@ public record Event(
                 updatedComments);
     }
 
+    public Event updateDetails(String newTitle, String newDescription, LocalDateTime newFrom, LocalDateTime newTo, String newLocation) {
+        Objects.requireNonNull(newTitle, "Event title cannot be null");
+        Objects.requireNonNull(newDescription, "Event description cannot be null");
+        Objects.requireNonNull(newFrom, "Event from date cannot be null");
+        Objects.requireNonNull(newTo, "Event to date cannot be null");
+        Objects.requireNonNull(newLocation, "Event location cannot be null");
+
+
+        if (newTitle.isBlank()) {
+            throw new IllegalArgumentException("Event title cannot be blank");
+        }
+
+        if (newLocation.isBlank()) {
+            throw new IllegalArgumentException("Event location cannot be blank");
+        }
+
+        if (!CommonValidators.isValidStringLength(newTitle)) {
+            throw new IllegalArgumentException(
+                    "Event title cannot exceed " + Constants.DEFAULT_MAX_STRING_LENGTH + " characters");
+        }
+
+        if (!CommonValidators.isValidStringLength(newDescription)) {
+            throw new IllegalArgumentException(
+                    "Event description cannot exceed " + Constants.DEFAULT_MAX_STRING_LENGTH + " characters");
+        }
+
+        if (!CommonValidators.isValidStringLength(newLocation)) {
+            throw new IllegalArgumentException(
+                    "Event location cannot exceed " + Constants.DEFAULT_MAX_STRING_LENGTH + " characters");
+        }
+
+
+        if (newFrom.isAfter(newTo)) {
+            throw new IllegalArgumentException("Event start date must be before end date");
+        }
+
+        return new Event(newTitle, newDescription, newFrom, newTo, newLocation, createdBy, createdAt, modifiedBy, modifiedAt, featuredImage);
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

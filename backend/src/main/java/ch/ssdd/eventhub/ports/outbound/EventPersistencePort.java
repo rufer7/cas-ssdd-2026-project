@@ -11,4 +11,5 @@ public interface EventPersistencePort {
     Optional<Event> findById(UUID uuid);
     List<Event> findAll();
     void deleteById(UUID uuid);
+    Event updateById(UUID uuid, Event event);
 }

@@ -13,9 +13,7 @@ import java.util.UUID;
 @Service
 public class EventMutationService implements UpdateEventUseCase, DeleteEventUseCase {
 
-
     private final EventPersistencePort eventPersistencePort;
-
 
     public EventMutationService(EventPersistencePort eventPersistencePort) {
         this.eventPersistencePort = eventPersistencePort;
@@ -29,6 +27,14 @@ public class EventMutationService implements UpdateEventUseCase, DeleteEventUseC
 
     @Override
     public Event update(UUID eventId, String title, String description, LocalDateTime from, LocalDateTime to, String location) {
-        return null;
+        // 1. Fetch current domain state
+        Event existingEvent = eventPersistencePort.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException("Event not found for id: " + eventId));
+
+        // 2. Execute mutation directly in the domain layer
+        Event updatedEvent = existingEvent.updateDetails(title, description, from, to, location);
+
+        // 3. Persist the already-mutated domain object
+        return eventPersistencePort.save(updatedEvent);
     }
 }

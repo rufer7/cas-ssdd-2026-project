@@ -60,17 +60,14 @@ public class EventRestController {
     public ResponseEntity<EventResponseDto> updateEvent(@PathVariable UUID id,
                                                         @RequestBody UpdateEventRequestDto request) {
 
-        //updateEventUseCase.update(id, request.title(), request.description(), request.from(), request.to(), request.location());
+        updateEventUseCase.update(id, request.title(), request.description(), request.from(), request.to(), request.location());
 
         return ResponseEntity.of(EventResponseDto.of(null));
     }
     @DeleteMapping  ("/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<EventResponseDto> deleteEvent(@PathVariable UUID id) {
-
         deleteEventUseCase.deleteEvent(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-
-        // if not successful ,return no found
     }
 }
