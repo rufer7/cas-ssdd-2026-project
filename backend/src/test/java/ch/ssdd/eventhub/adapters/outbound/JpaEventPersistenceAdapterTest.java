@@ -66,7 +66,7 @@ class JpaEventPersistenceAdapterTest {
                 LocalDateTime.now(),
                 null);
 
-        UserEntity userEntity = new UserEntity(user);
+        var userEntity = new UserEntity(user);
 
         when(userRepository.findByUsername("john"))
                 .thenReturn(Optional.of(userEntity));
