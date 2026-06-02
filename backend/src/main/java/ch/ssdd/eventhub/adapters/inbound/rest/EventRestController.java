@@ -2,7 +2,6 @@ package ch.ssdd.eventhub.adapters.inbound.rest;
 
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateEventRequest;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.EventDTO;
-import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
 import org.springframework.http.HttpStatus;
