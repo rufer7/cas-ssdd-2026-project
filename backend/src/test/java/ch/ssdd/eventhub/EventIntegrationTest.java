@@ -56,7 +56,7 @@ class EventIntegrationTest {
                 .with(csrf())
                 .contentType("application/json")
                 .content(request))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value("Integration Test Event"));
 
         mockMvc.perform(get("/api/events"))
