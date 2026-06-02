@@ -4,15 +4,15 @@ import ch.ssdd.eventhub.domain.Event;
 
 import java.time.LocalDateTime;
 
-public record EventDTO(
+public record EventResponseDto(
         String title,
         String description,
         LocalDateTime from,
         LocalDateTime to,
         String location) {
 
-    public static EventDTO of(Event event) {
-        return new EventDTO(
+    public static EventResponseDto of(Event event) {
+        return new EventResponseDto(
                 event.title(),
                 event.description(),
                 event.from(),

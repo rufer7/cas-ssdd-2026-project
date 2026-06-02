@@ -2,7 +2,7 @@ package ch.ssdd.eventhub.adapters.inbound.rest.dto;
 
 import java.time.LocalDateTime;
 
-public record CreateEventRequest(
+public record CreateEventRequestDto(
         String title,
         String description,
         LocalDateTime from,

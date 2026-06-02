@@ -9,5 +9,4 @@ class EventhubApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

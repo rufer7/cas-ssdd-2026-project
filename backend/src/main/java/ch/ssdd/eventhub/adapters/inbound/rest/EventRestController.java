@@ -1,7 +1,7 @@
 package ch.ssdd.eventhub.adapters.inbound.rest;
 
-import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateEventRequest;
-import ch.ssdd.eventhub.adapters.inbound.rest.dto.EventDTO;
+import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateEventRequestDto;
+import ch.ssdd.eventhub.adapters.inbound.rest.dto.EventResponseDto;
 import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
 import org.springframework.http.HttpStatus;
@@ -27,16 +27,16 @@ public class EventRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EventDTO>> getAllEvents() {
+    public ResponseEntity<List<EventResponseDto>> getAllEvents() {
         var eventDTOs = loadAllEventsUseCase.loadAllEvents()
                 .stream()
-                .map(EventDTO::of)
+                .map(EventResponseDto::of)
                 .toList();
-        return new ResponseEntity<>(eventDTOs, HttpStatus.OK);
+        return ResponseEntity.ok(eventDTOs);
     }
 
     @PostMapping
-    public ResponseEntity<EventDTO> createEvent(@RequestBody CreateEventRequest request) {
+    public ResponseEntity<EventResponseDto> createEvent(@RequestBody CreateEventRequestDto request) {
 
         var event = createEventUseCase.create(
                 request.title(),
@@ -45,6 +45,6 @@ public class EventRestController {
                 request.to(),
                 request.location(),
                 request.username());
-        return new ResponseEntity<>(EventDTO.of(event), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(EventResponseDto.of(event));
     }
 }
