@@ -4,7 +4,7 @@ import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateEventRequest;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.EventDTO;
 import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
-import ch.ssdd.eventhub.ports.inbound.LoadEventUseCase;
+import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 class EventRestControllerTest {
 
     @Mock
-    LoadEventUseCase loadEventUseCase;
+    LoadAllEventsUseCase loadAllEventsUseCase;
 
     @Mock
     CreateEventUseCase createEventUseCase;
@@ -37,7 +37,7 @@ class EventRestControllerTest {
         Event event1 = mock(Event.class);
         Event event2 = mock(Event.class);
 
-        when(loadEventUseCase.loadAllEvents())
+        when(loadAllEventsUseCase.loadAllEvents())
                 .thenReturn(List.of(event1, event2));
 
         // when
@@ -48,7 +48,7 @@ class EventRestControllerTest {
         assertNotNull(response.getBody());
         assertEquals(2, response.getBody().size());
 
-        verify(loadEventUseCase, times(1)).loadAllEvents();
+        verify(loadAllEventsUseCase, times(1)).loadAllEvents();
     }
 
     @Test
@@ -60,10 +60,9 @@ class EventRestControllerTest {
                 LocalDateTime.now().plusDays(1),
                 LocalDateTime.now().plusDays(2),
                 "Zurich",
-                "john"
-        );
+                "john");
 
-        Event event = mock(Event.class);
+        var event = mock(Event.class);
 
         when(createEventUseCase.create(
                 request.title(),
@@ -71,14 +70,13 @@ class EventRestControllerTest {
                 request.from(),
                 request.to(),
                 request.location(),
-                request.username()
-        )).thenReturn(event);
+                request.username())).thenReturn(event);
 
         // when
         ResponseEntity<EventDTO> response = controller.createEvent(request);
 
         // then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
 
         verify(createEventUseCase, times(1)).create(
@@ -87,7 +85,6 @@ class EventRestControllerTest {
                 request.from(),
                 request.to(),
                 request.location(),
-                request.username()
-        );
+                request.username());
     }
 }

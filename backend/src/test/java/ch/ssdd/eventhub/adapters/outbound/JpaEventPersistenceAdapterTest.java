@@ -51,8 +51,7 @@ class JpaEventPersistenceAdapterTest {
                 "ext-1",
                 Role.USER,
                 LocalDateTime.now().minusDays(1),
-                LocalDateTime.now().minusDays(1)
-        );
+                LocalDateTime.now().minusDays(1));
 
         Event event = new Event(
                 "title",
@@ -64,8 +63,7 @@ class JpaEventPersistenceAdapterTest {
                 LocalDateTime.now(),
                 user,
                 LocalDateTime.now(),
-                null
-        );
+                null);
 
         UserEntity userEntity = new UserEntity(user);
 
@@ -82,7 +80,7 @@ class JpaEventPersistenceAdapterTest {
         assertNotNull(result);
         assertEquals("title", result.title());
 
-        verify(userRepository, times(2)).findByUsername("john");
+        verify(userRepository, times(1)).findByUsername("john");
 
         ArgumentCaptor<EventEntity> captor = ArgumentCaptor.forClass(EventEntity.class);
         verify(eventRepository).save(captor.capture());
@@ -100,8 +98,7 @@ class JpaEventPersistenceAdapterTest {
                 "ext-1",
                 Role.USER,
                 LocalDateTime.now().minusDays(1),
-                LocalDateTime.now().minusDays(1)
-        );
+                LocalDateTime.now().minusDays(1));
 
         Event event = new Event(
                 "title",
@@ -113,8 +110,7 @@ class JpaEventPersistenceAdapterTest {
                 LocalDateTime.now(),
                 user,
                 LocalDateTime.now(),
-                null
-        );
+                null);
 
         when(userRepository.findByUsername("john"))
                 .thenReturn(Optional.empty());
@@ -122,8 +118,7 @@ class JpaEventPersistenceAdapterTest {
         // when + then
         assertThrows(
                 IllegalArgumentException.class,
-                () -> adapter.save(event)
-        );
+                () -> adapter.save(event));
 
         verify(eventRepository, never()).save(any());
     }

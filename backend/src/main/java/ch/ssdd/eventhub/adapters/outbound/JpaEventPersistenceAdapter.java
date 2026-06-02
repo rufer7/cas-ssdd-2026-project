@@ -25,16 +25,13 @@ public class JpaEventPersistenceAdapter implements EventPersistencePort {
 
     @Override
     public Event save(Event event) {
+        // TODO: to be refactored as soon as we get the user from authentication context
         String usernameCreatedBy = event.createdBy().username();
-        String usernameModifiedBy = event.modifiedBy().username();
 
         UserEntity createdBy = userRepository.findByUsername(usernameCreatedBy)
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + usernameCreatedBy));
 
-        UserEntity modifiedBy = userRepository.findByUsername(usernameModifiedBy)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + usernameModifiedBy));
-
-        EventEntity entity = new EventEntity(event, createdBy, modifiedBy);
+        EventEntity entity = new EventEntity(event, createdBy, createdBy);
         eventRepository.save(entity);
         return event;
     }

@@ -4,7 +4,7 @@ import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateEventRequest;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.EventDTO;
 import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
-import ch.ssdd.eventhub.ports.inbound.LoadEventUseCase;
+import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,32 +19,33 @@ import java.util.List;
 @RequestMapping("/api/events")
 public class EventRestController {
 
-    private final LoadEventUseCase loadEventUseCase;
+    private final LoadAllEventsUseCase loadAllEventsUseCase;
     private final CreateEventUseCase createEventUseCase;
 
-    public EventRestController(LoadEventUseCase loadEventUseCase, CreateEventUseCase createEventUseCase) {
-        this.loadEventUseCase = loadEventUseCase;
+    public EventRestController(LoadAllEventsUseCase loadAllEventsUseCase, CreateEventUseCase createEventUseCase) {
+        this.loadAllEventsUseCase = loadAllEventsUseCase;
         this.createEventUseCase = createEventUseCase;
     }
 
     @GetMapping
     public ResponseEntity<List<EventDTO>> getAllEvents() {
-        List<Event> events = loadEventUseCase.loadAllEvents();
-        List<EventDTO> eventDTOs = events.stream().map(EventDTO::of).toList();
+        var eventDTOs = loadAllEventsUseCase.loadAllEvents()
+                .stream()
+                .map(EventDTO::of)
+                .toList();
         return new ResponseEntity<>(eventDTOs, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<EventDTO> createEvent(@RequestBody CreateEventRequest request) {
 
-        Event event = createEventUseCase.create(
+        var event = createEventUseCase.create(
                 request.title(),
                 request.description(),
                 request.from(),
                 request.to(),
                 request.location(),
-                request.username()
-        );
-        return new ResponseEntity<>(EventDTO.of(event), HttpStatus.OK);
+                request.username());
+        return new ResponseEntity<>(EventDTO.of(event), HttpStatus.CREATED);
     }
 }

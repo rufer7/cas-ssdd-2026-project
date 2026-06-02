@@ -8,5 +8,6 @@ public record CreateEventRequest(
         LocalDateTime from,
         LocalDateTime to,
         String location,
-        String username
-) {}
+        // TODO: to be removed as soon as authentication is in place
+        String username) {
+}
