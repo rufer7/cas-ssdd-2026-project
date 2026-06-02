@@ -23,13 +23,14 @@ class NoteTest {
     void shouldThrowWhenContentIsNull() {
         LocalDateTime now = LocalDateTime.now();
 
+        User dummyUser = dummyUser();
         assertThrows(
                 NullPointerException.class,
                 () -> new Note(
                         null,
-                        dummyUser(),
+                        dummyUser,
                         now,
-                        dummyUser(),
+                        dummyUser,
                         now
                 )
         );
@@ -39,13 +40,14 @@ class NoteTest {
     void shouldThrowWhenContentIsBlank() {
         LocalDateTime now = LocalDateTime.now();
 
+        User dummyUser = dummyUser();
         assertThrows(
                 IllegalArgumentException.class,
                 () -> new Note(
                         "",
-                        dummyUser(),
+                        dummyUser,
                         now,
-                        dummyUser(),
+                        dummyUser,
                         now
                 )
         );
@@ -55,13 +57,15 @@ class NoteTest {
     void shouldThrowWhenCreatedAfterModified() {
         LocalDateTime now = LocalDateTime.now();
 
+        User dummyUser = dummyUser();
+        LocalDateTime plusOne = now.plusDays(1);
         assertThrows(
                 IllegalArgumentException.class,
                 () -> new Note(
                         "Valid content",
-                        dummyUser(),
-                        now.plusDays(1),
-                        dummyUser(),
+                        dummyUser,
+                        plusOne,
+                        dummyUser,
                         now
                 )
         );
@@ -71,14 +75,16 @@ class NoteTest {
     void shouldThrowWhenCreatedInFuture() {
         LocalDateTime now = LocalDateTime.now();
 
+        LocalDateTime plusTen = now.plusDays(10);
+        User dummyUser = dummyUser();
         assertThrows(
                 IllegalArgumentException.class,
                 () -> new Note(
                         "Valid content",
-                        dummyUser(),
-                        now.plusDays(10),
-                        dummyUser(),
-                        now.plusDays(10)
+                        dummyUser,
+                        plusTen,
+                        dummyUser,
+                        plusTen
                 )
         );
     }
