@@ -46,4 +46,9 @@ public class JpaEventPersistenceAdapter implements EventPersistencePort {
                 .map(EventEntity::toEvent)
                 .toList();
     }
+
+    @Override
+    public void deleteById(UUID uuid) {
+        eventRepository.deleteById(uuid);
+    }
 }
