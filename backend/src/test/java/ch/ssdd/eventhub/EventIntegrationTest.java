@@ -64,4 +64,24 @@ class EventIntegrationTest {
                 .andExpect(jsonPath("$[?(@.title == 'Integration Test Event')]").exists())
                 .andExpect(jsonPath("$.length()").value(initialCount + 1));
     }
+
+    @Test
+    void shouldReturnBadRequestWhenCreatingEventWithInvalidData() throws Exception {
+        String invalidRequest = """
+                {
+                  "title": "",
+                  "description": "Test",
+                  "from": "2026-06-01T10:00:00",
+                  "to": "2026-06-01T12:00:00",
+                  "location": "Zurich",
+                  "username": "alice_admin"
+                }
+                """;
+
+        mockMvc.perform(post("/api/events")
+                .with(csrf())
+                .contentType("application/json")
+                .content(invalidRequest))
+                .andExpect(status().isBadRequest());
+    }
 }
