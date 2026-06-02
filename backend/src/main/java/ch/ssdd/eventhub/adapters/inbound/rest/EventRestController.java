@@ -18,6 +18,8 @@ import java.util.List;
 @RequestMapping("/api/events")
 public class EventRestController {
 
+    private final PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+
     private final LoadAllEventsUseCase loadAllEventsUseCase;
     private final CreateEventUseCase createEventUseCase;
 
@@ -28,23 +30,23 @@ public class EventRestController {
 
     @GetMapping
     public ResponseEntity<List<EventResponseDto>> getAllEvents() {
-        var eventDTOs = loadAllEventsUseCase.loadAllEvents()
+        var eventDtos = loadAllEventsUseCase.loadAllEvents()
                 .stream()
                 .map(EventResponseDto::of)
                 .toList();
-        return ResponseEntity.ok(eventDTOs);
+        return ResponseEntity.ok(eventDtos);
     }
 
     @PostMapping
     public ResponseEntity<EventResponseDto> createEvent(@RequestBody CreateEventRequestDto request) {
 
         var event = createEventUseCase.create(
-                request.title(),
-                request.description(),
+                policy.sanitize(request.title()),
+                policy.sanitize(request.description()),
                 request.from(),
                 request.to(),
-                request.location(),
-                request.username());
+                policy.sanitize(request.location()),
+                policy.sanitize(request.username()));
         return ResponseEntity.status(HttpStatus.CREATED).body(EventResponseDto.of(event));
     }
 }
