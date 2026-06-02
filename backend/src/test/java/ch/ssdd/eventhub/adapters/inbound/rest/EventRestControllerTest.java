@@ -1,7 +1,7 @@
 package ch.ssdd.eventhub.adapters.inbound.rest;
 
-import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateEventRequest;
-import ch.ssdd.eventhub.adapters.inbound.rest.dto.EventDTO;
+import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateEventRequestDto;
+import ch.ssdd.eventhub.adapters.inbound.rest.dto.EventResponseDto;
 import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
@@ -41,7 +41,7 @@ class EventRestControllerTest {
                 .thenReturn(List.of(event1, event2));
 
         // when
-        ResponseEntity<List<EventDTO>> response = controller.getAllEvents();
+        ResponseEntity<List<EventResponseDto>> response = controller.getAllEvents();
 
         // then
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -54,7 +54,7 @@ class EventRestControllerTest {
     @Test
     void shouldCreateEvent() {
         // given
-        CreateEventRequest request = new CreateEventRequest(
+        CreateEventRequestDto request = new CreateEventRequestDto(
                 "title",
                 "desc",
                 LocalDateTime.now().plusDays(1),
@@ -73,7 +73,7 @@ class EventRestControllerTest {
                 request.username())).thenReturn(event);
 
         // when
-        ResponseEntity<EventDTO> response = controller.createEvent(request);
+        ResponseEntity<EventResponseDto> response = controller.createEvent(request);
 
         // then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
