@@ -21,29 +21,23 @@ class CommentTest {
     void shouldThrowWhenContentIsBlank() {
         LocalDateTime now = LocalDateTime.now();
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new Comment(
-                        "",
-                        dummyUser(),
-                        now,
-                        dummyUser(),
-                        now
-                )
-        );
+        User dummyUser = dummyUser();
+        assertThrows(IllegalArgumentException.class,
+                () -> new Comment("", dummyUser, now, dummyUser, now));
     }
 
     @Test
     void shouldThrowWhenContentIsNull() {
         LocalDateTime now = LocalDateTime.now();
 
+        User dummyUser = dummyUser();
         assertThrows(
                 NullPointerException.class,
                 () -> new Comment(
                         null,
-                        dummyUser(),
+                        dummyUser,
                         now,
-                        dummyUser(),
+                        dummyUser,
                         now
                 )
         );
@@ -53,13 +47,15 @@ class CommentTest {
     void shouldThrowWhenCreatedAfterModified() {
         LocalDateTime now = LocalDateTime.now();
 
+        User dummyUser = dummyUser();
+        LocalDateTime createdAt = now.plusDays(1);
         assertThrows(
                 IllegalArgumentException.class,
                 () -> new Comment(
                         "Valid content",
-                        dummyUser(),
-                        now.plusDays(1),
-                        dummyUser(),
+                        dummyUser,
+                        createdAt,
+                        dummyUser,
                         now
                 )
         );
@@ -69,14 +65,16 @@ class CommentTest {
     void shouldThrowWhenCreatedAtInFuture() {
         LocalDateTime now = LocalDateTime.now();
 
+        User dummyUser = dummyUser();
+        LocalDateTime localDatePlusDays = now.plusDays(10);
         assertThrows(
                 IllegalArgumentException.class,
                 () -> new Comment(
                         "Valid content",
-                        dummyUser(),
-                        now.plusDays(10),
-                        dummyUser(),
-                        now.plusDays(10)
+                        dummyUser,
+                        localDatePlusDays,
+                        dummyUser,
+                        localDatePlusDays
                 )
         );
     }
@@ -85,11 +83,12 @@ class CommentTest {
     void shouldAcceptMinimumValidComment() {
         LocalDateTime now = LocalDateTime.now();
 
+        User dummyUser = dummyUser();
         Comment comment = new Comment(
                 "a",
-                dummyUser(),
+                dummyUser,
                 now,
-                dummyUser(),
+                dummyUser,
                 now
         );
 
