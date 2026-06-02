@@ -1,9 +1,5 @@
-package ch.ssdd.eventhub.adapters.outbound;
+package ch.ssdd.eventhub.adapters.outbound.persistence;
 
-import ch.ssdd.eventhub.adapters.outbound.jpa.EventEntity;
-import ch.ssdd.eventhub.adapters.outbound.jpa.EventRepository;
-import ch.ssdd.eventhub.adapters.outbound.jpa.UserEntity;
-import ch.ssdd.eventhub.adapters.outbound.jpa.UserRepository;
 import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.domain.User;
 import ch.ssdd.eventhub.ports.outbound.EventPersistencePort;

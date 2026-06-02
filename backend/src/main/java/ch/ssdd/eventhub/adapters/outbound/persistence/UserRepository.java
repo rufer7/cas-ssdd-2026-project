@@ -1,4 +1,4 @@
-package ch.ssdd.eventhub.adapters.outbound.jpa;
+package ch.ssdd.eventhub.adapters.outbound.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

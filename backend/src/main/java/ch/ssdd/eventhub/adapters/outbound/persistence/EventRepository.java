@@ -1,6 +1,5 @@
-package ch.ssdd.eventhub.adapters.outbound.jpa;
+package ch.ssdd.eventhub.adapters.outbound.persistence;
 
-import ch.ssdd.eventhub.domain.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

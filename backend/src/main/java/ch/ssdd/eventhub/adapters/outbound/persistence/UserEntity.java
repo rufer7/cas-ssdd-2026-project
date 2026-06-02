@@ -1,4 +1,4 @@
-package ch.ssdd.eventhub.adapters.outbound.jpa;
+package ch.ssdd.eventhub.adapters.outbound.persistence;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -58,8 +58,7 @@ public class UserEntity {
                 this.externalId,
                 this.role,
                 this.createdAt,
-                this.modifiedAt
-        );
+                this.modifiedAt);
     }
 
     public UUID getId() {
@@ -105,5 +104,4 @@ public class UserEntity {
     public void setModifiedAt(LocalDateTime modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
-
 }
