@@ -15,15 +15,14 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
  * Security configuration for the event-hub backend.
  *
  * <p>
- * Authentication is delegated to Microsoft Entra ID (OIDC). The
- * {@code spring-cloud-azure-starter-active-directory} starter auto-configures a
- * {@code JwtDecoder} that validates bearer tokens against the configured Entra
- * ID
- * tenant (using {@code spring.cloud.azure.active-directory.*} properties) and a
+ * Authentication is delegated to Microsoft Entra ID (OIDC).
+ * The {@code spring-cloud-azure-starter-active-directory} starter
+ * auto-configures a {@code JwtDecoder} that validates bearer tokens against the
+ * configured Entra ID tenant (using
+ * {@code spring.cloud.azure.active-directory.*} properties) and a
  * {@code JwtAuthenticationConverter} that maps the {@code roles} claim of an
  * access token to authorities prefixed with {@code APPROLE_} and the
- * {@code scp}
- * claim to authorities prefixed with {@code SCOPE_}.
+ * {@code scp} claim to authorities prefixed with {@code SCOPE_}.
  *
  * <p>
  * The expected behaviour is:
@@ -47,14 +46,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 // Stateless resource server: clients authenticate on every request with a
-                // bearer
-                // token in the Authorization header. CSRF protection is intentionally disabled
-                // because no session/cookie-based authentication is used, so there is no
-                // ambient
-                // authority that an attacker could exploit via cross-site requests.
+                // bearer token in the Authorization header. CSRF protection is intentionally
+                // disabled because no session/cookie-based authentication is used, so there is
+                // no ambient authority that an attacker could exploit via cross-site requests.
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .csrf(Customizer.withDefaults())
                 .headers(headers -> headers
                         .httpStrictTransportSecurity((hsts) -> hsts
@@ -62,8 +58,7 @@ public class SecurityConfig {
                                 .preload(true)
                                 .maxAgeInSeconds(31536000))
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
-                        .contentTypeOptions(
-                                (contentTypeOptions) -> contentTypeOptions.disable())
+                        .contentTypeOptions((contentTypeOptions) -> contentTypeOptions.disable())
                         .referrerPolicy(referrer -> referrer.policy(
                                 ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
                         .addHeaderWriter(new StaticHeadersWriter(
