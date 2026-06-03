@@ -8,6 +8,8 @@ import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.DeleteEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
 import ch.ssdd.eventhub.ports.inbound.UpdateEventUseCase;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +31,8 @@ import java.util.UUID;
 @RequestMapping("/api/events")
 public class EventRestController {
 
+    private final PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+
     private final LoadAllEventsUseCase loadAllEventsUseCase;
     private final CreateEventUseCase createEventUseCase;
     private final UpdateEventUseCase updateEventUseCase;
@@ -43,11 +47,11 @@ public class EventRestController {
 
     @GetMapping
     public ResponseEntity<List<EventResponseDto>> getAllEvents() {
-        var eventDTOs = loadAllEventsUseCase.loadAllEvents()
+        var eventDtos = loadAllEventsUseCase.loadAllEvents()
                 .stream()
                 .map(EventResponseDto::of)
                 .toList();
-        return ResponseEntity.ok(eventDTOs);
+        return ResponseEntity.ok(eventDtos);
     }
 
 
