@@ -19,16 +19,16 @@ import org.springframework.test.web.servlet.MockMvc;
  * Verifies that the OIDC/Entra ID security configuration enforces the expected
  * status codes:
  * <ul>
- *     <li>{@code 401} when no bearer token is supplied;</li>
- *     <li>{@code 403} when accessing an admin endpoint with a token that does
- *     not carry the {@code Admin} app role;</li>
- *     <li>{@code 200} when accessing the API with a valid token.</li>
+ * <li>{@code 401} when no bearer token is supplied;</li>
+ * <li>{@code 403} when accessing an admin endpoint with a token that does
+ * not carry the {@code Admin} app role;</li>
+ * <li>{@code 200} when accessing the API with a valid token.</li>
  * </ul>
  *
  * The {@code JwtDecoder} is mocked via {@link TestSecurityConfig}; the actual
- * authorities are supplied via {@code SecurityMockMvcRequestPostProcessors.jwt()}
- * so the assertions exercise the real {@link SecurityConfig} authorisation
- * rules.
+ * authorities are supplied via
+ * {@code SecurityMockMvcRequestPostProcessors.jwt()} so the assertions exercise
+ * the real {@link SecurityConfig} authorisation rules.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -47,16 +47,17 @@ class SecurityConfigTest {
     @Test
     void adminEndpointForbiddenForNonAdmin() throws Exception {
         mockMvc.perform(get("/api/admin/ping")
-                        .with(jwt().jwt(userToken())
-                                .authorities(new SimpleGrantedAuthority("APPROLE_User"))))
+                .with(jwt().jwt(userToken())
+                        .authorities(new SimpleGrantedAuthority("APPROLE_User"))))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     void adminEndpointAllowedForAdmin() throws Exception {
         mockMvc.perform(get("/api/admin/ping")
-                        .with(jwt().jwt(userToken())
-                                .authorities(new SimpleGrantedAuthority(SecurityConfig.ADMIN_AUTHORITY))))
+                .with(jwt().jwt(userToken())
+                        .authorities(new SimpleGrantedAuthority(
+                                SecurityConfig.ADMIN_AUTHORITY))))
                 .andExpect(status().isOk());
     }
 
