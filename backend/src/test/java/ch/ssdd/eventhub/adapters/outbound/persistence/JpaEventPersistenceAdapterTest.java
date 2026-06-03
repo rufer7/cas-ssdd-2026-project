@@ -1,10 +1,5 @@
 package ch.ssdd.eventhub.adapters.outbound.persistence;
 
-import ch.ssdd.eventhub.adapters.outbound.persistence.EventEntity;
-import ch.ssdd.eventhub.adapters.outbound.persistence.EventRepository;
-import ch.ssdd.eventhub.adapters.outbound.persistence.JpaEventPersistenceAdapter;
-import ch.ssdd.eventhub.adapters.outbound.persistence.UserEntity;
-import ch.ssdd.eventhub.adapters.outbound.persistence.UserRepository;
 import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.domain.Role;
 import ch.ssdd.eventhub.domain.User;
@@ -55,6 +50,7 @@ class JpaEventPersistenceAdapterTest {
                                 LocalDateTime.now().minusDays(1));
 
                 Event event = new Event(
+                        UUID.fromString("00000000-0000-0000-0000-000000000001"),
                                 "title",
                                 "desc",
                                 LocalDateTime.now().plusDays(1),
@@ -102,7 +98,8 @@ class JpaEventPersistenceAdapterTest {
                                 LocalDateTime.now().minusDays(1));
 
                 Event event = new Event(
-                                "title",
+                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
+                        "title",
                                 "desc",
                                 LocalDateTime.now().plusDays(1),
                                 LocalDateTime.now().plusDays(2),

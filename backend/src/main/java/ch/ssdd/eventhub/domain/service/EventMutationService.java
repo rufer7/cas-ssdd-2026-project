@@ -4,7 +4,6 @@ import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.ports.inbound.DeleteEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.UpdateEventUseCase;
 import ch.ssdd.eventhub.ports.outbound.EventPersistencePort;
-import ch.ssdd.eventhub.ports.outbound.UserPersistencePort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,7 +21,7 @@ public class EventMutationService implements UpdateEventUseCase, DeleteEventUseC
 
     @Override
     public void deleteEvent(UUID eventId) {
-            eventPersistencePort.deleteById(eventId);
+        eventPersistencePort.deleteById(eventId);
     }
 
     @Override
