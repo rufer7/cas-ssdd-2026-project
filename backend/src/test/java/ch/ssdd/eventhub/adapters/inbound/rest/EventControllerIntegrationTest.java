@@ -66,7 +66,6 @@ class EventControllerIntegrationTest {
                         .content(unsafePayload))
                 .andExpect(status().isCreated());
 
-        // 4. Verify that the UseCase layer received completely clean strings
         CreateEventCommand expectedPassedObject = new CreateEventCommand(
                 "Concert",                        // <script> completely removed
                 "Party time click",                    // javascript link stripped out
