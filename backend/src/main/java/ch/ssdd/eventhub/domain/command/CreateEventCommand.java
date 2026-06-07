@@ -15,6 +15,8 @@ public record CreateEventCommand(
         Objects.requireNonNull(title, "Title is required");
         Objects.requireNonNull(from, "Start date is required");
         Objects.requireNonNull(to, "End date is required");
+        Objects.requireNonNull(location, "End date is required");
+        Objects.requireNonNull(username, "End date is required");
         if (to.isBefore(from)) {
             throw new IllegalArgumentException("End date cannot be before start date");
         }

@@ -68,7 +68,7 @@ public class EventRestController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EventResponseDto> updateEvent(@PathVariable UUID id,
                                                         @RequestBody UpdateEventRequestDto request) {
 
@@ -78,7 +78,7 @@ public class EventRestController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EventResponseDto> deleteEvent(@PathVariable UUID id) {
         deleteEventUseCase.deleteEvent(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
