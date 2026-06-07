@@ -3,6 +3,7 @@ package ch.ssdd.eventhub.domain;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,6 +25,8 @@ class EventTest {
 
     @Test
     void shouldThrowWhenTitleIsBlank() {
+        UUID fakeUuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
+
         LocalDateTime now = LocalDateTime.now();
 
         LocalDateTime plusOneDay = now.plusDays(1);
@@ -31,7 +34,7 @@ class EventTest {
         User dummyUser = dummyUser();
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> new Event(
+                () -> new Event(fakeUuid,
                         "",
                         "Description",
                         plusOneDay,
@@ -50,6 +53,8 @@ class EventTest {
 
     @Test
     void shouldThrowWhenTitleIsNull() {
+        UUID fakeUuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
+
         LocalDateTime now = LocalDateTime.now();
 
         LocalDateTime plusOneDay = now.plusDays(1);
@@ -57,7 +62,7 @@ class EventTest {
         User dummyUser = dummyUser();
         assertThrows(
                 NullPointerException.class,
-                () -> new Event(
+                () -> new Event(fakeUuid,
                         null,
                         "Description",
                         plusOneDay,
@@ -74,6 +79,8 @@ class EventTest {
 
     @Test
     void shouldThrowWhenFromIsAfterTo() {
+        UUID fakeUuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
+
         LocalDateTime now = LocalDateTime.now();
 
         LocalDateTime plusThree = now.plusDays(3);
@@ -82,6 +89,7 @@ class EventTest {
         assertThrows(
                 IllegalArgumentException.class,
                 () -> new Event(
+                        fakeUuid,
                         "Title",
                         "Description",
                         plusThree,
@@ -149,9 +157,12 @@ class EventTest {
     }
 
     private Event validEvent() {
+        UUID fakeUuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
+
         LocalDateTime now = LocalDateTime.now();
 
         return new Event(
+                fakeUuid,
                 "Title",
                 "Description",
                 now.plusDays(1),

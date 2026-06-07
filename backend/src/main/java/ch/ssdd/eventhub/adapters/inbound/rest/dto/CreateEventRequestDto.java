@@ -1,5 +1,7 @@
 package ch.ssdd.eventhub.adapters.inbound.rest.dto;
 
+import ch.ssdd.eventhub.domain.command.CreateEventCommand;
+
 import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotBlank;
@@ -14,4 +16,8 @@ public record CreateEventRequestDto(
         @NotNull @NotBlank @Size(max = 255) String location,
         // TODO: to be removed as soon as authentication is in place
         String username) {
+
+    public CreateEventCommand toCommand() {
+        return new CreateEventCommand(title, description, from, to, location, username);
+    }
 }

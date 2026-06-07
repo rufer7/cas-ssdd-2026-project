@@ -1,0 +1,27 @@
+meta {
+  name: Create Event NO AUTH
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/api/events
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  ~Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "title": "Project Alignment Meeting",
+    "description": "Discussing Spring Boot architecture and Bruno setup.",
+    "from": "2026-06-01T10:00:00",
+    "to": "2026-06-01T11:30:00",
+    "location": "Basel, Switzerland",
+    "username": "alice_admin"
+  }
+}
