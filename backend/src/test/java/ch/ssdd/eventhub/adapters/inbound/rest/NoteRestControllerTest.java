@@ -3,6 +3,7 @@ package ch.ssdd.eventhub.adapters.inbound.rest;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateNoteRequestDto;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.NoteResponseDto;
 import ch.ssdd.eventhub.domain.Note;
+import ch.ssdd.eventhub.domain.User;
 import ch.ssdd.eventhub.ports.inbound.CreateNoteUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadAllNotesUseCase;
 import org.junit.jupiter.api.Test;
@@ -39,9 +40,12 @@ class NoteRestControllerTest {
         // given
         Note note1 = mock(Note.class);
         Note note2 = mock(Note.class);
+        User dummyUser = mock(User.class);
 
         when(loadAllNotesUseCase.loadAllNotes())
                 .thenReturn(List.of(note1, note2));
+        when(note1.createdBy()).thenReturn(dummyUser);
+        when(note2.createdBy()).thenReturn(dummyUser);
 
         // when
         ResponseEntity<List<NoteResponseDto>> response = controller.getAllNotes();
@@ -59,9 +63,11 @@ class NoteRestControllerTest {
         // given
         CreateNoteRequestDto request = new CreateNoteRequestDto("My note", "john");
         Note note = mock(Note.class);
+        User dummyUser = mock(User.class);
 
         when(createNoteUseCase.createNote(request.content(), request.username()))
                 .thenReturn(note);
+        when(note.createdBy()).thenReturn(dummyUser);
 
         // when
         ResponseEntity<NoteResponseDto> response = controller.createNote(request);
