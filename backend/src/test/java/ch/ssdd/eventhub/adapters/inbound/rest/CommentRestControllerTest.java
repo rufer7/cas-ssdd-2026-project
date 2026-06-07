@@ -3,6 +3,7 @@ package ch.ssdd.eventhub.adapters.inbound.rest;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.CommentResponseDto;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateCommentRequestDto;
 import ch.ssdd.eventhub.domain.Comment;
+import ch.ssdd.eventhub.domain.User;
 import ch.ssdd.eventhub.ports.inbound.AddCommentUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadCommentsByEventUseCase;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,11 @@ class CommentRestControllerTest {
         Comment comment1 = mock(Comment.class);
         Comment comment2 = mock(Comment.class);
 
+        User dummyUser = mock(User.class);
+
+        when(comment1.createdBy()).thenReturn(dummyUser);
+        when(comment2.createdBy()).thenReturn(dummyUser);
+
         when(loadCommentsByEventUseCase.loadCommentsByEvent(eventId))
                 .thenReturn(List.of(comment1, comment2));
 
@@ -62,6 +68,9 @@ class CommentRestControllerTest {
         UUID eventId = UUID.randomUUID();
         CreateCommentRequestDto request = new CreateCommentRequestDto("Great event!", "john");
         Comment comment = mock(Comment.class);
+        User dummyUser = mock(User.class);
+
+        when(comment.createdBy()).thenReturn(dummyUser);
 
         when(addCommentUseCase.addComment(eventId, request.content(), request.username()))
                 .thenReturn(comment);
