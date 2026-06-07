@@ -8,7 +8,7 @@ import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.ValueDeserializer;
 
 public class SanitizerDeserializer extends ValueDeserializer<String> {
-    private static final PolicyFactory POLICY = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+    private static final PolicyFactory POLICY = Sanitizers.BLOCKS.and(Sanitizers.FORMATTING).and(Sanitizers.LINKS);
 
     @Override
     public String deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException {
