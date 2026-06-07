@@ -1,13 +1,13 @@
 package ch.ssdd.eventhub.domain;
 
+import ch.ssdd.eventhub.domain.common.CommonValidators;
+import ch.ssdd.eventhub.domain.common.Constants;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
-import ch.ssdd.eventhub.domain.common.CommonValidators;
-import ch.ssdd.eventhub.domain.common.Constants;
 
 public record Event(
         String title,

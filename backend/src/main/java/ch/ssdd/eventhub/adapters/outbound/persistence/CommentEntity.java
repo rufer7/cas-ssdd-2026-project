@@ -1,8 +1,6 @@
 package ch.ssdd.eventhub.adapters.outbound.persistence;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
+import ch.ssdd.eventhub.domain.Comment;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,6 +10,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "comments")
@@ -43,6 +44,15 @@ public class CommentEntity {
     private LocalDateTime modifiedAt;
 
     protected CommentEntity() {
+    }
+
+    public Comment toComment() {
+        return new Comment(
+                this.content,
+                this.createdBy.toUser(),
+                this.createdAt,
+                this.modifiedBy.toUser(),
+                this.modifiedAt);
     }
 
     public UUID getId() {
