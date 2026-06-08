@@ -33,7 +33,7 @@ public class EventCreationService implements LoadAllEventsUseCase, CreateEventUs
 
         User user = userPersistencePort.findByUsername(username)
                 .orElseThrow(() -> {
-                    logger.warn("Event creation failed: User '{}' does not exist in the system", username);
+                    logger.error("Event creation failed: User '{}' does not exist in the system", username);
                     return new IllegalArgumentException("User not found for username: " + username);
                 });
 
