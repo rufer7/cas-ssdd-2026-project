@@ -16,7 +16,7 @@ public class AuthenticationAuditListener {
     @EventListener
     public void onAuthenticationSuccess(AuthenticationSuccessEvent event) {
         String username = event.getAuthentication().getName();
-        logger.info("Authentication Success: User '{}' logged in successfully.", username);
+        logger.info("Authentication Success: User '{}' authenticated successfully.", username);
     }
 
     @EventListener
