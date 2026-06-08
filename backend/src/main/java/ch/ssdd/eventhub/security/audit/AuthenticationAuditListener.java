@@ -23,7 +23,7 @@ public class AuthenticationAuditListener {
     public void onAuthenticationFailure(AbstractAuthenticationFailureEvent event) {
         String username = event.getAuthentication().getName();
         String exceptionMessage = event.getException().getMessage();
-        logger.warn("Authentication Failure: Attempted login for user '{}' failed. Reason: {}",
+        logger.warn("Authentication Failure: Attempted authentication for user '{}' failed. Reason: {}",
                 username, exceptionMessage);
     }
 }
