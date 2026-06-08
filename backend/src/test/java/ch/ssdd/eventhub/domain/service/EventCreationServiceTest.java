@@ -3,6 +3,7 @@ package ch.ssdd.eventhub.domain.service;
 import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.domain.Role;
 import ch.ssdd.eventhub.domain.User;
+import ch.ssdd.eventhub.domain.command.CreateEventCommand;
 import ch.ssdd.eventhub.ports.outbound.EventPersistencePort;
 import ch.ssdd.eventhub.ports.outbound.UserPersistencePort;
 import org.junit.jupiter.api.Test;
@@ -58,16 +59,15 @@ class EventCreationServiceTest {
 
         LocalDateTime from = LocalDateTime.now().plusDays(1);
         LocalDateTime to = LocalDateTime.now().plusDays(2);
-
-        // when
-        Event result = service.create(
-                "My Event",
+        CreateEventCommand createEventCommand = new CreateEventCommand("My Event",
                 "Description",
                 from,
                 to,
                 "Zurich",
-                "john"
-        );
+                "john");
+
+        // when
+        Event result = service.create(createEventCommand);
 
         // then
         assertNotNull(result);
@@ -94,17 +94,15 @@ class EventCreationServiceTest {
         // when + then
         LocalDateTime plusOne = LocalDateTime.now().plusDays(1);
         LocalDateTime plusTwo = LocalDateTime.now().plusDays(2);
+        CreateEventCommand createEventCommand = new CreateEventCommand(
+                "Event",
+                "Desc",
+                plusOne,
+                plusTwo,
+                "Zurich",
+                "missing");
         IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> service.create(
-                        "Event",
-                        "Desc",
-                        plusOne,
-                        plusTwo,
-                        "Zurich",
-                        "missing"
-                )
-        );
+                IllegalArgumentException.class, () -> service.create(createEventCommand));
 
         assertTrue(ex.getMessage().contains("User not found"));
 

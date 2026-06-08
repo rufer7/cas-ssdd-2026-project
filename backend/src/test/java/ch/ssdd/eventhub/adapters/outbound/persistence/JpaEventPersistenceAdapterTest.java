@@ -50,6 +50,7 @@ class JpaEventPersistenceAdapterTest {
                                 LocalDateTime.now().minusDays(1));
 
                 Event event = new Event(
+                        UUID.fromString("00000000-0000-0000-0000-000000000001"),
                                 "title",
                                 "desc",
                                 LocalDateTime.now().plusDays(1),
@@ -97,7 +98,8 @@ class JpaEventPersistenceAdapterTest {
                                 LocalDateTime.now().minusDays(1));
 
                 Event event = new Event(
-                                "title",
+                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
+                        "title",
                                 "desc",
                                 LocalDateTime.now().plusDays(1),
                                 LocalDateTime.now().plusDays(2),

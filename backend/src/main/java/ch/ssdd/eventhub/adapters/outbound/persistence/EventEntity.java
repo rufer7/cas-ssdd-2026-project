@@ -91,6 +91,7 @@ public class EventEntity {
 
     public Event toEvent() {
         return new Event(
+                this.id,
                 this.title,
                 this.description,
                 this.from,

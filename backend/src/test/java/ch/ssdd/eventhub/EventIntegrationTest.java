@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -30,6 +31,7 @@ class EventIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "alice_admin", roles = {"ADMIN"})
     void shouldCreateAndFetchEvent() throws Exception {
 
         String request = """
@@ -64,6 +66,32 @@ class EventIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "john_user", roles = {"USER"})
+    void shouldNotCreateEventBecauseNotAdmin() throws Exception {
+
+        String request = """
+                {
+                  "title": "Integration Test Event",
+                  "description": "Test",
+                  "from": "2026-06-01T10:00:00",
+                  "to": "2026-06-01T12:00:00",
+                  "location": "Zurich",
+                  "username": "alice_admin"
+                }
+                """;
+
+        mockMvc.perform(get("/api/events"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/events")
+                        .with(csrf())
+                        .contentType("application/json")
+                        .content(request))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = "alice_admin", roles = {"ADMIN"})
     void shouldReturnBadRequestWhenCreatingEventWithInvalidData() throws Exception {
         String invalidRequest = """
                 {
