@@ -60,7 +60,6 @@ public class EventRestController {
     public ResponseEntity<EventResponseDto> createEvent(@AuthenticationPrincipal UserDetails principal,
                                                         @RequestBody CreateEventRequestDto request) {
 
-        // TODO replace with proper logging
         logger.info("Event created triggered by {}", principal.getUsername());
 
         var event = createEventUseCase.create(request.toCommand());
