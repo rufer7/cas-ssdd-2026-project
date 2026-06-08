@@ -89,6 +89,7 @@ class JpaNotePersistenceAdapterTest {
         when(noteEntity1.toNote()).thenReturn(note1);
         when(noteEntity2.toNote()).thenReturn(note2);
         when(noteRepository.findByCreatedBy(userEntity)).thenReturn(List.of(noteEntity1, noteEntity2));
+        when(userRepository.findByUsername("john")).thenReturn(Optional.of(userEntity));
 
         // when
         List<Note> result = adapter.findAllByUser("john");
@@ -98,6 +99,5 @@ class JpaNotePersistenceAdapterTest {
         assertSame(note1, result.get(0));
         assertSame(note2, result.get(1));
 
-        verify(noteRepository).findAll();
     }
 }
