@@ -68,7 +68,7 @@ class SanitizerDeserializerTest {
 
         String result = deserializer.deserialize(jsonParser, deserializationContext);
 
-        assertEquals("Safe text", result);
+        assertEquals("<p>Safe text</p>", result);
     }
 
     @Test
