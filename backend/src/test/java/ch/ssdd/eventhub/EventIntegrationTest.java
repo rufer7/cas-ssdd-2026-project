@@ -80,9 +80,8 @@ class EventIntegrationTest {
                 }
                 """;
 
-        MvcResult initialGet = mockMvc.perform(get("/api/events"))
-                .andExpect(status().isOk())
-                .andReturn();
+        mockMvc.perform(get("/api/events"))
+                .andExpect(status().isOk());
 
         mockMvc.perform(post("/api/events")
                         .with(csrf())
