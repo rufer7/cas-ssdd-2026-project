@@ -48,8 +48,7 @@ class NoteServiceTest {
                 "ext-1",
                 Role.USER,
                 LocalDateTime.now().minusDays(1),
-                LocalDateTime.now().minusDays(1)
-        );
+                LocalDateTime.now().minusDays(1));
 
         when(userPersistencePort.findByUsername("john"))
                 .thenReturn(Optional.of(user));
@@ -79,30 +78,29 @@ class NoteServiceTest {
         // when + then
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.createNote("Content", "missing")
-        );
+                () -> service.createNote("Content", "missing"));
 
         assertTrue(ex.getMessage().contains("User not found"));
         verify(notePersistencePort, never()).save(any(), any());
     }
 
     @Test
-    void shouldLoadAllNotes() {
+    void shouldLoadNotesOfUser() {
         // given
         Note note1 = mock(Note.class);
         Note note2 = mock(Note.class);
 
-        when(notePersistencePort.findAll())
+        when(notePersistencePort.findAllByUser("john"))
                 .thenReturn(List.of(note1, note2));
 
         // when
-        List<Note> result = service.loadAllNotes();
+        List<Note> result = service.loadNotesByUser("john");
 
         // then
         assertEquals(2, result.size());
         assertSame(note1, result.get(0));
         assertSame(note2, result.get(1));
 
-        verify(notePersistencePort, times(1)).findAll();
+        verify(notePersistencePort, times(1)).findAllByUser("john");
     }
 }

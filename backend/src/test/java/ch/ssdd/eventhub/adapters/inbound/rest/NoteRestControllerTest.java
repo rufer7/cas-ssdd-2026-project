@@ -5,7 +5,7 @@ import ch.ssdd.eventhub.adapters.inbound.rest.dto.NoteResponseDto;
 import ch.ssdd.eventhub.domain.Note;
 import ch.ssdd.eventhub.domain.User;
 import ch.ssdd.eventhub.ports.inbound.CreateNoteUseCase;
-import ch.ssdd.eventhub.ports.inbound.LoadAllNotesUseCase;
+import ch.ssdd.eventhub.ports.inbound.LoadNotesByUserUseCase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,32 +30,32 @@ class NoteRestControllerTest {
     CreateNoteUseCase createNoteUseCase;
 
     @Mock
-    LoadAllNotesUseCase loadAllNotesUseCase;
+    LoadNotesByUserUseCase loadNotesByUserUseCase;
 
     @InjectMocks
     NoteRestController controller;
 
     @Test
-    void shouldReturnAllNotes() {
+    void shouldReturnNotesOfUser() {
         // given
         Note note1 = mock(Note.class);
         Note note2 = mock(Note.class);
         User dummyUser = mock(User.class);
 
-        when(loadAllNotesUseCase.loadAllNotes())
+        when(loadNotesByUserUseCase.loadNotesByUser("john"))
                 .thenReturn(List.of(note1, note2));
         when(note1.createdBy()).thenReturn(dummyUser);
         when(note2.createdBy()).thenReturn(dummyUser);
 
         // when
-        ResponseEntity<List<NoteResponseDto>> response = controller.getAllNotes();
+        ResponseEntity<List<NoteResponseDto>> response = controller.getNotesByUser("john");
 
         // then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(2, response.getBody().size());
 
-        verify(loadAllNotesUseCase, times(1)).loadAllNotes();
+        verify(loadNotesByUserUseCase, times(1)).loadNotesByUser("john");
     }
 
     @Test

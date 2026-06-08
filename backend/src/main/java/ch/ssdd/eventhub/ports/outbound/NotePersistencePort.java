@@ -9,5 +9,5 @@ public interface NotePersistencePort {
 
     Note save(Note note, User createdBy);
 
-    List<Note> findAll();
+    List<Note> findAllByUser(String username);
 }

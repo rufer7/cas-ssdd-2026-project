@@ -14,7 +14,7 @@ public class JpaNotePersistenceAdapter implements NotePersistencePort {
     private final UserRepository userRepository;
 
     public JpaNotePersistenceAdapter(NoteRepository noteRepository,
-                                     UserRepository userRepository) {
+            UserRepository userRepository) {
         this.noteRepository = noteRepository;
         this.userRepository = userRepository;
     }
@@ -37,8 +37,11 @@ public class JpaNotePersistenceAdapter implements NotePersistencePort {
     }
 
     @Override
-    public List<Note> findAll() {
-        return noteRepository.findAll()
+    public List<Note> findAllByUser(String username) {
+        UserEntity userEntity = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
+
+        return noteRepository.findByCreatedBy(userEntity)
                 .stream()
                 .map(NoteEntity::toNote)
                 .toList();

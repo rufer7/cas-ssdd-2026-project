@@ -77,7 +77,7 @@ class JpaNotePersistenceAdapterTest {
     }
 
     @Test
-    void shouldFindAllNotes() {
+    void shouldFindNotesOfUser() {
         // given
         NoteEntity e1 = mock(NoteEntity.class);
         NoteEntity e2 = mock(NoteEntity.class);

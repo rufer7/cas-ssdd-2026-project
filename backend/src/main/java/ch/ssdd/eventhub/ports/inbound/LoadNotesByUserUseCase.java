@@ -4,7 +4,7 @@ import ch.ssdd.eventhub.domain.Note;
 
 import java.util.List;
 
-public interface LoadAllNotesUseCase {
+public interface LoadNotesByUserUseCase {
 
-    List<Note> loadAllNotes();
+    List<Note> loadNotesByUser(String username);
 }
