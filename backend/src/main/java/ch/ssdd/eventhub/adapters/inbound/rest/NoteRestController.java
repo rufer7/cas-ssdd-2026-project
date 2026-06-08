@@ -20,13 +20,11 @@ import java.util.List;
 @RequestMapping("/api/notes")
 public class NoteRestController {
 
-    private final PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-
     private final CreateNoteUseCase createNoteUseCase;
     private final LoadAllNotesUseCase loadAllNotesUseCase;
 
     public NoteRestController(CreateNoteUseCase createNoteUseCase,
-                               LoadAllNotesUseCase loadAllNotesUseCase) {
+            LoadAllNotesUseCase loadAllNotesUseCase) {
         this.createNoteUseCase = createNoteUseCase;
         this.loadAllNotesUseCase = loadAllNotesUseCase;
     }
@@ -43,8 +41,8 @@ public class NoteRestController {
     @PostMapping
     public ResponseEntity<NoteResponseDto> createNote(@RequestBody CreateNoteRequestDto request) {
         var note = createNoteUseCase.createNote(
-                policy.sanitize(request.content()),
-                policy.sanitize(request.username()));
+                request.content(),
+                request.username());
         return ResponseEntity.status(HttpStatus.CREATED).body(NoteResponseDto.of(note));
     }
 }
