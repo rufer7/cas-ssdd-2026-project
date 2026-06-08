@@ -8,8 +8,8 @@ import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.DeleteEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
 import ch.ssdd.eventhub.ports.inbound.UpdateEventUseCase;
-import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,7 +31,7 @@ import java.util.UUID;
 @RequestMapping("/api/events")
 public class EventRestController {
 
-    private final PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+    private static final Logger logger = LoggerFactory.getLogger(EventRestController.class);
 
     private final LoadAllEventsUseCase loadAllEventsUseCase;
     private final CreateEventUseCase createEventUseCase;
@@ -60,8 +60,7 @@ public class EventRestController {
     public ResponseEntity<EventResponseDto> createEvent(@AuthenticationPrincipal UserDetails principal,
                                                         @RequestBody CreateEventRequestDto request) {
 
-        // TODO replace with proper logging
-        System.out.println("Event created triggered by " + principal.getUsername());
+        logger.info("Event created triggered by {}", principal.getUsername());
 
         var event = createEventUseCase.create(request.toCommand());
         return ResponseEntity.status(HttpStatus.CREATED).body(EventResponseDto.of(event));

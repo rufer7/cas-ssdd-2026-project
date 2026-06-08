@@ -5,6 +5,7 @@ import ch.ssdd.eventhub.domain.common.CommonValidators;
 import ch.ssdd.eventhub.domain.common.Constants;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -188,7 +189,7 @@ public record Event(
         }
         return new Event(UUID.randomUUID(), createEventCommand.title(), createEventCommand.description(),
                 createEventCommand.from(), createEventCommand.to(), createEventCommand.location(), creator,
-                LocalDateTime.now(), creator, LocalDateTime.now(), null);
+                LocalDateTime.now(ZoneId.systemDefault()), creator, LocalDateTime.now(ZoneId.systemDefault()), null);
     }
 
     @Override
