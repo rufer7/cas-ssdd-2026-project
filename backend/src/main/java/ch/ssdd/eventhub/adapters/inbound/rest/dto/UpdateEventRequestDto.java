@@ -10,9 +10,22 @@ import jakarta.validation.constraints.Size;
 import tools.jackson.databind.annotation.JsonDeserialize;
 
 public record UpdateEventRequestDto(
-        @NotNull @NotBlank @Size(max = 255) @JsonDeserialize(using = SanitizerDeserializer.class) String title,
-        @NotNull @Size(max = 255) @JsonDeserialize(using = SanitizerDeserializer.class) String description,
+        @NotNull
+        @NotBlank
+        @Size(max = 255)
+        @JsonDeserialize(using = SanitizerDeserializer.class)
+        String title,
+        @NotNull
+        @Size(max = 255)
+        @JsonDeserialize(using = SanitizerDeserializer.class)
+        String description,
+        @NotNull
         LocalDateTime from,
+        @NotNull
         LocalDateTime to,
-        @NotNull @NotBlank @Size(max = 255) @JsonDeserialize(using = SanitizerDeserializer.class) String location) {
+        @NotNull
+        @NotBlank
+        @Size(max = 255)
+        @JsonDeserialize(using = SanitizerDeserializer.class)
+        String location) {
 }

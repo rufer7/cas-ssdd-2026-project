@@ -79,22 +79,24 @@ class JpaNotePersistenceAdapterTest {
     @Test
     void shouldFindNotesOfUser() {
         // given
-        NoteEntity e1 = mock(NoteEntity.class);
-        NoteEntity e2 = mock(NoteEntity.class);
-        Note d1 = mock(Note.class);
-        Note d2 = mock(Note.class);
+        var noteEntity1 = mock(NoteEntity.class);
+        var noteEntity2 = mock(NoteEntity.class);
+        var note1 = mock(Note.class);
+        var note2 = mock(Note.class);
+        var user = buildUser();
+        var userEntity = new UserEntity(user);
 
-        when(e1.toNote()).thenReturn(d1);
-        when(e2.toNote()).thenReturn(d2);
-        when(noteRepository.findAll()).thenReturn(List.of(e1, e2));
+        when(noteEntity1.toNote()).thenReturn(note1);
+        when(noteEntity2.toNote()).thenReturn(note2);
+        when(noteRepository.findByCreatedBy(userEntity)).thenReturn(List.of(noteEntity1, noteEntity2));
 
         // when
-        List<Note> result = adapter.findAll();
+        List<Note> result = adapter.findAllByUser("john");
 
         // then
         assertEquals(2, result.size());
-        assertSame(d1, result.get(0));
-        assertSame(d2, result.get(1));
+        assertSame(note1, result.get(0));
+        assertSame(note2, result.get(1));
 
         verify(noteRepository).findAll();
     }
