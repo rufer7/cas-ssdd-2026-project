@@ -1,5 +1,6 @@
 package ch.ssdd.eventhub.adapters.outbound.persistence;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.Note;
 import ch.ssdd.eventhub.domain.Role;
 import ch.ssdd.eventhub.domain.User;
@@ -38,14 +39,14 @@ class JpaNotePersistenceAdapterTest {
 
     private User buildUser() {
         return new User("john", "ext-1", Role.USER,
-                LocalDateTime.now().minusDays(1), LocalDateTime.now().minusDays(1));
+                LocalDateTimeHelper.utcNow().minusDays(1), LocalDateTimeHelper.utcNow().minusDays(1));
     }
 
     @Test
     void shouldSaveNoteSuccessfully() {
         // given
         User user = buildUser();
-        Note note = new Note("My note", user, LocalDateTime.now(), user, LocalDateTime.now());
+        Note note = new Note("My note", user, LocalDateTimeHelper.utcNow(), user, LocalDateTimeHelper.utcNow());
         UserEntity userEntity = new UserEntity(user);
 
         when(userRepository.findByUsername("john")).thenReturn(Optional.of(userEntity));
@@ -67,7 +68,7 @@ class JpaNotePersistenceAdapterTest {
     void shouldThrowWhenUserNotFound() {
         // given
         User user = buildUser();
-        Note note = new Note("Content", user, LocalDateTime.now(), user, LocalDateTime.now());
+        Note note = new Note("Content", user, LocalDateTimeHelper.utcNow(), user, LocalDateTimeHelper.utcNow());
 
         when(userRepository.findByUsername("john")).thenReturn(Optional.empty());
 

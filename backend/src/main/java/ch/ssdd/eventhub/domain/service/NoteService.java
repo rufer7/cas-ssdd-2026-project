@@ -1,5 +1,6 @@
 package ch.ssdd.eventhub.domain.service;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.Note;
 import ch.ssdd.eventhub.domain.User;
 import ch.ssdd.eventhub.ports.inbound.CreateNoteUseCase;
@@ -28,7 +29,7 @@ public class NoteService implements CreateNoteUseCase, LoadNotesByUserUseCase {
         var user = userPersistencePort.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
         var note = new Note(content, user, now, user, now);
 
         return notePersistencePort.save(note, user);

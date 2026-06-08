@@ -1,5 +1,6 @@
 package ch.ssdd.eventhub.adapters.outbound.persistence;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.Comment;
 import ch.ssdd.eventhub.domain.Role;
 import ch.ssdd.eventhub.domain.User;
@@ -42,7 +43,7 @@ class JpaCommentPersistenceAdapterTest {
 
     private User buildUser() {
         return new User("john", "ext-1", Role.USER,
-                LocalDateTime.now().minusDays(1), LocalDateTime.now().minusDays(1));
+                LocalDateTimeHelper.utcNow().minusDays(1), LocalDateTimeHelper.utcNow().minusDays(1));
     }
 
     @Test
@@ -53,9 +54,9 @@ class JpaCommentPersistenceAdapterTest {
         Comment comment = new Comment(
                 "Great event!",
                 user,
-                LocalDateTime.now(),
+                LocalDateTimeHelper.utcNow(),
                 user,
-                LocalDateTime.now());
+                LocalDateTimeHelper.utcNow());
 
         EventEntity eventEntity = mock(EventEntity.class);
         UserEntity userEntity = new UserEntity(user);
@@ -82,7 +83,7 @@ class JpaCommentPersistenceAdapterTest {
         // given
         UUID eventId = UUID.randomUUID();
         User user = buildUser();
-        Comment comment = new Comment("Content", user, LocalDateTime.now(), user, LocalDateTime.now());
+        Comment comment = new Comment("Content", user, LocalDateTimeHelper.utcNow(), user, LocalDateTimeHelper.utcNow());
 
         when(eventRepository.findById(eventId)).thenReturn(Optional.empty());
 
@@ -96,7 +97,7 @@ class JpaCommentPersistenceAdapterTest {
         // given
         UUID eventId = UUID.randomUUID();
         User user = buildUser();
-        Comment comment = new Comment("Content", user, LocalDateTime.now(), user, LocalDateTime.now());
+        Comment comment = new Comment("Content", user, LocalDateTimeHelper.utcNow(), user, LocalDateTimeHelper.utcNow());
 
         EventEntity eventEntity = mock(EventEntity.class);
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(eventEntity));

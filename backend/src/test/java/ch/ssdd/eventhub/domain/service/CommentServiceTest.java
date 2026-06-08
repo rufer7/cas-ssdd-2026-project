@@ -1,5 +1,6 @@
 package ch.ssdd.eventhub.domain.service;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.Comment;
 import ch.ssdd.eventhub.domain.Role;
 import ch.ssdd.eventhub.domain.User;
@@ -48,8 +49,8 @@ class CommentServiceTest {
                 "john",
                 "ext-1",
                 Role.USER,
-                LocalDateTime.now().minusDays(1),
-                LocalDateTime.now().minusDays(1)
+                LocalDateTimeHelper.utcNow().minusDays(1),
+                LocalDateTimeHelper.utcNow().minusDays(1)
         );
         UUID eventId = UUID.randomUUID();
 

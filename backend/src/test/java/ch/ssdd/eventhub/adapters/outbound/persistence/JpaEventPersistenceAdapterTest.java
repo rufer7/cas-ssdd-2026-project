@@ -1,5 +1,6 @@
 package ch.ssdd.eventhub.adapters.outbound.persistence;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.domain.Role;
 import ch.ssdd.eventhub.domain.User;
@@ -46,20 +47,20 @@ class JpaEventPersistenceAdapterTest {
                                 "john",
                                 "ext-1",
                                 Role.USER,
-                                LocalDateTime.now().minusDays(1),
-                                LocalDateTime.now().minusDays(1));
+                                LocalDateTimeHelper.utcNow().minusDays(1),
+                                LocalDateTimeHelper.utcNow().minusDays(1));
 
                 Event event = new Event(
                         UUID.fromString("00000000-0000-0000-0000-000000000001"),
                                 "title",
                                 "desc",
-                                LocalDateTime.now().plusDays(1),
-                                LocalDateTime.now().plusDays(2),
+                                LocalDateTimeHelper.utcNow().plusDays(1),
+                                LocalDateTimeHelper.utcNow().plusDays(2),
                                 "Zurich",
                                 user,
-                                LocalDateTime.now(),
+                                LocalDateTimeHelper.utcNow(),
                                 user,
-                                LocalDateTime.now(),
+                                LocalDateTimeHelper.utcNow(),
                                 null);
 
                 var userEntity = new UserEntity(user);
@@ -94,20 +95,20 @@ class JpaEventPersistenceAdapterTest {
                                 "john",
                                 "ext-1",
                                 Role.USER,
-                                LocalDateTime.now().minusDays(1),
-                                LocalDateTime.now().minusDays(1));
+                                LocalDateTimeHelper.utcNow().minusDays(1),
+                                LocalDateTimeHelper.utcNow().minusDays(1));
 
                 Event event = new Event(
                         UUID.fromString("00000000-0000-0000-0000-000000000002"),
                         "title",
                                 "desc",
-                                LocalDateTime.now().plusDays(1),
-                                LocalDateTime.now().plusDays(2),
+                                LocalDateTimeHelper.utcNow().plusDays(1),
+                                LocalDateTimeHelper.utcNow().plusDays(2),
                                 "Zurich",
                                 user,
-                                LocalDateTime.now(),
+                                LocalDateTimeHelper.utcNow(),
                                 user,
-                                LocalDateTime.now(),
+                                LocalDateTimeHelper.utcNow(),
                                 null);
 
                 when(userRepository.findByUsername("john"))
