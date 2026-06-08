@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -41,6 +42,8 @@ class NoteRestControllerTest {
         Note note1 = mock(Note.class);
         Note note2 = mock(Note.class);
         User dummyUser = mock(User.class);
+        UserDetails principal = mock(UserDetails.class);
+        when(principal.getUsername()).thenReturn("john");
 
         when(loadNotesByUserUseCase.loadNotesByUser("john"))
                 .thenReturn(List.of(note1, note2));
@@ -48,7 +51,7 @@ class NoteRestControllerTest {
         when(note2.createdBy()).thenReturn(dummyUser);
 
         // when
-        ResponseEntity<List<NoteResponseDto>> response = controller.getNotesByUser("john");
+        ResponseEntity<List<NoteResponseDto>> response = controller.getNotesByUser(principal);
 
         // then
         assertEquals(HttpStatus.OK, response.getStatusCode());

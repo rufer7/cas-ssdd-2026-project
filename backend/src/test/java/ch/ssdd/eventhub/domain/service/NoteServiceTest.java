@@ -87,9 +87,18 @@ class NoteServiceTest {
     @Test
     void shouldLoadNotesOfUser() {
         // given
+        User user = new User(
+                "john",
+                "ext-1",
+                Role.USER,
+                LocalDateTime.now().minusDays(1),
+                LocalDateTime.now().minusDays(1));
+
         Note note1 = mock(Note.class);
         Note note2 = mock(Note.class);
 
+        when(userPersistencePort.findByUsername("john"))
+                .thenReturn(Optional.of(user));
         when(notePersistencePort.findAllByUser("john"))
                 .thenReturn(List.of(note1, note2));
 
