@@ -18,11 +18,4 @@ public class RestControllerExceptionHandler {
         logger.warn("Invalid client request received: {}", ex.getMessage(), ex);
         return ex.getMessage();
     }
-
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handleGenericException(Exception ex) {
-        logger.error("An unexpected system error occurred: {}", ex.getMessage(), ex);
-        return "An internal server error occurred.";
-    }
 }
