@@ -26,7 +26,7 @@ public class NoteService implements CreateNoteUseCase, LoadNotesByUserUseCase {
     @Override
     public Note createNote(String content, String username) {
         var user = userPersistencePort.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found for username: " + username));
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
 
         LocalDateTime now = LocalDateTime.now();
         var note = new Note(content, user, now, user, now);
@@ -37,7 +37,7 @@ public class NoteService implements CreateNoteUseCase, LoadNotesByUserUseCase {
     @Override
     public List<Note> loadNotesByUser(String username) {
         var user = userPersistencePort.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found for username: " + username));
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
         return notePersistencePort.findAllByUser(user.username());
     }
 }
