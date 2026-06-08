@@ -15,14 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -47,6 +40,7 @@ public class EventRestController {
 
     @GetMapping
     public ResponseEntity<List<EventResponseDto>> getAllEvents() {
+        logger.debug("Fetching all events");
         var eventDtos = loadAllEventsUseCase.loadAllEvents()
                 .stream()
                 .map(EventResponseDto::of)
@@ -54,32 +48,40 @@ public class EventRestController {
         return ResponseEntity.ok(eventDtos);
     }
 
-
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EventResponseDto> createEvent(@AuthenticationPrincipal UserDetails principal,
                                                         @RequestBody CreateEventRequestDto request) {
-
-        logger.info("Event created triggered by {}", principal.getUsername());
+        logger.info("User '{}' is attempting to create a new event titled: '{}'", principal.getUsername(), request.title());
 
         var event = createEventUseCase.create(request.toCommand());
+
+        logger.info("Event successfully created with ID: '{}' by user '{}'", event.id(), principal.getUsername());
         return ResponseEntity.status(HttpStatus.CREATED).body(EventResponseDto.of(event));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<EventResponseDto> updateEvent(@PathVariable UUID id,
+    public ResponseEntity<EventResponseDto> updateEvent(@AuthenticationPrincipal UserDetails principal,
+                                                        @PathVariable UUID id,
                                                         @RequestBody UpdateEventRequestDto request) {
+        logger.info("User '{}' is attempting to update event ID: '{}'", principal.getUsername(), id);
 
         Event updatedEvent = updateEventUseCase.update(id, request.title(), request.description(), request.from(), request.to(), request.location());
 
+        logger.info("Event ID: '{}' successfully updated by user '{}'", id, principal.getUsername());
         return ResponseEntity.ok(EventResponseDto.of(updatedEvent));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<EventResponseDto> deleteEvent(@PathVariable UUID id) {
+    public ResponseEntity<EventResponseDto> deleteEvent(@AuthenticationPrincipal UserDetails principal,
+                                                        @PathVariable UUID id) {
+        logger.info("User '{}' is attempting to delete event ID: '{}'", principal.getUsername(), id);
+
         deleteEventUseCase.deleteEvent(id);
+
+        logger.info("Event ID: '{}' successfully deleted by user '{}'", id, principal.getUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
