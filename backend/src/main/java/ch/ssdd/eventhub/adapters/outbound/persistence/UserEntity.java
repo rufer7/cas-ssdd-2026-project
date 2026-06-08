@@ -1,9 +1,5 @@
 package ch.ssdd.eventhub.adapters.outbound.persistence;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.UUID;
-
 import ch.ssdd.eventhub.domain.Role;
 import ch.ssdd.eventhub.domain.User;
 import jakarta.persistence.Column;
@@ -14,6 +10,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")

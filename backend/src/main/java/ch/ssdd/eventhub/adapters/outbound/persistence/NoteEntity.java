@@ -1,8 +1,6 @@
 package ch.ssdd.eventhub.adapters.outbound.persistence;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
+import ch.ssdd.eventhub.domain.Note;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,6 +10,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "notes")
@@ -39,6 +40,15 @@ public class NoteEntity {
     private LocalDateTime modifiedAt;
 
     protected NoteEntity() {
+    }
+
+    public Note toNote() {
+        return new Note(
+                this.content,
+                this.createdBy.toUser(),
+                this.createdAt,
+                this.modifiedBy.toUser(),
+                this.modifiedAt);
     }
 
     public UUID getId() {
