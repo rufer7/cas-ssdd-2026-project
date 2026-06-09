@@ -2,6 +2,7 @@ package ch.ssdd.eventhub.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,6 +34,7 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
  * <li>requests with a valid bearer token return {@code 200}.</li>
  * </ul>
  */
+@Profile("!local")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {

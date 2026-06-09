@@ -1,15 +1,20 @@
 package ch.ssdd.eventhub.domain;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
+import ch.ssdd.eventhub.domain.command.CreateEventCommand;
+import ch.ssdd.eventhub.domain.common.CommonValidators;
+import ch.ssdd.eventhub.domain.common.Constants;
+import org.jspecify.annotations.NonNull;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
-import ch.ssdd.eventhub.domain.common.CommonValidators;
-import ch.ssdd.eventhub.domain.common.Constants;
+import java.util.UUID;
 
 public record Event(
+        UUID id,
         String title,
         String description,
         LocalDateTime from,
@@ -23,6 +28,7 @@ public record Event(
         List<Comment> comments) {
 
     public Event(
+            UUID id,
             String title,
             String description,
             LocalDateTime from,
@@ -33,11 +39,12 @@ public record Event(
             User modifiedBy,
             LocalDateTime modifiedAt,
             byte[] featuredImage) {
-        this(title, description, from, to, location, createdBy, createdAt, modifiedBy, modifiedAt, featuredImage,
+        this(id, title, description, from, to, location, createdBy, createdAt, modifiedBy, modifiedAt, featuredImage,
                 List.of());
     }
 
     public Event {
+        Objects.requireNonNull(id, "Event id cannot be null");
         Objects.requireNonNull(title, "Event title cannot be null");
         Objects.requireNonNull(description, "Event description cannot be null");
         Objects.requireNonNull(from, "Event from date cannot be null");
@@ -99,6 +106,7 @@ public record Event(
         updatedComments.add(comment);
 
         return new Event(
+                id,
                 title,
                 description,
                 from,
@@ -123,6 +131,7 @@ public record Event(
         updatedComments.remove(comment);
 
         return new Event(
+                id,
                 title,
                 description,
                 from,
@@ -134,6 +143,54 @@ public record Event(
                 modifiedAt,
                 featuredImage,
                 updatedComments);
+    }
+
+    public Event updateDetails(String newTitle, String newDescription, LocalDateTime newFrom, LocalDateTime newTo, String newLocation) {
+        Objects.requireNonNull(newTitle, "Event title cannot be null");
+        Objects.requireNonNull(newDescription, "Event description cannot be null");
+        Objects.requireNonNull(newFrom, "Event from date cannot be null");
+        Objects.requireNonNull(newTo, "Event to date cannot be null");
+        Objects.requireNonNull(newLocation, "Event location cannot be null");
+
+
+        if (newTitle.isBlank()) {
+            throw new IllegalArgumentException("Event title cannot be blank");
+        }
+
+        if (newLocation.isBlank()) {
+            throw new IllegalArgumentException("Event location cannot be blank");
+        }
+
+        if (!CommonValidators.isValidStringLength(newTitle)) {
+            throw new IllegalArgumentException(
+                    "Event title cannot exceed " + Constants.DEFAULT_MAX_STRING_LENGTH + " characters");
+        }
+
+        if (!CommonValidators.isValidStringLength(newDescription)) {
+            throw new IllegalArgumentException(
+                    "Event description cannot exceed " + Constants.DEFAULT_MAX_STRING_LENGTH + " characters");
+        }
+
+        if (!CommonValidators.isValidStringLength(newLocation)) {
+            throw new IllegalArgumentException(
+                    "Event location cannot exceed " + Constants.DEFAULT_MAX_STRING_LENGTH + " characters");
+        }
+
+
+        if (newFrom.isAfter(newTo)) {
+            throw new IllegalArgumentException("Event start date must be before end date");
+        }
+
+        return new Event(id, newTitle, newDescription, newFrom, newTo, newLocation, createdBy, createdAt, modifiedBy, modifiedAt, featuredImage);
+    }
+
+    public static Event createFromCommand(CreateEventCommand createEventCommand, User creator) {
+        if (createEventCommand.to().isBefore(createEventCommand.from())) {
+            throw new IllegalArgumentException("Event from date must be before to date");
+        }
+        return new Event(UUID.randomUUID(), createEventCommand.title(), createEventCommand.description(),
+                createEventCommand.from(), createEventCommand.to(), createEventCommand.location(), creator,
+                LocalDateTimeHelper.utcNow(), creator, LocalDateTimeHelper.utcNow(), null);
     }
 
     @Override
@@ -162,7 +219,8 @@ public record Event(
     }
 
     @Override
-    public String toString() {
+    public @NonNull String toString() {
+
         return "Event{"
                 + "title=" + title
                 + ", description=" + description

@@ -1,16 +1,9 @@
 package ch.ssdd.eventhub.ports.inbound;
 
 import ch.ssdd.eventhub.domain.Event;
-
-import java.time.LocalDateTime;
+import ch.ssdd.eventhub.domain.command.CreateEventCommand;
 
 public interface CreateEventUseCase {
 
-    Event create(
-            String title,
-            String description,
-            LocalDateTime from,
-            LocalDateTime to,
-            String location,
-            String username);
+    Event create(CreateEventCommand createEventCommand);
 }

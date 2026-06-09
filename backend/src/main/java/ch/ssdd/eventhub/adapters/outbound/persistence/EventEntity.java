@@ -1,5 +1,6 @@
 package ch.ssdd.eventhub.adapters.outbound.persistence;
 
+import ch.ssdd.eventhub.domain.Event;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,8 +13,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-
-import ch.ssdd.eventhub.domain.Event;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -44,8 +43,6 @@ public class EventEntity {
     @Column(nullable = false, length = 255)
     private String location;
 
-    // TODO: check if we can use @ManyToOne(fetch = FetchType.LAZY, optional =
-    // false)
     @ManyToOne(optional = false)
     @JoinColumn(name = "created_by_id", nullable = false)
     private UserEntity createdBy;
@@ -53,8 +50,6 @@ public class EventEntity {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    // TODO: check if we can use @ManyToOne(fetch = FetchType.LAZY, optional =
-    // false)
     @ManyToOne(optional = false)
     @JoinColumn(name = "modified_by_id", nullable = false)
     private UserEntity modifiedBy;
@@ -92,6 +87,7 @@ public class EventEntity {
 
     public Event toEvent() {
         return new Event(
+                this.id,
                 this.title,
                 this.description,
                 this.from,

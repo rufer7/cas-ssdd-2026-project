@@ -1,5 +1,7 @@
 package ch.ssdd.eventhub.domain.common;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
+
 import java.time.LocalDateTime;
 
 public class CommonValidators {
@@ -13,7 +15,7 @@ public class CommonValidators {
     }
 
     public static boolean isNotInFuture(LocalDateTime dateTime) {
-        return !dateTime.isAfter(LocalDateTime.now());
+        return !dateTime.isAfter(LocalDateTimeHelper.utcNow());
     }
 
     public static boolean isCreatedAtBeforeModifiedAt(LocalDateTime createdAt, LocalDateTime modifiedAt) {

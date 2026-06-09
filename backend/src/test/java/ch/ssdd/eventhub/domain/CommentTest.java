@@ -1,10 +1,13 @@
 package ch.ssdd.eventhub.domain;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CommentTest {
 
@@ -19,7 +22,7 @@ class CommentTest {
 
     @Test
     void shouldThrowWhenContentIsBlank() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         User dummyUser = dummyUser();
         assertThrows(IllegalArgumentException.class,
@@ -28,7 +31,7 @@ class CommentTest {
 
     @Test
     void shouldThrowWhenContentIsNull() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         User dummyUser = dummyUser();
         assertThrows(
@@ -45,7 +48,7 @@ class CommentTest {
 
     @Test
     void shouldThrowWhenCreatedAfterModified() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         User dummyUser = dummyUser();
         LocalDateTime createdAt = now.plusDays(1);
@@ -63,7 +66,7 @@ class CommentTest {
 
     @Test
     void shouldThrowWhenCreatedAtInFuture() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         User dummyUser = dummyUser();
         LocalDateTime localDatePlusDays = now.plusDays(10);
@@ -81,7 +84,7 @@ class CommentTest {
 
     @Test
     void shouldAcceptMinimumValidComment() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         User dummyUser = dummyUser();
         Comment comment = new Comment(
@@ -101,13 +104,13 @@ class CommentTest {
                 "john",
                 "ext-1",
                 Role.USER,
-                LocalDateTime.now().minusDays(1),
-                LocalDateTime.now().minusDays(1)
+                LocalDateTimeHelper.utcNow().minusDays(1),
+                LocalDateTimeHelper.utcNow().minusDays(1)
         );
     }
 
     private Comment validComment() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         return new Comment(
                 "This is a valid comment",

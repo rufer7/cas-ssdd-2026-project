@@ -1,8 +1,10 @@
 package ch.ssdd.eventhub.domain;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,14 +26,16 @@ class EventTest {
 
     @Test
     void shouldThrowWhenTitleIsBlank() {
-        LocalDateTime now = LocalDateTime.now();
+        UUID fakeUuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
+
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         LocalDateTime plusOneDay = now.plusDays(1);
         LocalDateTime plusTwoDays = now.plusDays(2);
         User dummyUser = dummyUser();
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> new Event(
+                () -> new Event(fakeUuid,
                         "",
                         "Description",
                         plusOneDay,
@@ -50,14 +54,16 @@ class EventTest {
 
     @Test
     void shouldThrowWhenTitleIsNull() {
-        LocalDateTime now = LocalDateTime.now();
+        UUID fakeUuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
+
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         LocalDateTime plusOneDay = now.plusDays(1);
         LocalDateTime plusTwoDay = now.plusDays(2);
         User dummyUser = dummyUser();
         assertThrows(
                 NullPointerException.class,
-                () -> new Event(
+                () -> new Event(fakeUuid,
                         null,
                         "Description",
                         plusOneDay,
@@ -74,7 +80,9 @@ class EventTest {
 
     @Test
     void shouldThrowWhenFromIsAfterTo() {
-        LocalDateTime now = LocalDateTime.now();
+        UUID fakeUuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
+
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         LocalDateTime plusThree = now.plusDays(3);
         LocalDateTime plusOne = now.plusDays(1);
@@ -82,6 +90,7 @@ class EventTest {
         assertThrows(
                 IllegalArgumentException.class,
                 () -> new Event(
+                        fakeUuid,
                         "Title",
                         "Description",
                         plusThree,
@@ -132,9 +141,9 @@ class EventTest {
         return new Comment(
                 "Test",
                 dummyUser(),
-                LocalDateTime.now(),
+                LocalDateTimeHelper.utcNow(),
                 dummyUser(),
-                LocalDateTime.now()
+                LocalDateTimeHelper.utcNow()
         );
     }
 
@@ -143,15 +152,18 @@ class EventTest {
                 "john",
                 "ext-1",
                 Role.USER,
-                LocalDateTime.now().minusDays(1),
-                LocalDateTime.now().minusDays(1)
+                LocalDateTimeHelper.utcNow().minusDays(1),
+                LocalDateTimeHelper.utcNow().minusDays(1)
         );
     }
 
     private Event validEvent() {
-        LocalDateTime now = LocalDateTime.now();
+        UUID fakeUuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
+
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         return new Event(
+                fakeUuid,
                 "Title",
                 "Description",
                 now.plusDays(1),

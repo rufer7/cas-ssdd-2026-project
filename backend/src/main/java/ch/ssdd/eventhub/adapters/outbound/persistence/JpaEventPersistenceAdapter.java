@@ -46,4 +46,24 @@ public class JpaEventPersistenceAdapter implements EventPersistencePort {
                 .map(EventEntity::toEvent)
                 .toList();
     }
+
+    @Override
+    public void deleteById(UUID uuid) {
+        eventRepository.deleteById(uuid);
+    }
+
+    @Override
+    public Event updateById(UUID uuid, Event event) {
+        EventEntity eventEntity = eventRepository.findById(uuid)
+                .orElseThrow(() -> new IllegalArgumentException("Event not found for id: " + uuid));
+        eventEntity.setTitle(event.title());
+        eventEntity.setDescription(event.description());
+        eventEntity.setFrom(event.from());
+        eventEntity.setTo(event.to());
+        eventEntity.setLocation(event.location());
+        EventEntity updatedEventEntity = eventRepository.save(eventEntity);
+        return updatedEventEntity.toEvent();
+    }
+
+
 }

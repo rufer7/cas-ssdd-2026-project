@@ -1,5 +1,6 @@
 package ch.ssdd.eventhub.domain;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ class UserTest {
 
     @Test
     void shouldThrowWhenUsernameIsNull() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         assertThrows(
                 NullPointerException.class,
@@ -36,7 +37,7 @@ class UserTest {
 
     @Test
     void shouldThrowWhenExternalIdIsNull() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         assertThrows(
                 NullPointerException.class,
@@ -52,7 +53,7 @@ class UserTest {
 
     @Test
     void shouldThrowWhenRoleIsNull() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         assertThrows(
                 NullPointerException.class,
@@ -68,7 +69,7 @@ class UserTest {
 
     @Test
     void shouldThrowWhenUsernameIsBlank() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         assertThrows(
                 IllegalArgumentException.class,
@@ -84,7 +85,7 @@ class UserTest {
 
     @Test
     void shouldThrowWhenExternalIdIsBlank() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         assertThrows(
                 IllegalArgumentException.class,
@@ -100,7 +101,7 @@ class UserTest {
 
     @Test
     void shouldThrowWhenCreatedAfterModified() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         LocalDateTime plusOne = now.plusDays(1);
         assertThrows(
@@ -117,7 +118,7 @@ class UserTest {
 
     @Test
     void shouldThrowWhenCreatedInFuture() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         LocalDateTime plusTen = now.plusDays(10);
         assertThrows(
@@ -134,7 +135,7 @@ class UserTest {
 
     @Test
     void shouldAcceptMinimumValidUser() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         User user = new User(
                 "a",
@@ -149,7 +150,7 @@ class UserTest {
     }
 
     private User validUser() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         return new User(
                 "john_doe",
