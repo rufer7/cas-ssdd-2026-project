@@ -174,10 +174,10 @@ tenant.
 
 Behaviour:
 
-- Calls without a bearer token → `401 Unauthorized`
-- Calls to admin protected endpoints with a bearer token that does not carry the `Admin` app role → `403 Forbidden`
-- Calls to user protected endpoints with a bearer token that does not carry the `User` app role → `403 Forbidden`
-- Calls with a valid bearer token that carries the necessary role → `200 OK`
+- requests without a bearer token → `401 Unauthorized`
+- requests to admin endpoints with a token that does not carry the `Admin` app role → `403 Forbidden`
+- requests to user endpoints with a token that does not carry the `User` app role → `403 Forbidden`
+- requests to with a valid bearer token and the required role → `200 OK` / `201 CREATED`
 
 Required environment variables (sourced by `application.properties`):
 

@@ -17,16 +17,14 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
  *
  * <p>
  * Authentication is delegated to Microsoft Entra ID (OIDC).
- * The {@code spring-cloud-azure-starter-active-directory} starter
- * auto-configures a {@code JwtDecoder} that validates bearer tokens against the
- * configured Entra ID tenant (using
- * {@code spring.cloud.azure.active-directory.*} properties) and a
+ * The {@code spring-cloud-azure-starter-active-directory} starter auto-configures
+ * a {@code JwtDecoder} that validates bearer tokens against the configured Entra ID tenant
+ * (using {@code spring.cloud.azure.active-directory.*} properties) and a
  * {@code JwtAuthenticationConverter} that maps the {@code roles} claim of an
- * access token to authorities and the
- * {@code scp} claim to authorities prefixed with {@code SCOPE_}.
+ * access token to authorities and the {@code scp} claim to authorities prefixed with {@code SCOPE_}.
  *
  * <p>
- * The expected behaviour is:
+ * The expected behavior is:
  * <ul>
  * <li>requests without a bearer token return {@code 401};</li>
  * <li>requests to admin endpoints with a token that does not carry the
@@ -75,12 +73,12 @@ public class SecurityConfig {
                         .contentSecurityPolicy(csp -> csp
                                 .policyDirectives(CSP_DIRECTIVES)))
                 .authorizeHttpRequests(auth -> auth
-                        // Every call requires a valid bearer token.
                         .anyRequest().authenticated())
                 // Use the JwtDecoder auto-configured by
                 // spring-cloud-azure-starter-active-directory
                 // for the configured Entra ID tenant.
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+                .oauth2ResourceServer(oauth2 ->
+                        oauth2.jwt(Customizer.withDefaults()));
 
         return http.build();
     }
