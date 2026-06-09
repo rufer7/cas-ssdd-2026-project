@@ -1,11 +1,12 @@
 package ch.ssdd.eventhub.domain;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.command.CreateEventCommand;
 import ch.ssdd.eventhub.domain.common.CommonValidators;
 import ch.ssdd.eventhub.domain.common.Constants;
+import org.jspecify.annotations.NonNull;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -189,7 +190,7 @@ public record Event(
         }
         return new Event(UUID.randomUUID(), createEventCommand.title(), createEventCommand.description(),
                 createEventCommand.from(), createEventCommand.to(), createEventCommand.location(), creator,
-                LocalDateTime.now(ZoneId.systemDefault()), creator, LocalDateTime.now(ZoneId.systemDefault()), null);
+                LocalDateTimeHelper.utcNow(), creator, LocalDateTimeHelper.utcNow(), null);
     }
 
     @Override
@@ -218,7 +219,8 @@ public record Event(
     }
 
     @Override
-    public String toString() {
+    public @NonNull String toString() {
+
         return "Event{"
                 + "title=" + title
                 + ", description=" + description

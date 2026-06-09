@@ -78,8 +78,7 @@ class EventRestControllerTest {
         );
 
         var event = mock(Event.class);
-        UserDetails principal = mock(UserDetails.class);
-        when(principal.getUsername()).thenReturn("john");
+        var principal = mock(UserDetails.class);
 
         when(createEventUseCase.create(expectedCommand)).thenReturn(event);
 

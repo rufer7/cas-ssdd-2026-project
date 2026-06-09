@@ -3,13 +3,10 @@ package ch.ssdd.eventhub.adapters.inbound.rest;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateEventRequestDto;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.EventResponseDto;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.UpdateEventRequestDto;
-import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.DeleteEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
 import ch.ssdd.eventhub.ports.inbound.UpdateEventUseCase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,8 +27,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/events")
 public class EventRestController {
-
-    private static final Logger logger = LoggerFactory.getLogger(EventRestController.class);
 
     private final LoadAllEventsUseCase loadAllEventsUseCase;
     private final CreateEventUseCase createEventUseCase;
@@ -54,32 +49,33 @@ public class EventRestController {
         return ResponseEntity.ok(eventDtos);
     }
 
-
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EventResponseDto> createEvent(@AuthenticationPrincipal UserDetails principal,
                                                         @RequestBody CreateEventRequestDto request) {
 
-        logger.info("Event created triggered by {}", principal.getUsername());
-
         var event = createEventUseCase.create(request.toCommand());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(EventResponseDto.of(event));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<EventResponseDto> updateEvent(@PathVariable UUID id,
+    public ResponseEntity<EventResponseDto> updateEvent(@AuthenticationPrincipal UserDetails principal,
+                                                        @PathVariable UUID id,
                                                         @RequestBody UpdateEventRequestDto request) {
 
-        Event updatedEvent = updateEventUseCase.update(id, request.title(), request.description(), request.from(), request.to(), request.location());
+        var updatedEvent = updateEventUseCase.update(id, request.title(), request.description(), request.from(), request.to(), request.location());
 
         return ResponseEntity.ok(EventResponseDto.of(updatedEvent));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<EventResponseDto> deleteEvent(@PathVariable UUID id) {
+    public ResponseEntity<EventResponseDto> deleteEvent(@AuthenticationPrincipal UserDetails principal,
+                                                        @PathVariable UUID id) {
         deleteEventUseCase.deleteEvent(id);
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
