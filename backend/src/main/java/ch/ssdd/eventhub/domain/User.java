@@ -1,5 +1,6 @@
 package ch.ssdd.eventhub.domain;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.common.CommonValidators;
 import ch.ssdd.eventhub.domain.common.Constants;
 
@@ -45,5 +46,9 @@ public record User(
         if (!CommonValidators.isNotInFuture(createdAt)) {
             throw new IllegalArgumentException("CreatedAt cannot be in the future");
         }
+    }
+
+    public static User createNewProvisionedAdminUser(String username) {
+        return new User(username, username, Role.ADMIN, LocalDateTimeHelper.utcNow(), LocalDateTimeHelper.utcNow());
     }
 }

@@ -29,10 +29,9 @@ public record CreateEventRequestDto(
         @Size(max = 255)
         @JsonDeserialize(using = SanitizerDeserializer.class)
         String location,
-        // TODO: to be removed as soon as authentication is in place
         String username) {
 
-    public CreateEventCommand toCommand() {
+    public CreateEventCommand toCommand(String username) {
         return new CreateEventCommand(title, description, from, to, location, username);
     }
 }

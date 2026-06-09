@@ -54,7 +54,7 @@ public class EventRestController {
     public ResponseEntity<EventResponseDto> createEvent(Authentication authentication,
                                                         @RequestBody CreateEventRequestDto request) {
 
-        var event = createEventUseCase.create(request.toCommand());
+        var event = createEventUseCase.create(request.toCommand(authentication.getName()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(EventResponseDto.of(event));
     }

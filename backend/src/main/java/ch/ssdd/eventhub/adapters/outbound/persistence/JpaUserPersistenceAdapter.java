@@ -26,4 +26,10 @@ public class JpaUserPersistenceAdapter implements UserPersistencePort {
     public List<User> findAll() {
         return List.of();
     }
+
+    @Override
+    public User save(User user) {
+        UserEntity userEntity = new UserEntity(user);
+        return userRepository.save(userEntity).toUser();
+    }
 }
