@@ -217,7 +217,7 @@ public record Event(
         result = 31 * result + Arrays.hashCode(featuredImage);
         return result;
     }
-    
+
     @Override
     public @NonNull String toString() {
 
