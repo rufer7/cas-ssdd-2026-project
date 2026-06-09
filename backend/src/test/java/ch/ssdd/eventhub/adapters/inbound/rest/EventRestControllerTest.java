@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
@@ -42,12 +44,13 @@ class EventRestControllerTest {
         // given
         Event event1 = mock(Event.class);
         Event event2 = mock(Event.class);
+        Authentication authentication = mock(Authentication.class);
 
         when(loadAllEventsUseCase.loadAllEvents())
                 .thenReturn(List.of(event1, event2));
 
         // when
-        ResponseEntity<List<EventResponseDto>> response = controller.getAllEvents();
+        ResponseEntity<List<EventResponseDto>> response = controller.getAllEvents(authentication);
 
         // then
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -80,9 +83,11 @@ class EventRestControllerTest {
         var event = mock(Event.class);
         var principal = mock(UserDetails.class);
 
+        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, null, List.of());
+
         when(createEventUseCase.create(expectedCommand)).thenReturn(event);
 
-        ResponseEntity<EventResponseDto> response = controller.createEvent(principal, request);
+        ResponseEntity<EventResponseDto> response = controller.createEvent(authentication, request);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
