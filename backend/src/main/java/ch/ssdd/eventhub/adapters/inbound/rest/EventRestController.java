@@ -31,8 +31,6 @@ import java.util.UUID;
 @RequestMapping("/api/events")
 public class EventRestController {
 
-    private static final Logger logger = LoggerFactory.getLogger(EventRestController.class);
-
     private final LoadAllEventsUseCase loadAllEventsUseCase;
     private final CreateEventUseCase createEventUseCase;
     private final UpdateEventUseCase updateEventUseCase;
@@ -47,7 +45,6 @@ public class EventRestController {
 
     @GetMapping
     public ResponseEntity<List<EventResponseDto>> getAllEvents() {
-        logger.debug("Fetching all events");
         var eventDtos = loadAllEventsUseCase.loadAllEvents()
                 .stream()
                 .map(EventResponseDto::of)
@@ -59,11 +56,9 @@ public class EventRestController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EventResponseDto> createEvent(@AuthenticationPrincipal UserDetails principal,
                                                         @RequestBody CreateEventRequestDto request) {
-        logger.info("User '{}' is attempting to create a new event titled: '{}'", principal.getUsername(), request.title());
 
         var event = createEventUseCase.create(request.toCommand());
 
-        logger.info("Event successfully created with ID: '{}' by user '{}'", event.id(), principal.getUsername());
         return ResponseEntity.status(HttpStatus.CREATED).body(EventResponseDto.of(event));
     }
 
@@ -72,11 +67,9 @@ public class EventRestController {
     public ResponseEntity<EventResponseDto> updateEvent(@AuthenticationPrincipal UserDetails principal,
                                                         @PathVariable UUID id,
                                                         @RequestBody UpdateEventRequestDto request) {
-        logger.info("User '{}' is attempting to update event ID: '{}'", principal.getUsername(), id);
 
-        Event updatedEvent = updateEventUseCase.update(id, request.title(), request.description(), request.from(), request.to(), request.location());
+        var updatedEvent = updateEventUseCase.update(id, request.title(), request.description(), request.from(), request.to(), request.location());
 
-        logger.info("Event ID: '{}' successfully updated by user '{}'", id, principal.getUsername());
         return ResponseEntity.ok(EventResponseDto.of(updatedEvent));
     }
 
@@ -84,11 +77,8 @@ public class EventRestController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EventResponseDto> deleteEvent(@AuthenticationPrincipal UserDetails principal,
                                                         @PathVariable UUID id) {
-        logger.info("User '{}' is attempting to delete event ID: '{}'", principal.getUsername(), id);
-
         deleteEventUseCase.deleteEvent(id);
 
-        logger.info("Event ID: '{}' successfully deleted by user '{}'", id, principal.getUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
