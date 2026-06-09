@@ -217,8 +217,7 @@ public record Event(
         result = 31 * result + Arrays.hashCode(featuredImage);
         return result;
     }
-
-    @org.jetbrains.annotations.Contract(pure = true)
+    
     @Override
     public @NonNull String toString() {
 
