@@ -1,6 +1,7 @@
 package ch.ssdd.eventhub.domain.common;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class CommonValidators {
 
@@ -13,7 +14,7 @@ public class CommonValidators {
     }
 
     public static boolean isNotInFuture(LocalDateTime dateTime) {
-        return !dateTime.isAfter(LocalDateTime.now());
+        return !dateTime.isAfter(LocalDateTime.now(ZoneId.systemDefault()));
     }
 
     public static boolean isCreatedAtBeforeModifiedAt(LocalDateTime createdAt, LocalDateTime modifiedAt) {

@@ -1,7 +1,6 @@
 package ch.ssdd.eventhub.domain.service;
 
 import ch.ssdd.eventhub.domain.Note;
-import ch.ssdd.eventhub.domain.User;
 import ch.ssdd.eventhub.ports.inbound.CreateNoteUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadNotesByUserUseCase;
 import ch.ssdd.eventhub.ports.outbound.NotePersistencePort;
