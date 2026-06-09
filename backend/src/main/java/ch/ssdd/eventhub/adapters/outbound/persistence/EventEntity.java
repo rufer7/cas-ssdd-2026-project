@@ -43,8 +43,6 @@ public class EventEntity {
     @Column(nullable = false, length = 255)
     private String location;
 
-    // TODO: check if we can use @ManyToOne(fetch = FetchType.LAZY, optional =
-    // false)
     @ManyToOne(optional = false)
     @JoinColumn(name = "created_by_id", nullable = false)
     private UserEntity createdBy;
@@ -52,8 +50,6 @@ public class EventEntity {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    // TODO: check if we can use @ManyToOne(fetch = FetchType.LAZY, optional =
-    // false)
     @ManyToOne(optional = false)
     @JoinColumn(name = "modified_by_id", nullable = false)
     private UserEntity modifiedBy;

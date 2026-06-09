@@ -4,8 +4,6 @@ import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateNoteRequestDto;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.NoteResponseDto;
 import ch.ssdd.eventhub.ports.inbound.CreateNoteUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadNotesByUserUseCase;
-import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

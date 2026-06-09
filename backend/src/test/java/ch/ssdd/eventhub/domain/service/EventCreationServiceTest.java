@@ -1,5 +1,6 @@
 package ch.ssdd.eventhub.domain.service;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.domain.Role;
 import ch.ssdd.eventhub.domain.User;
@@ -47,8 +48,8 @@ class EventCreationServiceTest {
                 "john",
                 "ext-1",
                 Role.USER,
-                LocalDateTime.now().minusDays(1),
-                LocalDateTime.now().minusDays(1)
+                LocalDateTimeHelper.utcNow().minusDays(1),
+                LocalDateTimeHelper.utcNow().minusDays(1)
         );
 
         when(userPersistencePort.findByUsername("john"))
@@ -57,8 +58,8 @@ class EventCreationServiceTest {
         when(eventPersistencePort.save(any(Event.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        LocalDateTime from = LocalDateTime.now().plusDays(1);
-        LocalDateTime to = LocalDateTime.now().plusDays(2);
+        LocalDateTime from = LocalDateTimeHelper.utcNow().plusDays(1);
+        LocalDateTime to = LocalDateTimeHelper.utcNow().plusDays(2);
         CreateEventCommand createEventCommand = new CreateEventCommand("My Event",
                 "Description",
                 from,
@@ -92,8 +93,8 @@ class EventCreationServiceTest {
                 .thenReturn(Optional.empty());
 
         // when + then
-        LocalDateTime plusOne = LocalDateTime.now().plusDays(1);
-        LocalDateTime plusTwo = LocalDateTime.now().plusDays(2);
+        LocalDateTime plusOne = LocalDateTimeHelper.utcNow().plusDays(1);
+        LocalDateTime plusTwo = LocalDateTimeHelper.utcNow().plusDays(2);
         CreateEventCommand createEventCommand = new CreateEventCommand(
                 "Event",
                 "Desc",

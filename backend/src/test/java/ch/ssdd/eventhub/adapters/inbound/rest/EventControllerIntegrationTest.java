@@ -15,6 +15,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -69,8 +70,8 @@ class EventControllerIntegrationTest {
         CreateEventCommand expectedPassedObject = new CreateEventCommand(
                 "Concert",                        // <script> completely removed
                 "Party time click",                    // javascript link stripped out
-                LocalDateTime.of(2026, 6, 7, 20, 0),   // Dates pass perfectly
-                LocalDateTime.of(2026, 6, 7, 23, 0),
+                LocalDateTime.of(2026, Month.JUNE, 7, 20, 0),   // Dates pass perfectly
+                LocalDateTime.of(2026, Month.JUNE, 7, 23, 0),
                 "Club ",                       // <iframe> completely removed
                 "user123"                              // Clean strings passed normally
         );
