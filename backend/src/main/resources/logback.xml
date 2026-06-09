@@ -3,7 +3,9 @@
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
             <layout class="ch.ssdd.eventhub.logging.MaskingPatternLayout">
                 <maskPattern>\"content\"\s*:\s*\"(.*?)\"</maskPattern> <!-- content JSON pattern -->
-                <maskPattern>Authorization:\"Basic (.*?)\"</maskPattern> <!-- Address JSON pattern -->
+                <!-- Authorization header patterns -->
+                <maskPattern>Authorization:\"Basic (.*?)\"</maskPattern>
+                <maskPattern>Authorization:\"Bearer (.*?)\"</maskPattern>
                 <pattern>%-5p [%d{ISO8601,UTC}] [%thread] %c: %m%n%rootException</pattern>
             </layout>
         </encoder>
