@@ -1,5 +1,6 @@
 package ch.ssdd.eventhub.domain;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ class NoteTest {
 
     @Test
     void shouldThrowWhenContentIsNull() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         User dummyUser = dummyUser();
         assertThrows(
@@ -38,7 +39,7 @@ class NoteTest {
 
     @Test
     void shouldThrowWhenContentIsBlank() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         User dummyUser = dummyUser();
         assertThrows(
@@ -55,7 +56,7 @@ class NoteTest {
 
     @Test
     void shouldThrowWhenCreatedAfterModified() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         User dummyUser = dummyUser();
         LocalDateTime plusOne = now.plusDays(1);
@@ -73,7 +74,7 @@ class NoteTest {
 
     @Test
     void shouldThrowWhenCreatedInFuture() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         LocalDateTime plusTen = now.plusDays(10);
         User dummyUser = dummyUser();
@@ -91,7 +92,7 @@ class NoteTest {
 
     @Test
     void shouldAcceptMinimalValidNote() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         Note note = new Note(
                 "a",
@@ -109,13 +110,13 @@ class NoteTest {
                 "john",
                 "ext-1",
                 Role.USER,
-                LocalDateTime.now().minusDays(1),
-                LocalDateTime.now().minusDays(1)
+                LocalDateTimeHelper.utcNow().minusDays(1),
+                LocalDateTimeHelper.utcNow().minusDays(1)
         );
     }
 
     private Note validNote() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         return new Note(
                 "This is a valid note",

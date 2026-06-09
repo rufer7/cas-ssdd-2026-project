@@ -1,5 +1,6 @@
 package ch.ssdd.eventhub.domain;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ class EventTest {
     void shouldThrowWhenTitleIsBlank() {
         UUID fakeUuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         LocalDateTime plusOneDay = now.plusDays(1);
         LocalDateTime plusTwoDays = now.plusDays(2);
@@ -55,7 +56,7 @@ class EventTest {
     void shouldThrowWhenTitleIsNull() {
         UUID fakeUuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         LocalDateTime plusOneDay = now.plusDays(1);
         LocalDateTime plusTwoDay = now.plusDays(2);
@@ -81,7 +82,7 @@ class EventTest {
     void shouldThrowWhenFromIsAfterTo() {
         UUID fakeUuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         LocalDateTime plusThree = now.plusDays(3);
         LocalDateTime plusOne = now.plusDays(1);
@@ -140,9 +141,9 @@ class EventTest {
         return new Comment(
                 "Test",
                 dummyUser(),
-                LocalDateTime.now(),
+                LocalDateTimeHelper.utcNow(),
                 dummyUser(),
-                LocalDateTime.now()
+                LocalDateTimeHelper.utcNow()
         );
     }
 
@@ -151,15 +152,15 @@ class EventTest {
                 "john",
                 "ext-1",
                 Role.USER,
-                LocalDateTime.now().minusDays(1),
-                LocalDateTime.now().minusDays(1)
+                LocalDateTimeHelper.utcNow().minusDays(1),
+                LocalDateTimeHelper.utcNow().minusDays(1)
         );
     }
 
     private Event validEvent() {
         UUID fakeUuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
 
         return new Event(
                 fakeUuid,

@@ -2,6 +2,7 @@ package ch.ssdd.eventhub.adapters.inbound.rest;
 
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateEventRequestDto;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.EventResponseDto;
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.domain.command.CreateEventCommand;
 import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
@@ -15,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -62,8 +62,8 @@ class EventRestControllerTest {
         CreateEventRequestDto request = new CreateEventRequestDto(
                 "title",
                 "desc",
-                LocalDateTime.now().plusDays(1),
-                LocalDateTime.now().plusDays(2),
+                LocalDateTimeHelper.utcNow().plusDays(1),
+                LocalDateTimeHelper.utcNow().plusDays(2),
                 "Zurich",
                 "john"
         );

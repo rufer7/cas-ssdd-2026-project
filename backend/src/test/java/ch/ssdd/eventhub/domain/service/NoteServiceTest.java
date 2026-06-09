@@ -1,5 +1,6 @@
 package ch.ssdd.eventhub.domain.service;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.Note;
 import ch.ssdd.eventhub.domain.Role;
 import ch.ssdd.eventhub.domain.User;
@@ -11,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,8 +47,8 @@ class NoteServiceTest {
                 "john",
                 "ext-1",
                 Role.USER,
-                LocalDateTime.now().minusDays(1),
-                LocalDateTime.now().minusDays(1));
+                LocalDateTimeHelper.utcNow().minusDays(1),
+                LocalDateTimeHelper.utcNow().minusDays(1));
 
         when(userPersistencePort.findByUsername("john"))
                 .thenReturn(Optional.of(user));
@@ -91,8 +91,8 @@ class NoteServiceTest {
                 "john",
                 "ext-1",
                 Role.USER,
-                LocalDateTime.now().minusDays(1),
-                LocalDateTime.now().minusDays(1));
+                LocalDateTimeHelper.utcNow().minusDays(1),
+                LocalDateTimeHelper.utcNow().minusDays(1));
 
         Note note1 = mock(Note.class);
         Note note2 = mock(Note.class);

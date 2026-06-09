@@ -1,5 +1,6 @@
 package ch.ssdd.eventhub.domain.service;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.Comment;
 import ch.ssdd.eventhub.ports.inbound.AddCommentUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadCommentsByEventUseCase;
@@ -37,7 +38,7 @@ public class CommentService implements AddCommentUseCase, LoadCommentsByEventUse
                     return new IllegalArgumentException("User not found for username: " + username);
                 });
 
-        var now = LocalDateTime.now();
+        var now = LocalDateTimeHelper.utcNow();
         var comment = new Comment(content, user, now, user, now);
 
         var savedComment = commentPersistencePort.save(eventId, comment, user);
