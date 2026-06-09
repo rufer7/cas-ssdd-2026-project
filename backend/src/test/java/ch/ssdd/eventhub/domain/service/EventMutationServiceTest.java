@@ -1,5 +1,6 @@
 package ch.ssdd.eventhub.domain.service;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.ports.outbound.EventPersistencePort;
 import org.junit.jupiter.api.Test;
@@ -40,8 +41,8 @@ class EventMutationServiceTest {
         UUID eventId = UUID.randomUUID();
         String title = "New Title";
         String description = "New Description";
-        LocalDateTime from = LocalDateTime.now();
-        LocalDateTime to = LocalDateTime.now().plusHours(2);
+        LocalDateTime from = LocalDateTimeHelper.utcNow();
+        LocalDateTime to = LocalDateTimeHelper.utcNow().plusHours(2);
         String location = "Zurich";
 
         Event existingEvent = org.mockito.Mockito.mock(Event.class);
@@ -65,8 +66,8 @@ class EventMutationServiceTest {
         UUID eventId = UUID.randomUUID();
         String title = "Title";
         String description = "Description";
-        LocalDateTime from = LocalDateTime.now();
-        LocalDateTime to = LocalDateTime.now().plusHours(2);
+        LocalDateTime from = LocalDateTimeHelper.utcNow();
+        LocalDateTime to = LocalDateTimeHelper.utcNow().plusHours(2);
         String location = "Zurich";
 
         when(eventPersistencePort.findById(eventId)).thenReturn(Optional.empty());
