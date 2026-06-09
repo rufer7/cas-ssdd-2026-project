@@ -29,27 +29,29 @@ public class EventCreationService implements LoadAllEventsUseCase, CreateEventUs
     @Override
     public Event create(CreateEventCommand createEventCommand) {
         String username = createEventCommand.username();
-        logger.debug("Processing event creation business logic for user: '{}'", username);
+
+        logger.debug("Processing event creation business logic for user '{}' ...", username);
 
         User user = userPersistencePort.findByUsername(username)
                 .orElseThrow(() -> {
-                    logger.error("Event creation failed: User '{}' does not exist in the system", username);
+                    logger.error("Processing event creation business logic for user '{}' FAILED as the user does not exist in the system", username);
                     return new IllegalArgumentException("User not found for username: " + username);
                 });
 
         Event eventFromCommand = Event.createFromCommand(createEventCommand, user);
         Event savedEvent = eventPersistencePort.save(eventFromCommand);
 
-        logger.info("Business Operation Success: Domain Event '{}' persisted with ID '{}' for user '{}'",
-                savedEvent.title(), savedEvent.title(), username);
+        logger.info("Processing event creation business logic for user '{}' SUCCEEDED. Event '{}' persisted with ID '{}'",
+                username, savedEvent.title(), savedEvent.title());
 
         return savedEvent;
     }
 
     @Override
     public List<Event> loadAllEvents() {
-        List<Event> events = eventPersistencePort.findAll();
-        logger.debug("Loaded {} events from persistence layer", events.size());
+        logger.debug("Loading events ...");
+        var events = eventPersistencePort.findAll();
+        logger.info("Loading events SUCCEEDED ({} events found)", events.size());
         return events;
     }
 }

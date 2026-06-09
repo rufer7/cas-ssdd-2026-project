@@ -24,27 +24,30 @@ public class EventMutationService implements UpdateEventUseCase, DeleteEventUseC
 
     @Override
     public void deleteEvent(UUID eventId) {
-        logger.debug("Executing business logic to delete event ID: '{}'", eventId);
+        logger.debug("Processing event deletion business logic for event with ID '{}' ...", eventId);
 
         eventPersistencePort.deleteById(eventId);
 
-        logger.info("Business Operation Success: Event ID '{}' deleted from the system", eventId);
+        logger.info("Processing event deletion business logic for event with ID '{}' SUCCEEDED",
+                eventId);
     }
 
     @Override
     public Event update(UUID eventId, String title, String description, LocalDateTime from, LocalDateTime to, String location) {
-        logger.debug("Executing business logic to update event ID: '{}'", eventId);
+        logger.debug("Processing event update business logic for event with ID '{}' ...", eventId);
 
         Event existingEvent = eventPersistencePort.findById(eventId)
                 .orElseThrow(() -> {
-                    logger.warn("Event update failed: Event ID '{}' does not exist", eventId);
+                    logger.error("Processing event update business logic for event with ID '{}' FAILED as the event does not exist in the system", eventId);
                     return new IllegalArgumentException("Event not found for id: " + eventId);
                 });
 
         Event updatedEvent = existingEvent.updateDetails(title, description, from, to, location);
         Event savedEvent = eventPersistencePort.save(updatedEvent);
 
-        logger.info("Business Operation Success: Event ID '{}' updated details saved successfully", eventId);
+        logger.info("Processing event update business logic for event with ID '{}' SUCCEEDED",
+                eventId);
+
         return savedEvent;
     }
 }

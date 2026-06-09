@@ -1,11 +1,12 @@
 package ch.ssdd.eventhub.domain.service;
 
 import ch.ssdd.eventhub.domain.Note;
-import ch.ssdd.eventhub.domain.User;
 import ch.ssdd.eventhub.ports.inbound.CreateNoteUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadNotesByUserUseCase;
 import ch.ssdd.eventhub.ports.outbound.NotePersistencePort;
 import ch.ssdd.eventhub.ports.outbound.UserPersistencePort;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,6 +14,8 @@ import java.util.List;
 
 @Service
 public class NoteService implements CreateNoteUseCase, LoadNotesByUserUseCase {
+
+    private static final Logger logger = LoggerFactory.getLogger(NoteService.class);
 
     private final NotePersistencePort notePersistencePort;
     private final UserPersistencePort userPersistencePort;
@@ -25,19 +28,36 @@ public class NoteService implements CreateNoteUseCase, LoadNotesByUserUseCase {
 
     @Override
     public Note createNote(String content, String username) {
-        var user = userPersistencePort.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
+        logger.debug("Processing note creation business logic for user '{}' ...", username);
 
-        LocalDateTime now = LocalDateTime.now();
+        var user = userPersistencePort.findByUsername(username)
+                .orElseThrow(() -> {
+                    logger.error("Processing note creation business logic for user '{}' FAILED as the user does not exist in the system", username);
+                    return new IllegalArgumentException("User not found: " + username);
+                });
+
+        var now = LocalDateTime.now();
         var note = new Note(content, user, now, user, now);
 
-        return notePersistencePort.save(note, user);
+        var savedNote = notePersistencePort.save(note, user);
+
+        logger.info("Processing note creation business logic for user '{}' SUCCEEDED", username);
+
+        return savedNote;
     }
 
     @Override
     public List<Note> loadNotesByUser(String username) {
+        logger.debug("Loading notes of user '{}' ...", username);
         var user = userPersistencePort.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
-        return notePersistencePort.findAllByUser(user.username());
+                .orElseThrow(() -> {
+                    logger.error("Loading notes of user '{}' FAILED as the user does not exist in the system", username);
+                    return new IllegalArgumentException("User not found: " + username);
+                });
+        var notes = notePersistencePort.findAllByUser(user.username());
+
+        logger.info("Loading notes of user '{}' SUCCEEDED ({} notes found)", username, notes.size());
+
+        return notes;
     }
 }
