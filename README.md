@@ -165,7 +165,7 @@ Once the application is running, you can access the following URL:
 
 - http://localhost:8080/api/events
 
-### Authentication (Microsoft Entra ID via OIDC)
+## Authentication (Microsoft Entra ID via OIDC)
 
 Authentication is delegated to Microsoft Entra ID. The backend is configured as
 an OAuth2 resource server via the `spring-cloud-azure-starter-active-directory`
@@ -190,6 +190,13 @@ Required environment variables (sourced by `application.properties`):
 | `ENTRA_ID_APP_ID_URI`     | Application ID URI exposed by the app registration (e.g. `api://<client-id>`).      |
 
 App roles defined in the app registration (e.g. `Admin`, `User`) are surfaced by Spring Security as authorities.
+
+### Start locally with Entra ID integration
+
+To start the application locally with Entra ID integration, proceed as follows.
+
+- `backend\src\main\resources\application-local.properties`: change `${ENTRA_ID_ENABLED:false}` to `${ENTRA_ID_ENABLED:false}`
+- `backend\src\main\resources\application.properties`: set `ENTRA_ID_*` environment variables
 
 ## Update gradle.lockfile and verification-metadata.xml
 
