@@ -3,15 +3,23 @@ package ch.ssdd.eventhub.security.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy;
 import org.springframework.security.web.header.writers.StaticHeadersWriter;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Security configuration for the event-hub backend.
@@ -80,8 +88,27 @@ public class SecurityConfig {
                 // spring-cloud-azure-starter-active-directory
                 // for the configured Entra ID tenant.
                 .oauth2ResourceServer(oauth2 ->
-                        oauth2.jwt(Customizer.withDefaults()));
+                        oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(azureJwtConverter())));
 
         return http.build();
+    }
+
+    @Bean
+    public Converter<Jwt, AbstractAuthenticationToken> azureJwtConverter() {
+        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+
+        converter.setPrincipalClaimName("email");
+        converter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            List<String> entraRoles = jwt.getClaimAsStringList("roles");
+            if (entraRoles == null) {
+                return List.of();
+            }
+
+            return entraRoles.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+        });
+
+        return converter;
     }
 }

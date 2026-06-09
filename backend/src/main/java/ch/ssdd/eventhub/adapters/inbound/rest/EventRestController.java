@@ -10,9 +10,7 @@ import ch.ssdd.eventhub.ports.inbound.UpdateEventUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,8 +40,8 @@ public class EventRestController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('Admin')")
-    public ResponseEntity<List<EventResponseDto>> getAllEvents(@AuthenticationPrincipal OidcUser principal) {
+    @PreAuthorize("hasAnyAuthority('Admin', 'User')")
+    public ResponseEntity<List<EventResponseDto>> getAllEvents(Authentication authentication) {
         var eventDtos = loadAllEventsUseCase.loadAllEvents()
                 .stream()
                 .map(EventResponseDto::of)
@@ -52,8 +50,8 @@ public class EventRestController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<EventResponseDto> createEvent(@AuthenticationPrincipal UserDetails principal,
+    @PreAuthorize("hasAuthority('Admin')")
+    public ResponseEntity<EventResponseDto> createEvent(Authentication authentication,
                                                         @RequestBody CreateEventRequestDto request) {
 
         var event = createEventUseCase.create(request.toCommand());
@@ -62,8 +60,8 @@ public class EventRestController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<EventResponseDto> updateEvent(@AuthenticationPrincipal UserDetails principal,
+    @PreAuthorize("hasAuthority('Admin')")
+    public ResponseEntity<EventResponseDto> updateEvent(Authentication authentication,
                                                         @PathVariable UUID id,
                                                         @RequestBody UpdateEventRequestDto request) {
 
@@ -73,8 +71,8 @@ public class EventRestController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<EventResponseDto> deleteEvent(@AuthenticationPrincipal UserDetails principal,
+    @PreAuthorize("hasAuthority('Admin')")
+    public ResponseEntity<EventResponseDto> deleteEvent(Authentication authentication,
                                                         @PathVariable UUID id) {
         deleteEventUseCase.deleteEvent(id);
 
