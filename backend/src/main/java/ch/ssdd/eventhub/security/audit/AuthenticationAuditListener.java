@@ -15,12 +15,14 @@ public class AuthenticationAuditListener {
 
     @EventListener
     public void onAuthenticationSuccess(AuthenticationSuccessEvent event) {
+        // TODO: get email claim here
         String username = event.getAuthentication().getName();
         logger.info("Authentication Success: User '{}' authenticated successfully.", username);
     }
 
     @EventListener
     public void onAuthenticationFailure(AbstractAuthenticationFailureEvent event) {
+        // TODO: get email claim here
         String username = event.getAuthentication().getName();
         String exceptionMessage = event.getException().getMessage();
         logger.warn("Authentication Failure: Attempted authentication for user '{}' failed. Reason: {}",
