@@ -174,9 +174,10 @@ tenant.
 
 Behaviour:
 
-- `/api/**` without a bearer token → `401 Unauthorized`
-- `/api/admin/**` with a bearer token that does not carry the `Admin` app role → `403 Forbidden`
-- `/api/**` with a valid bearer token → `200 OK`
+- Calls without a bearer token → `401 Unauthorized`
+- Calls to admin protected endpoints with a bearer token that does not carry the `Admin` app role → `403 Forbidden`
+- Calls to user protected endpoints with a bearer token that does not carry the `User` app role → `403 Forbidden`
+- Calls with a valid bearer token that carries the necessary role → `200 OK`
 
 Required environment variables (sourced by `application.properties`):
 
@@ -188,8 +189,7 @@ Required environment variables (sourced by `application.properties`):
 | `ENTRA_ID_CLIENT_SECRET`  | Client secret of the registered app.                                                |
 | `ENTRA_ID_APP_ID_URI`     | Application ID URI exposed by the app registration (e.g. `api://<client-id>`).      |
 
-App roles defined in the app registration (e.g. `Admin`, `User`) are surfaced by
-Spring Security as authorities prefixed with `APPROLE_` (e.g. `APPROLE_Admin`).
+App roles defined in the app registration (e.g. `Admin`, `User`) are surfaced by Spring Security as authorities.
 
 ## Update gradle.lockfile and verification-metadata.xml
 

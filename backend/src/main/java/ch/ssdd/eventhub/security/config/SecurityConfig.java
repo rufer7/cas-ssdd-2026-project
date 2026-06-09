@@ -22,7 +22,7 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
  * configured Entra ID tenant (using
  * {@code spring.cloud.azure.active-directory.*} properties) and a
  * {@code JwtAuthenticationConverter} that maps the {@code roles} claim of an
- * access token to authorities prefixed with {@code APPROLE_} and the
+ * access token to authorities and the
  * {@code scp} claim to authorities prefixed with {@code SCOPE_}.
  *
  * <p>
@@ -31,7 +31,9 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
  * <li>requests without a bearer token return {@code 401};</li>
  * <li>requests to admin endpoints with a token that does not carry the
  * {@code Admin} app role return {@code 403};</li>
- * <li>requests with a valid bearer token return {@code 200}.</li>
+ * <li>requests to user endpoints with a token that does not carry the
+ * {@code User} app role return {@code 403};</li>
+ * <li>requests to with a valid bearer token and the required role return {@code 200/201}.</li>
  * </ul>
  */
 @Profile("!local")
@@ -40,7 +42,9 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
 public class SecurityConfig {
 
     /** Authority granted by the Entra ID app role {@code Admin}. */
-    public static final String ADMIN_AUTHORITY = "APPROLE_Admin";
+    public static final String ADMIN_AUTHORITY = "Admin";
+    /** Authority granted by the Entra ID app role {@code User}. */
+    public static final String USER_AUTHORITY = "User";
     private static final String PERMISSIONS_POLICY = "accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=()";
     private static final String CSP_DIRECTIVES = "object-src 'none'; block-all-mixed-content; img-src 'none'; form-action 'none'; font-src 'none'; style-src 'none'; script-src 'none'; base-uri 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'";
 
@@ -48,9 +52,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 // Stateless resource server: clients authenticate on every request with a
-                // bearer token in the Authorization header. CSRF protection is intentionally
-                // disabled because no session/cookie-based authentication is used, so there is
-                // no ambient authority that an attacker could exploit via cross-site requests.
+                // bearer token in the Authorization header.
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(Customizer.withDefaults())
@@ -73,14 +75,8 @@ public class SecurityConfig {
                         .contentSecurityPolicy(csp -> csp
                                 .policyDirectives(CSP_DIRECTIVES)))
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoints reserved for administrators require the Entra ID "Admin"
-                        // app role.
-                        .requestMatchers("/api/admin/**").hasAuthority(ADMIN_AUTHORITY)
-                        // The H2 console is only enabled for local development.
-                        .requestMatchers("/h2-console/**").permitAll()
-                        // Every other API call requires a valid bearer token.
-                        .requestMatchers("/api/**").authenticated()
-                        .anyRequest().permitAll())
+                        // Every call requires a valid bearer token.
+                        .anyRequest().authenticated())
                 // Use the JwtDecoder auto-configured by
                 // spring-cloud-azure-starter-active-directory
                 // for the configured Entra ID tenant.
