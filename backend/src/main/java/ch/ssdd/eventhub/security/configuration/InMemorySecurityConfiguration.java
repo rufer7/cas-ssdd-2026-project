@@ -19,7 +19,8 @@ import org.springframework.security.web.SecurityFilterChain;
 /**
  * Only active when local spring profile is active. These are dummy data which are loaded in memory.
  * The whole implementation is temporary till next lab with proper authentication is introduced.
- * TODO remove this whole class + everything basic auth related when next lab is published
+ *
+ * IMPORTANT: DO NOT USE THAT IN PRODUCTION - for convenience reasons only during local development
  */
 @Profile("local")
 @Configuration

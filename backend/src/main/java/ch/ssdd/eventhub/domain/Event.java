@@ -152,7 +152,6 @@ public record Event(
         Objects.requireNonNull(newTo, "Event to date cannot be null");
         Objects.requireNonNull(newLocation, "Event location cannot be null");
 
-
         if (newTitle.isBlank()) {
             throw new IllegalArgumentException("Event title cannot be blank");
         }
