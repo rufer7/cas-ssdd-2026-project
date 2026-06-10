@@ -1,4 +1,4 @@
-package ch.ssdd.eventhub.security.configuration;
+package ch.ssdd.eventhub.security.config;
 
 
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
  *
  * IMPORTANT: DO NOT USE THAT IN PRODUCTION - for convenience reasons only during local development
  */
-@Profile("local")
+@Profile("!local")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
