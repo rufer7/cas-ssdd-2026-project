@@ -7,13 +7,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,7 +36,7 @@ class EventIntegrationTest {
     @WithMockUser(username = "alice_admin", roles = {"ADMIN"})
     void shouldCreateAndFetchEvent() throws Exception {
 
-        String request = """
+        var request = """
                 {
                   "title": "Integration Test Event",
                   "description": "Test",
@@ -45,12 +47,12 @@ class EventIntegrationTest {
                 }
                 """;
 
-        MvcResult initialGet = mockMvc.perform(get("/api/events"))
+        var initialGet = mockMvc.perform(get("/api/events"))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        String initialJson = initialGet.getResponse().getContentAsString();
-        int initialCount = JsonPath.parse(initialJson).read("$.length()", Integer.class);
+        var initialJson = initialGet.getResponse().getContentAsString();
+        var initialCount = JsonPath.parse(initialJson).read("$.length()", Integer.class);
 
         mockMvc.perform(post("/api/events")
                 .with(csrf())
@@ -69,7 +71,7 @@ class EventIntegrationTest {
     @WithMockUser(username = "john_user", roles = {"USER"})
     void shouldNotCreateEventBecauseNotAdmin() throws Exception {
 
-        String request = """
+        var request = """
                 {
                   "title": "Integration Test Event",
                   "description": "Test",
@@ -93,7 +95,7 @@ class EventIntegrationTest {
     @Test
     @WithMockUser(username = "alice_admin", roles = {"ADMIN"})
     void shouldReturnBadRequestWhenCreatingEventWithInvalidData() throws Exception {
-        String invalidRequest = """
+        var invalidRequest = """
                 {
                   "title": "",
                   "description": "Test",
@@ -109,5 +111,26 @@ class EventIntegrationTest {
                 .contentType("application/json")
                 .content(invalidRequest))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = "alice_admin", roles = {"ADMIN"})
+    void shouldUploadFeaturedImageToEvent() throws Exception {
+
+        var file = Files.readAllBytes(Path.of("src/test/resources/spring.png"));
+        var multipartFile = new MockMultipartFile("file", "spring.png",
+                "image/png", file);
+
+        var initialGet = mockMvc.perform(get("/api/events"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var initialJson = initialGet.getResponse().getContentAsString();
+        var eventId = JsonPath.parse(initialJson).read("$.[0].eventId", String.class);
+
+        mockMvc.perform(multipart("/api/events/" + eventId + "/uploadFeaturedImage")
+                        .with(csrf())
+                        .file(multipartFile))
+                .andExpect(status().isOk());
     }
 }

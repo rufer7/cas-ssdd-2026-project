@@ -12,4 +12,7 @@ public interface UpdateEventUseCase {
                  LocalDateTime from,
                  LocalDateTime to,
                  String location);
+
+    void updateFeaturedImage(UUID id,
+                              byte[] featuredImage);
 }
