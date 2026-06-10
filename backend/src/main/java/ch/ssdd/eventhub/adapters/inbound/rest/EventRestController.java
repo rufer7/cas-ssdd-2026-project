@@ -1,11 +1,13 @@
 package ch.ssdd.eventhub.adapters.inbound.rest;
 
+import ch.ssdd.eventhub.adapters.inbound.rest.config.SanitizedString;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateEventRequestDto;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.EventResponseDto;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.UpdateEventRequestDto;
 import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.DeleteEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
+import ch.ssdd.eventhub.ports.inbound.SearchEventsUseCase;
 import ch.ssdd.eventhub.ports.inbound.UpdateEventUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,12 +35,14 @@ public class EventRestController {
     private final CreateEventUseCase createEventUseCase;
     private final UpdateEventUseCase updateEventUseCase;
     private final DeleteEventUseCase deleteEventUseCase;
+    private final SearchEventsUseCase searchEventsUseCase;
 
-    public EventRestController(LoadAllEventsUseCase loadAllEventsUseCase, CreateEventUseCase createEventUseCase, UpdateEventUseCase updateEventUseCase, DeleteEventUseCase deleteEventUseCase) {
+    public EventRestController(LoadAllEventsUseCase loadAllEventsUseCase, CreateEventUseCase createEventUseCase, UpdateEventUseCase updateEventUseCase, DeleteEventUseCase deleteEventUseCase, SearchEventsUseCase searchEventsUseCase) {
         this.loadAllEventsUseCase = loadAllEventsUseCase;
         this.createEventUseCase = createEventUseCase;
         this.updateEventUseCase = updateEventUseCase;
         this.deleteEventUseCase = deleteEventUseCase;
+        this.searchEventsUseCase = searchEventsUseCase;
     }
 
     @GetMapping
@@ -47,6 +52,15 @@ public class EventRestController {
                 .map(EventResponseDto::of)
                 .toList();
         return ResponseEntity.ok(eventDtos);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<EventResponseDto>> searchEvents(@RequestParam(name = "query") SanitizedString searchString) {
+        var searchEvents = searchEventsUseCase.searchEvents(searchString.value())
+                .stream()
+                .map(EventResponseDto::of)
+                .toList();
+        return ResponseEntity.ok(searchEvents);
     }
 
     @PostMapping

@@ -1,0 +1,15 @@
+meta {
+  name: Search Events with Strange Inputs
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://localhost:8080/api/events/search?query=normalSearch%0d%0a[INFO] User admin deleted database
+  body: none
+  auth: basic
+}
+
+params:query {
+  query: normalSearch%0d%0a[INFO] User admin deleted database
+}

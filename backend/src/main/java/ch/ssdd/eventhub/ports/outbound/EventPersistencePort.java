@@ -10,6 +10,7 @@ public interface EventPersistencePort {
     Event save(Event event);
     Optional<Event> findById(UUID uuid);
     List<Event> findAll();
+    List<Event> searchByTitleOrDescription(String searchTerm);
     void deleteById(UUID uuid);
     Event updateById(UUID uuid, Event event);
 }
