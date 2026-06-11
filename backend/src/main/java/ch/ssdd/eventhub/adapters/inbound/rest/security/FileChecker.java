@@ -47,17 +47,17 @@ public class FileChecker {
 
         if (!isFileSizeBelowMaxAllowedSize(fileContent.length))
         {
-            logger.error("Size of file with name '{}' exceeds the maximum allowed size of '{}' bytes", fileName, MAX_ALLOWED_FILE_SIZE);
+            logger.error("Size of file exceeds the maximum allowed size of '{}' bytes", MAX_ALLOWED_FILE_SIZE);
             return false;
         }
         if (!hasAllowedFileExtension(fileName))
         {
-            logger.error("File with name '{}' has an invalid file extension", fileName);
+            logger.error("File has an invalid file extension");
             return false;
         }
         if (!isExtensionMatchingSignature(fileName, fileContent))
         {
-            logger.error("File with name '{}' does not match the expected signature for its extension", fileName);
+            logger.error("File does not match the expected signature for its extension");
             return false;
         }
 
@@ -85,7 +85,7 @@ public class FileChecker {
         var extension = FilenameUtils.getExtension(fileName).toLowerCase();
         if (extension.isEmpty())
         {
-            logger.warn("File with name '{}' has no extension.", fileName);
+            logger.warn("File has no extension.");
             return false;
         }
 
@@ -97,10 +97,7 @@ public class FileChecker {
 
         if (expectedSignatures.isEmpty())
         {
-            logger.warn(
-                    "Skipping signature validation for file with name '{}' as no expected signature(s) specified.",
-                    fileName
-            );
+            logger.warn("Skipping signature validation for file as no expected signature(s) specified.");
             return true;
         }
 
@@ -113,7 +110,7 @@ public class FileChecker {
             return true;
         }
 
-        logger.warn("File with name '{}' does not match any expected signature for extension '{}'.", fileName, extension);
+        logger.warn("File does not match any expected signature for extension '{}'.", extension);
         return false;
     }
 }

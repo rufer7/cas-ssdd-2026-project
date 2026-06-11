@@ -59,19 +59,11 @@ class FileCheckerTest {
             "arbitrary.DOCX",
             "arbitrary.zip",
             "arbitrary.",
-            "arbitrary"
-    })
-    void shouldReturnFalseWhenFileExtensionIsNotInAllowedFileExtensions(String fileName) {
-        var result = FileChecker.isValid(fileName, sampleFile);
-        assertFalse(result);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {
+            "arbitrary",
             "arbitrary.jpg",
-            "arbitrary.JPEG",
+            "arbitrary.JPEG"
     })
-    void shouldReturnFalseWhenExtensionIsNotMatchingSignature(String fileName) {
+    void shouldReturnFalseWhenFileExtensionIsNotInAllowedFileExtensionsOrExtensionDoesNotMatchSignature(String fileName) {
         var result = FileChecker.isValid(fileName, sampleFile);
         assertFalse(result);
     }
