@@ -48,6 +48,12 @@ public class JpaEventPersistenceAdapter implements EventPersistencePort {
     }
 
     @Override
+    public List<Event> searchByTitleOrDescription(String searchTerm) {
+        var eventsSearchResult = eventRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTerm, searchTerm);
+        return eventsSearchResult.stream().map(EventEntity::toEvent).toList();
+    }
+
+    @Override
     public void deleteById(UUID uuid) {
         eventRepository.deleteById(uuid);
     }
@@ -64,6 +70,5 @@ public class JpaEventPersistenceAdapter implements EventPersistencePort {
         EventEntity updatedEventEntity = eventRepository.save(eventEntity);
         return updatedEventEntity.toEvent();
     }
-
 
 }

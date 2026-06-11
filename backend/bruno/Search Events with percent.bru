@@ -1,0 +1,15 @@
+meta {
+  name: Search Events with percent
+  type: http
+  seq: 9
+}
+
+get {
+  url: http://localhost:8080/api/events/search?query=%
+  body: none
+  auth: basic
+}
+
+params:query {
+  query: %
+}

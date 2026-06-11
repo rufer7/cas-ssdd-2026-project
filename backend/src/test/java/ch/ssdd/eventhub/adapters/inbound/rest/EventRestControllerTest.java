@@ -1,12 +1,17 @@
 package ch.ssdd.eventhub.adapters.inbound.rest;
 
+import ch.ssdd.eventhub.adapters.inbound.rest.config.SanitizedString;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateEventRequestDto;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.EventResponseDto;
+import ch.ssdd.eventhub.adapters.inbound.rest.dto.UpdateEventRequestDto;
 import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.domain.command.CreateEventCommand;
 import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
+import ch.ssdd.eventhub.ports.inbound.DeleteEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
+import ch.ssdd.eventhub.ports.inbound.SearchEventsUseCase;
+import ch.ssdd.eventhub.ports.inbound.UpdateEventUseCase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,10 +21,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -33,6 +42,15 @@ class EventRestControllerTest {
 
     @Mock
     CreateEventUseCase createEventUseCase;
+
+    @Mock
+    UpdateEventUseCase updateEventUseCase;
+
+    @Mock
+    DeleteEventUseCase deleteEventUseCase;
+
+    @Mock
+    SearchEventsUseCase searchEventsUseCase;
 
     @InjectMocks
     EventRestController controller;
@@ -59,6 +77,7 @@ class EventRestControllerTest {
 
     @Test
     void shouldCreateEvent() {
+        // given
         CreateEventRequestDto request = new CreateEventRequestDto(
                 "title",
                 "desc",
@@ -82,11 +101,82 @@ class EventRestControllerTest {
 
         when(createEventUseCase.create(expectedCommand)).thenReturn(event);
 
+        // when
         ResponseEntity<EventResponseDto> response = controller.createEvent(principal, request);
 
+        // then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
 
         verify(createEventUseCase, times(1)).create(expectedCommand);
+    }
+
+    @Test
+    void shouldSearchEvents() {
+        // given
+        SanitizedString searchString = new SanitizedString("concert");
+        Event matchingEvent = mock(Event.class);
+
+        when(searchEventsUseCase.searchEvents("concert"))
+                .thenReturn(List.of(matchingEvent));
+
+        // when
+        ResponseEntity<List<EventResponseDto>> response = controller.searchEvents(searchString);
+
+        // then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().size());
+
+        verify(searchEventsUseCase, times(1)).searchEvents("concert");
+    }
+
+    @Test
+    void shouldUpdateEvent() {
+        // given
+        UUID eventId = UUID.randomUUID();
+        LocalDateTime fromDate = LocalDateTimeHelper.utcNow().plusDays(1);
+        LocalDateTime toDate = LocalDateTimeHelper.utcNow().plusDays(2);
+
+        UpdateEventRequestDto request = new UpdateEventRequestDto(
+                "Updated Title",
+                "Updated Description",
+                fromDate,
+                toDate,
+                "Bern"
+        );
+
+        var updatedEvent = mock(Event.class);
+        var principal = mock(UserDetails.class);
+
+        when(updateEventUseCase.update(eventId, request.title(), request.description(), request.from(), request.to(), request.location()))
+                .thenReturn(updatedEvent);
+
+        // when
+        ResponseEntity<EventResponseDto> response = controller.updateEvent(principal, eventId, request);
+
+        // then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+
+        verify(updateEventUseCase, times(1)).update(eventId, request.title(), request.description(), request.from(), request.to(), request.location());
+    }
+
+    @Test
+    void shouldDeleteEvent() {
+        // given
+        UUID eventId = UUID.randomUUID();
+        var principal = mock(UserDetails.class);
+
+        doNothing().when(deleteEventUseCase).deleteEvent(eventId);
+
+        // when
+        ResponseEntity<EventResponseDto> response = controller.deleteEvent(principal, eventId);
+
+        // then
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertNull(response.getBody());
+
+        verify(deleteEventUseCase, times(1)).deleteEvent(eventId);
     }
 }
