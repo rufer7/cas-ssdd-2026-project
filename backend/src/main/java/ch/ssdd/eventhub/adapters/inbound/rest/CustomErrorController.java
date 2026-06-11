@@ -30,7 +30,7 @@ public class CustomErrorController implements ErrorController {
 
         // Generic fallback for any other low-level container errors
         body.put("status", statusCode);
-        body.put("error", "Internal Error");
+        body.put("error", "Internal Server Error");
         body.put("message", "An unexpected error occurred processing the request.");
         return new ResponseEntity<>(body, HttpStatus.valueOf(statusCode));
     }
