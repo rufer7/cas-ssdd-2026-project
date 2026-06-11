@@ -57,7 +57,7 @@ class CustomErrorControllerTest {
         Map<String, Object> body = response.getBody();
         assertNotNull(body);
         assertEquals(500, body.get("status"));
-        assertEquals("Internal Error", body.get("error"));
+        assertEquals("Internal Server Error", body.get("error"));
         assertEquals("An unexpected error occurred processing the request.", body.get("message"));
     }
 
@@ -75,7 +75,7 @@ class CustomErrorControllerTest {
         Map<String, Object> body = response.getBody();
         assertNotNull(body);
         assertEquals(500, body.get("status"));
-        assertEquals("Internal Error", body.get("error"));
+        assertEquals("Internal Server Error", body.get("error"));
         assertEquals("An unexpected error occurred processing the request.", body.get("message"));
     }
 
@@ -94,7 +94,7 @@ class CustomErrorControllerTest {
         Map<String, Object> body = response.getBody();
         assertNotNull(body);
         assertEquals(404, body.get("status"));
-        assertEquals("Internal Error", body.get("error")); // Controller specifies "Internal Error" name as generic fallback
+        assertEquals("Internal Server Error", body.get("error"));
         assertEquals("An unexpected error occurred processing the request.", body.get("message"));
     }
 }
