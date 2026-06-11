@@ -71,7 +71,4 @@ public class JpaEventPersistenceAdapter implements EventPersistencePort {
         return updatedEventEntity.toEvent();
     }
 
-
-
-
 }

@@ -56,12 +56,11 @@ public class EventCreationService implements LoadAllEventsUseCase, CreateEventUs
         return events;
     }
 
-
     @Override
     public List<Event> searchEvents(String searchString) {
-        logger.debug("Searching events with {} as searchterm", searchString);
+        logger.debug("Searching for events with search term '{}'", searchString);
         var events = eventPersistencePort.searchByTitleOrDescription(searchString);
-        logger.info("Loading events SUCCEEDED ({} events found)", events.size());
+        logger.info("Searching for events with search term '{}' SUCCEEDED ({} events found)", searchString, events.size());
         return events;
     }
 }
