@@ -36,14 +36,14 @@ public class EventMutationService implements UpdateEventUseCase, DeleteEventUseC
     public Event update(UUID eventId, String title, String description, LocalDateTime from, LocalDateTime to, String location) {
         logger.debug("Processing event update business logic for event with ID '{}' ...", eventId);
 
-        Event existingEvent = eventPersistencePort.findById(eventId)
+        var existingEvent = eventPersistencePort.findById(eventId)
                 .orElseThrow(() -> {
                     logger.error("Processing event update business logic for event with ID '{}' FAILED as the event does not exist in the system", eventId);
                     return new IllegalArgumentException("Event not found for id: " + eventId);
                 });
 
-        Event updatedEvent = existingEvent.updateDetails(title, description, from, to, location);
-        Event savedEvent = eventPersistencePort.save(updatedEvent);
+        var updatedEvent = existingEvent.updateDetails(title, description, from, to, location);
+        var savedEvent = eventPersistencePort.save(updatedEvent);
 
         logger.info("Processing event update business logic for event with ID '{}' SUCCEEDED",
                 eventId);
@@ -62,7 +62,7 @@ public class EventMutationService implements UpdateEventUseCase, DeleteEventUseC
                 });
 
         var updatedEvent = existingEvent.updateFeaturedImage(featuredImage);
-        var savedEvent = eventPersistencePort.save(updatedEvent);
+        eventPersistencePort.save(updatedEvent);
 
         logger.info("Processing featuredImage update business logic for event with ID '{}' SUCCEEDED",
                 eventId);

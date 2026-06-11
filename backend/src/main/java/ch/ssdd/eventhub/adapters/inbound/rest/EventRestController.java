@@ -8,6 +8,8 @@ import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.DeleteEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
 import ch.ssdd.eventhub.ports.inbound.UpdateEventUseCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +25,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/events")
 public class EventRestController {
+
+    private static final Logger logger = LoggerFactory.getLogger(EventRestController.class);
 
     private final LoadAllEventsUseCase loadAllEventsUseCase;
     private final CreateEventUseCase createEventUseCase;
@@ -78,7 +82,8 @@ public class EventRestController {
         try {
             bytes = file.getBytes();
         } catch (IOException e) {
-            return ResponseEntity.badRequest().body("Invalid file");
+            logger.error("Error occurred during file processing", e);
+            return ResponseEntity.internalServerError().body("Error occurred during file processing");
         }
 
         var isValid = FileChecker.isValid(file.getOriginalFilename(), bytes);

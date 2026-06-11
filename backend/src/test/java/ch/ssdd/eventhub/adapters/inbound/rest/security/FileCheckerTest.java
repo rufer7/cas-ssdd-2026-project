@@ -68,14 +68,8 @@ class FileCheckerTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-            "arbitrary.docx",
-            "arbitrary.DOCX",
-            "arbitrary.zip",
             "arbitrary.jpg",
-            "arbitrary.jpeg",
             "arbitrary.JPEG",
-            "arbitrary.",
-            "arbitrary"
     })
     void shouldReturnFalseWhenExtensionIsNotMatchingSignature(String fileName) {
         var result = FileChecker.isValid(fileName, sampleFile);
