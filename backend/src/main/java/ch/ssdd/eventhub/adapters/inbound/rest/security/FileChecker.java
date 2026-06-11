@@ -91,7 +91,7 @@ public class FileChecker {
 
         var expectedSignatures = ALLOWED_FILE_EXTENSIONS.get(extension);
         if (expectedSignatures == null) {
-            logger.warn("Extension '{}' is not allowed (File name: {}).", extension, fileName);
+            logger.warn("Extension is not allowed.");
             return false;
         }
 
@@ -110,7 +110,7 @@ public class FileChecker {
             return true;
         }
 
-        logger.warn("File does not match any expected signature for extension '{}'.", extension);
+        logger.warn("File does not match any expected signature for extension.");
         return false;
     }
 }
