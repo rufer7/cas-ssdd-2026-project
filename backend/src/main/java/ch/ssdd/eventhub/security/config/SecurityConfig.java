@@ -1,25 +1,19 @@
 package ch.ssdd.eventhub.security.config;
 
+import com.auth0.spring.boot.Auth0AuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy;
 import org.springframework.security.web.header.writers.StaticHeadersWriter;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Security configuration for the event-hub backend.
@@ -57,13 +51,13 @@ public class SecurityConfig {
     private static final String CSP_DIRECTIVES = "object-src 'none'; block-all-mixed-content; img-src 'none'; form-action 'none'; font-src 'none'; style-src 'none'; script-src 'none'; base-uri 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'";
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, Auth0AuthenticationFilter authFilter) throws Exception {
         http
                 // Stateless resource server: clients authenticate on every request with a
                 // bearer token in the Authorization header.
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers
                         .httpStrictTransportSecurity(hsts -> hsts
                                 .includeSubDomains(true)
@@ -83,32 +77,10 @@ public class SecurityConfig {
                         .contentSecurityPolicy(csp -> csp
                                 .policyDirectives(CSP_DIRECTIVES)))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/index.html").permitAll()
                         .anyRequest().authenticated())
-                // Use the JwtDecoder auto-configured by
-                // spring-cloud-azure-starter-active-directory
-                // for the configured Entra ID tenant.
-                .oauth2ResourceServer(oauth2 ->
-                        oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(azureJwtConverter())));
-
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
-    @Bean
-    public Converter<Jwt, AbstractAuthenticationToken> azureJwtConverter() {
-        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-
-        converter.setPrincipalClaimName("email");
-        converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            List<String> entraRoles = jwt.getClaimAsStringList("roles");
-            if (entraRoles == null) {
-                return List.of();
-            }
-
-            return entraRoles.stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
-        });
-
-        return converter;
-    }
 }
