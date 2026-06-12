@@ -165,12 +165,11 @@ Once the application is running, you can access the following URL:
 
 - http://localhost:8080/api/events
 
-## Authentication (Microsoft Entra ID via OIDC)
+## Authentication (Auth0 via OIDC)
 
-Authentication is delegated to Microsoft Entra ID. The backend is configured as
-an OAuth2 resource server via the `spring-cloud-azure-starter-active-directory`
-starter and validates incoming bearer tokens against the configured Entra ID
-tenant.
+Authentication is delegated to `Auth0`. The backend is configured as
+an OAuth2 resource server and validates incoming bearer tokens against
+the configured Auth0 tenant.
 
 Behaviour:
 
@@ -181,22 +180,19 @@ Behaviour:
 
 Required environment variables (sourced by `application.properties`):
 
-| Variable                  | Description                                                                         |
-|---------------------------|-------------------------------------------------------------------------------------|
-| `ENTRA_ID_ENABLED`        | Toggles the Entra ID auto-configuration (default `true`; `false` in local profile). |
-| `ENTRA_ID_TENANT_ID`      | Entra ID tenant (directory) ID.                                                     |
-| `ENTRA_ID_CLIENT_ID`      | Application (client) ID of the registered app.                                      |
-| `ENTRA_ID_CLIENT_SECRET`  | Client secret of the registered app.                                                |
-| `ENTRA_ID_APP_ID_URI`     | Application ID URI exposed by the app registration (e.g. `api://<client-id>`).      |
+| Variable               | Description                           |
+|------------------------|---------------------------------------|
+| `AUTH0_DOMAIN`         | Auth0 tenant (`YOUR_TENANT.auth0.com` |
+| `AUTH0_AUDIENCE`       | Auth0 identifier                      |
+| `VITE_AUTH0_DOMAIN`    | Auth0 tenant (`YOUR_TENANT.auth0.com` |
+| `VITE_AUTH0_CLIENT_ID` | Auth0 identifier                      |
 
-App roles defined in the app registration (e.g. `Admin`, `User`) are surfaced by Spring Security as authorities.
+Permissions defined in the API application (e.g. `Admin`, `User`) are surfaced by Spring Security as authorities.
 
-### Start locally with Entra ID integration
+### Start locally with Auth0 integration
 
-To start the application locally with Entra ID integration, proceed as follows.
-
-- `backend\src\main\resources\application-local.properties`: change `${ENTRA_ID_ENABLED:false}` to `${ENTRA_ID_ENABLED:false}`
-- `backend\src\main\resources\application.properties`: set `ENTRA_ID_*` environment variables
+To start the application locally with `Auth0` integration, set the environment variables mentioned above
+in your IDE configuration.
 
 ## Update gradle.lockfile and verification-metadata.xml
 
