@@ -7,7 +7,7 @@ import ch.ssdd.eventhub.ports.inbound.DeleteEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
 import ch.ssdd.eventhub.ports.inbound.SearchEventsUseCase;
 import ch.ssdd.eventhub.ports.inbound.UpdateEventUseCase;
-import ch.ssdd.eventhub.security.configuration.InMemorySecurityConfiguration;
+import ch.ssdd.eventhub.security.config.InMemorySecurityConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
