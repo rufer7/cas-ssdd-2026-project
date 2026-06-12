@@ -167,32 +167,36 @@ Once the application is running, you can access the following URL:
 
 ## Authentication (Auth0 via OIDC)
 
-Authentication is delegated to `Auth0`. The backend is configured as
-an OAuth2 resource server and validates incoming bearer tokens against
-the configured Auth0 tenant.
+Authentication is delegated to `Auth0`. The backend is configured as an OAuth2 resource server and validates incoming bearer tokens against the configured Auth0 tenant.
 
-Behaviour:
+### Behaviour
 
 - requests without a bearer token → `401 Unauthorized`
 - requests to admin endpoints with a token that does not carry the `Admin` app role → `403 Forbidden`
 - requests to user endpoints with a token that does not carry the `User` app role → `403 Forbidden`
 - requests to with a valid bearer token and the required role → `200 OK` / `201 CREATED`
 
-Required environment variables (sourced by `application.properties`):
+### Create Auth0 applications
 
-| Variable               | Description                           |
-|------------------------|---------------------------------------|
-| `AUTH0_DOMAIN`         | Auth0 tenant (`YOUR_TENANT.auth0.com` |
-| `AUTH0_AUDIENCE`       | Auth0 identifier                      |
-| `VITE_AUTH0_DOMAIN`    | Auth0 tenant (`YOUR_TENANT.auth0.com` |
-| `VITE_AUTH0_CLIENT_ID` | Auth0 identifier                      |
+- step `Setup your Auth0 App` in https://auth0.com/docs/quickstart/spa/vanillajs
+- step `Setup your Auth0 API` in https://auth0.com/docs/quickstart/backend/java-spring-security5
 
-Permissions defined in the API application (e.g. `Admin`, `User`) are surfaced by Spring Security as authorities.
+### Required environment variables
+
+| Variable               | Description                            |
+|------------------------|----------------------------------------|
+| `AUTH0_DOMAIN`         | Auth0 tenant (`YOUR_TENANT.auth0.com`) |
+| `AUTH0_AUDIENCE`       | Auth0 identifier                       |
+| `VITE_AUTH0_CLIENT_ID` | Auth0 client Id                        |
+| `VITE_AUTH0_DOMAIN`    | Auth0 domain                           |
+| `VITE_AUTH0_AUDIENCE`  | Auth0 audience                         |
 
 ### Start locally with Auth0 integration
 
-To start the application locally with `Auth0` integration, set the environment variables mentioned above
-in your IDE configuration.
+To start the application locally with `Auth0` integration, proceed as follows.
+
+- set the environment variables prefixed with `AUTH0_` (see table above) in your IDE configuration
+- add `.env.local` file to frontend folder and set the variables
 
 ## Update gradle.lockfile and verification-metadata.xml
 
