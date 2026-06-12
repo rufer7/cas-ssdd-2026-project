@@ -19,9 +19,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
@@ -76,6 +79,26 @@ class EventRestControllerTest {
     }
 
     @Test
+    void shouldSearchEvents() {
+        // given
+        SanitizedString searchString = new SanitizedString("concert");
+        Event matchingEvent = mock(Event.class);
+
+        when(searchEventsUseCase.searchEvents("concert"))
+                .thenReturn(List.of(matchingEvent));
+
+        // when
+        ResponseEntity<List<EventResponseDto>> response = controller.searchEvents(searchString);
+
+        // then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().size());
+
+        verify(searchEventsUseCase, times(1)).searchEvents("concert");
+    }
+
+    @Test
     void shouldCreateEvent() {
         // given
         CreateEventRequestDto request = new CreateEventRequestDto(
@@ -112,31 +135,26 @@ class EventRestControllerTest {
     }
 
     @Test
-    void shouldSearchEvents() {
-        // given
-        SanitizedString searchString = new SanitizedString("concert");
-        Event matchingEvent = mock(Event.class);
+    void shouldUploadFeaturedImage() throws IOException {
+        var principal = mock(UserDetails.class);
+        var eventId = UUID.randomUUID();
+        var file = Files.readAllBytes(Path.of("src/test/resources/spring.png"));
+        var multipartFile = new MockMultipartFile("file", "spring.png",
+                "image/png", file);
 
-        when(searchEventsUseCase.searchEvents("concert"))
-                .thenReturn(List.of(matchingEvent));
+        var response = controller.uploadFeaturedImage(principal, eventId, multipartFile);
 
-        // when
-        ResponseEntity<List<EventResponseDto>> response = controller.searchEvents(searchString);
-
-        // then
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals(1, response.getBody().size());
 
-        verify(searchEventsUseCase, times(1)).searchEvents("concert");
+        verify(updateEventUseCase, times(1)).updateFeaturedImage(eventId, file);
     }
 
     @Test
     void shouldUpdateEvent() {
         // given
         UUID eventId = UUID.randomUUID();
-        LocalDateTime fromDate = LocalDateTimeHelper.utcNow().plusDays(1);
-        LocalDateTime toDate = LocalDateTimeHelper.utcNow().plusDays(2);
+        var fromDate = LocalDateTimeHelper.utcNow().plusDays(1);
+        var toDate = LocalDateTimeHelper.utcNow().plusDays(2);
 
         UpdateEventRequestDto request = new UpdateEventRequestDto(
                 "Updated Title",

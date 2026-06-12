@@ -45,7 +45,7 @@ The main focus of the application is on security aspects, ensuring that all func
 ## Requirements and Design Decisions
 
 - API: The application will expose a RESTful API for all functionalities, allowing for easy integration with various frontend technologies
-- Login functionality: Open ID Connect (OIDC) will be used for authentication, providing a secure and standardized way to manage user identities and access control via an external identity provider (i.e. Entra ID)
+- Login functionality: Open ID Connect (OIDC) will be used for authentication, providing a secure and standardized way to manage user identities and access control via an external identity provider (Auth0)
 - Role-based access control (RBAC): The application will implement RBAC to differentiate between regular users and administrators, ensuring that only authorized users can access specific functionalities
 - Secret user data: Personal notes created by users will be stored encrypted to ensure that sensitive information is protected at rest
 - File upload: Administrators will be able to upload featured images for events, with proper validation and security measures in place to prevent malicious file uploads
@@ -104,7 +104,7 @@ erDiagram
 > [!NOTE]
 > The following design decisions relate to the domain model and its implementation
 
-- The `User` record will have an `externalId` field to store the unique identifier from the external identity provider (Entra ID), allowing for seamless integration with OIDC authentication
+- The `User` record will have an `externalId` field to store the unique identifier from the external identity provider (Auth0), allowing for seamless integration with OIDC authentication
 - The `Role` field in the `User` record will be an enum to clearly define the different user roles (`USER`, `ADMIN`) and facilitate role-based access control - `ADMIN` role includes user permissions
 - The `Event` record acts as a aggregate root with `Comment` records being associated with it. This allows for a clear separation of concerns and encapsulation of related data
 - The `Note` record is associated with the `User` record, allowing users to have their own personal notes that are not directly related to events
@@ -114,10 +114,10 @@ erDiagram
 ## Technologies
 
 - `Backend`: [Java Spring Boot](https://spring.io/projects/spring-boot)
-- [OPTIONAL] `Frontend`: [Vue.js](https://vuejs.org/) or any other frontend technology of choice
+- `Frontend`: Vanilla JS
 - `Database`: [PostgreSQL](https://www.postgresql.org/)
 - `Authentication`: [Open ID Connect (OIDC)](https://openid.net/connect/)
-- `Identity Provider`: [Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id)
+- `Identity Provider`: [Auth0](https://auth0.com/)
 - `Hosting`: [Render](https://render.com/)
 - `Version Control`: [GitHub](https://github.com/)
 - `SAST`: [SonarQube Cloud](https://sonarcloud.io/)

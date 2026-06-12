@@ -145,13 +145,13 @@ public record Event(
                 updatedComments);
     }
 
+    // TODO: update modifiedBy and modifiedAt
     public Event updateDetails(String newTitle, String newDescription, LocalDateTime newFrom, LocalDateTime newTo, String newLocation) {
         Objects.requireNonNull(newTitle, "Event title cannot be null");
         Objects.requireNonNull(newDescription, "Event description cannot be null");
         Objects.requireNonNull(newFrom, "Event from date cannot be null");
         Objects.requireNonNull(newTo, "Event to date cannot be null");
         Objects.requireNonNull(newLocation, "Event location cannot be null");
-
 
         if (newTitle.isBlank()) {
             throw new IllegalArgumentException("Event title cannot be blank");
@@ -182,6 +182,13 @@ public record Event(
         }
 
         return new Event(id, newTitle, newDescription, newFrom, newTo, newLocation, createdBy, createdAt, modifiedBy, modifiedAt, featuredImage);
+    }
+
+    // TODO: update modifiedBy and modifiedAt
+    public Event updateFeaturedImage(byte[] featuredImage) {
+        Objects.requireNonNull(featuredImage, "Event featuredImage cannot be null");
+
+        return new Event(id, title, description, from, to, location, createdBy, createdAt, modifiedBy, modifiedAt, featuredImage);
     }
 
     public static Event createFromCommand(CreateEventCommand createEventCommand, User creator) {

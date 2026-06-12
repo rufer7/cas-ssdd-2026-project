@@ -3,7 +3,7 @@ import org.gradle.testing.jacoco.tasks.JacocoReport
 plugins {
 	java
 	jacoco
-	id("org.springframework.boot") version "4.0.6"
+	id("org.springframework.boot") version "4.1.0"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("org.sonarqube") version "7.3.0.8198"
 }
@@ -37,6 +37,8 @@ dependencies {
 	implementation("org.flywaydb:flyway-database-postgresql")
 
 	implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20260313.1")
+
+	implementation("commons-io:commons-io:2.22.0")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
