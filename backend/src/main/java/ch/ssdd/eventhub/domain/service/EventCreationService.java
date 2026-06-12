@@ -5,6 +5,7 @@ import ch.ssdd.eventhub.domain.User;
 import ch.ssdd.eventhub.domain.command.CreateEventCommand;
 import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
+import ch.ssdd.eventhub.ports.inbound.SearchEventsUseCase;
 import ch.ssdd.eventhub.ports.outbound.EventPersistencePort;
 import ch.ssdd.eventhub.ports.outbound.UserPersistencePort;
 import org.slf4j.Logger;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class EventCreationService implements LoadAllEventsUseCase, CreateEventUseCase {
+public class EventCreationService implements LoadAllEventsUseCase, CreateEventUseCase, SearchEventsUseCase {
 
     private static final Logger logger = LoggerFactory.getLogger(EventCreationService.class);
 
@@ -52,6 +53,14 @@ public class EventCreationService implements LoadAllEventsUseCase, CreateEventUs
         logger.debug("Loading events ...");
         var events = eventPersistencePort.findAll();
         logger.info("Loading events SUCCEEDED ({} events found)", events.size());
+        return events;
+    }
+
+    @Override
+    public List<Event> searchEvents(String searchString) {
+        logger.debug("Searching for events with search term '{}'", searchString);
+        var events = eventPersistencePort.searchByTitleOrDescription(searchString);
+        logger.info("Searching for events with search term '{}' SUCCEEDED ({} events found)", searchString, events.size());
         return events;
     }
 }
