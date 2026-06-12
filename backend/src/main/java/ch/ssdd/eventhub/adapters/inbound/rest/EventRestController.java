@@ -92,7 +92,7 @@ public class EventRestController {
      * @return 200 OK, if upload succeeded
      */
     @PostMapping("/{id}/uploadFeaturedImage")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity<String> uploadFeaturedImage(Authentication authentication,
                                                       @PathVariable UUID id,
                                                       @RequestParam("file") MultipartFile file) {
