@@ -93,7 +93,7 @@ public class EventRestController {
 
         updateEventUseCase.updateFeaturedImage(id, bytes);
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
