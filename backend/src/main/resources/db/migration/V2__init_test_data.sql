@@ -72,6 +72,53 @@ VALUES (
            'b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e'
        );
 
+INSERT INTO events (id, title, location, description, from_date_time, to_date_time, featured_image, created_at, modified_at, created_by_id, modified_by_id)
+VALUES (
+           '33333333-3333-4333-8333-333333333333',
+           'Global Autumn Hackathon',
+           'Tech Hub, Room 404',
+           'A 48-hour challenge to build open-source tools that solve real-world climate issues.',
+           '2026-10-23 18:00:00.000000',
+           '2026-10-25 18:00:00.000000',
+           NULL,
+           '2026-05-01 09:00:00.000000',
+           '2026-05-01 09:00:00.000000',
+           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d',
+           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'
+       );
+
+-- Event 4: Executive Leadership Roundtable
+INSERT INTO events (id, title, location, description, from_date_time, to_date_time, featured_image, created_at, modified_at, created_by_id, modified_by_id)
+VALUES (
+           '44444444-4444-4444-8444-444444444444',
+           'Executive Strategy Roundtable',
+           'Grand Hotel, Boardroom B',
+           'Quarterly alignment meeting for executives to finalize the product roadmap and budgets.',
+           '2026-11-05 10:00:00.000000',
+           '2026-11-05 15:00:00.000000',
+           NULL,
+           '2026-05-12 14:30:00.000000',
+           '2026-05-13 11:15:00.000000',
+           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d',
+           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'
+       );
+
+-- Event 5: Community Charity Run
+INSERT INTO events (id, title, location, description, from_date_time, to_date_time, featured_image, created_at, modified_at, created_by_id, modified_by_id)
+VALUES (
+           '55555555-5555-4555-8555-555555555555',
+           'Annual Charity 5K Run',
+           'City Park, North Entrance',
+           'Join our annual community run. All registration proceeds go directly to local food banks.',
+           '2026-09-27 07:30:00.000000',
+           '2026-09-27 12:00:00.000000',
+           NULL,
+           '2026-06-01 08:00:00.000000',
+           '2026-06-02 09:45:00.000000',
+           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d',
+           'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'
+       );
+
 
 -- ==========================================
 -- 3. INSERT COMMENTS

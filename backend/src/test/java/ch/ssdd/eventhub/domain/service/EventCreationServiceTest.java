@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -128,5 +129,43 @@ class EventCreationServiceTest {
         assertSame(event2, result.get(1));
 
         verify(eventPersistencePort, times(1)).findAll();
+    }
+
+    @Test
+    void shouldReturnEvents_When_SearchMatchesQuery() {
+        // given
+        String searchString = "Conference";
+        Event matchingEvent = mock(Event.class);
+
+        when(eventPersistencePort.searchByTitleOrDescription(searchString))
+                .thenReturn(List.of(matchingEvent));
+
+        // when
+        List<Event> result = service.searchEvents(searchString);
+
+        // then
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertSame(matchingEvent, result.get(0));
+
+        verify(eventPersistencePort, times(1)).searchByTitleOrDescription(searchString);
+    }
+
+    @Test
+    void shouldReturnEmptyList_When_SearchFindsNoMatches() {
+        // given
+        String searchString = "NonExistentKeyword";
+
+        when(eventPersistencePort.searchByTitleOrDescription(searchString))
+                .thenReturn(Collections.emptyList());
+
+        // when
+        List<Event> result = service.searchEvents(searchString);
+
+        // then
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+
+        verify(eventPersistencePort, times(1)).searchByTitleOrDescription(searchString);
     }
 }
