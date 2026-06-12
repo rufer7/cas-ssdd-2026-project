@@ -15,23 +15,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.test.web.servlet.MockMvc;
 
-/**
- * Verifies that the OIDC/Entra ID security configuration enforces the expected
- * status codes:
- * <ul>
- * <li>{@code 401} when no bearer token is supplied;</li>
- * <li>{@code 403} when accessing an admin endpoint with a token that does
- * not carry the {@code Admin} app role;</li>
- * <li>{@code 403} when accessing an user endpoint with a token that does
- * not carry the {@code User} app role;</li>
- * <li>{@code 200/201} when accessing the API with a valid token.</li>
- * </ul>
- *
- * The {@code JwtDecoder} is mocked via {@link TestSecurityConfig}; the actual
- * authorities are supplied via
- * {@code SecurityMockMvcRequestPostProcessors.jwt()} so the assertions exercise
- * the real {@link SecurityConfig} authorisation rules.
- */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestSecurityConfig.class)
@@ -41,7 +24,7 @@ class SecurityConfigTest {
     MockMvc mockMvc;
 
     @Test
-    void apiRequiresAuthentication() throws Exception {
+    void apiRequiresAuthorization() throws Exception {
         mockMvc.perform(get("/api/events"))
                 .andExpect(status().isUnauthorized());
     }
