@@ -11,7 +11,5 @@ public record CreateCommentRequestDto(
         @NotBlank
         @Size(max = 255)
         @JsonDeserialize(using = SanitizerDeserializer.class)
-        String content,
-        // TODO: to be removed as soon as authentication is in place
-        String username) {
+        String content) {
 }

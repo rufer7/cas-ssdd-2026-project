@@ -1,5 +1,4 @@
 import { noteService } from '../services/noteService.js';
-import { currentUsername } from '../auth.js';
 import { el, emptyState, toast } from '../ui/dom.js';
 import { formatDateTime } from '../ui/format.js';
 
@@ -49,7 +48,7 @@ export async function renderNotesView() {
             return;
         }
         try {
-            await noteService.createNote({ content, username: await currentUsername() });
+            await noteService.createNote({ content });
             contentInput.value = '';
             toast('Note saved.', 'success');
             await refresh();

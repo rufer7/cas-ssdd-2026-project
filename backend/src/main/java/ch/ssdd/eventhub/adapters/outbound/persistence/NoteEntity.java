@@ -1,7 +1,9 @@
 package ch.ssdd.eventhub.adapters.outbound.persistence;
 
 import ch.ssdd.eventhub.domain.Note;
+import ch.ssdd.eventhub.security.crypto.EncryptedStringConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +23,8 @@ public class NoteEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    // Encrypted at rest (AES-256-GCM) — note content is "secret" personal data.
+    @Convert(converter = EncryptedStringConverter.class)
     @Column(nullable = false, length = 4000)
     private String content;
 

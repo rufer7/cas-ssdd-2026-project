@@ -3,12 +3,9 @@ package ch.ssdd.eventhub.domain.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -24,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -72,20 +70,26 @@ class CommentServiceTest {
     }
 
     @Test
-    void shouldThrowWhenUserNotFound() {
-        // given
+    void shouldProvisionUserWithLeastPrivilegeWhenNotFound() {
+        // given: an authenticated principal with no local record yet
         UUID eventId = UUID.randomUUID();
-        when(userPersistencePort.findByUsername("missing"))
+        when(userPersistencePort.findByUsername("newcomer"))
                 .thenReturn(Optional.empty());
+        when(userPersistencePort.save(any(User.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+        when(commentPersistencePort.save(eq(eventId), any(Comment.class), any(User.class)))
+                .thenAnswer(invocation -> invocation.getArgument(1));
 
-        // when + then
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> service.addComment(eventId, "Content", "missing")
-        );
+        // when
+        Comment result = service.addComment(eventId, "Content", "newcomer");
 
-        assertTrue(ex.getMessage().contains("User not found"));
-        verify(commentPersistencePort, never()).save(any(), any(), any());
+        // then: a USER-role record is provisioned (never escalated) and the comment is saved
+        assertNotNull(result);
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userPersistencePort, times(1)).save(userCaptor.capture());
+        assertEquals(Role.USER, userCaptor.getValue().role());
+        assertEquals("newcomer", userCaptor.getValue().username());
+        verify(commentPersistencePort, times(1)).save(eq(eventId), any(Comment.class), any(User.class));
     }
 
     @Test

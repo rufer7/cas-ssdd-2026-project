@@ -26,11 +26,11 @@ export const noteService = {
     },
 
     /**
-     * @param {{ content: string, username: string }} note
-     *   `username` is still required by the API (transitional; will move to the token).
+     * The owner is taken from the authenticated principal server-side.
+     * @param {{ content: string }} note
      * @returns {Promise<NoteResponse>}
      */
-    createNote({ content, username }) {
-        return apiClient.post(NOTES_PATH, { content, username });
+    createNote({ content }) {
+        return apiClient.post(NOTES_PATH, { content });
     },
 };

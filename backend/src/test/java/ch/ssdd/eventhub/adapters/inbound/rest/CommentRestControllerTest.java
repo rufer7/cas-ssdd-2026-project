@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 @ExtendWith(MockitoExtension.class)
 class CommentRestControllerTest {
@@ -62,25 +63,27 @@ class CommentRestControllerTest {
     }
 
     @Test
-    void shouldAddComment() {
+    void shouldAddCommentAsAuthenticatedPrincipal() {
         // given
         UUID eventId = UUID.randomUUID();
-        CreateCommentRequestDto request = new CreateCommentRequestDto("Great event!", "john");
+        CreateCommentRequestDto request = new CreateCommentRequestDto("Great event!");
         Comment comment = mock(Comment.class);
         User dummyUser = mock(User.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn("john");
 
         when(comment.createdBy()).thenReturn(dummyUser);
-
-        when(addCommentUseCase.addComment(eventId, request.content(), request.username()))
+        when(addCommentUseCase.addComment(eventId, request.content(), "john"))
                 .thenReturn(comment);
 
         // when
-        ResponseEntity<CommentResponseDto> response = controller.addComment(eventId, request);
+        ResponseEntity<CommentResponseDto> response = controller.addComment(authentication, eventId, request);
 
         // then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
 
-        verify(addCommentUseCase, times(1)).addComment(eventId, request.content(), request.username());
+        // the author is the authenticated principal, not any client-supplied value
+        verify(addCommentUseCase, times(1)).addComment(eventId, request.content(), "john");
     }
 }

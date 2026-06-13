@@ -3,7 +3,6 @@ package ch.ssdd.eventhub.domain.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -23,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -69,18 +69,34 @@ class NoteServiceTest {
     }
 
     @Test
-    void shouldThrowWhenUserNotFound() {
-        // given
-        when(userPersistencePort.findByUsername("missing"))
+    void shouldProvisionUserWithLeastPrivilegeWhenNotFound() {
+        // given: an authenticated principal with no local record yet
+        when(userPersistencePort.findByUsername("newcomer"))
                 .thenReturn(Optional.empty());
+        when(userPersistencePort.save(any(User.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+        when(notePersistencePort.save(any(Note.class), any(User.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
-        // when + then
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> service.createNote("Content", "missing"));
+        // when
+        Note result = service.createNote("Content", "newcomer");
 
-        assertTrue(ex.getMessage().contains("User not found"));
-        verify(notePersistencePort, never()).save(any(), any());
+        // then: a USER-role record is provisioned (never escalated) and the note is saved
+        assertNotNull(result);
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userPersistencePort, times(1)).save(userCaptor.capture());
+        assertEquals(Role.USER, userCaptor.getValue().role());
+        verify(notePersistencePort, times(1)).save(any(Note.class), any(User.class));
+    }
+
+    @Test
+    void shouldReturnEmptyNotesWhenUserNotProvisioned() {
+        when(userPersistencePort.findByUsername("ghost")).thenReturn(Optional.empty());
+
+        List<Note> result = service.loadNotesByUser("ghost");
+
+        assertTrue(result.isEmpty());
+        verify(notePersistencePort, never()).findAllByUser(any());
     }
 
     @Test

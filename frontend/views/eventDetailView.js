@@ -1,6 +1,6 @@
 import { eventService } from '../services/eventService.js';
 import { commentService } from '../services/commentService.js';
-import { isAdmin, currentUsername } from '../auth.js';
+import { isAdmin } from '../auth.js';
 import { el, emptyState, toast } from '../ui/dom.js';
 import { formatDateTime, formatDateRange, toInputDateTime } from '../ui/format.js';
 import { openFormDialog } from '../ui/dialog.js';
@@ -171,7 +171,7 @@ async function commentsSectionFor(eventId) {
             return;
         }
         try {
-            await commentService.addComment(eventId, { content, username: await currentUsername() });
+            await commentService.addComment(eventId, { content });
             contentInput.value = '';
             toast('Comment posted.', 'success');
             await refresh();

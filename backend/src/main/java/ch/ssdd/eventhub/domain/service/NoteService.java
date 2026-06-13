@@ -2,6 +2,7 @@ package ch.ssdd.eventhub.domain.service;
 
 import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.Note;
+import ch.ssdd.eventhub.domain.User;
 import ch.ssdd.eventhub.ports.inbound.CreateNoteUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadNotesByUserUseCase;
 import ch.ssdd.eventhub.ports.outbound.NotePersistencePort;
@@ -29,10 +30,12 @@ public class NoteService implements CreateNoteUseCase, LoadNotesByUserUseCase {
     public Note createNote(String content, String username) {
         logger.debug("Processing note creation business logic for user '{}' ...", username);
 
+        // The username is the trusted authenticated principal (never client-supplied), so a
+        // missing local record is safely provisioned with the least-privilege USER role.
         var user = userPersistencePort.findByUsername(username)
-                .orElseThrow(() -> {
-                    logger.error("Processing note creation business logic for user '{}' FAILED as the user does not exist in the system", username);
-                    return new IllegalArgumentException("User not found: " + username);
+                .orElseGet(() -> {
+                    logger.info("Provisioning new user '{}' before creating note.", username);
+                    return userPersistencePort.save(User.createNewProvisionedUser(username));
                 });
 
         var now = LocalDateTimeHelper.utcNow();
@@ -48,12 +51,13 @@ public class NoteService implements CreateNoteUseCase, LoadNotesByUserUseCase {
     @Override
     public List<Note> loadNotesByUser(String username) {
         logger.debug("Loading notes of user '{}' ...", username);
-        var user = userPersistencePort.findByUsername(username)
-                .orElseThrow(() -> {
-                    logger.error("Loading notes of user '{}' FAILED as the user does not exist in the system", username);
-                    return new IllegalArgumentException("User not found: " + username);
-                });
-        var notes = notePersistencePort.findAllByUser(user.username());
+        // A not-yet-provisioned principal simply has no notes; avoid leaking existence details.
+        var user = userPersistencePort.findByUsername(username);
+        if (user.isEmpty()) {
+            logger.info("Loading notes of user '{}' SUCCEEDED (user has no provisioned record yet)", username);
+            return List.of();
+        }
+        var notes = notePersistencePort.findAllByUser(user.get().username());
 
         logger.info("Loading notes of user '{}' SUCCEEDED ({} notes found)", username, notes.size());
 

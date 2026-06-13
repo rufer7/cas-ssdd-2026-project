@@ -26,12 +26,12 @@ export const commentService = {
     },
 
     /**
+     * The author is taken from the authenticated principal server-side.
      * @param {string} eventId
-     * @param {{ content: string, username: string }} comment
-     *   `username` is still required by the API (transitional; will move to the token).
+     * @param {{ content: string }} comment
      * @returns {Promise<CommentResponse>}
      */
-    addComment(eventId, { content, username }) {
-        return apiClient.post(commentsPath(eventId), { content, username });
+    addComment(eventId, { content }) {
+        return apiClient.post(commentsPath(eventId), { content });
     },
 };

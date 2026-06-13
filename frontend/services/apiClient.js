@@ -10,7 +10,7 @@
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080';
 
-let tokenProvider = async () => null;
+let authHeaderProvider = async () => null;
 
 /**
  * Error thrown for any non-2xx response. Carries the HTTP status and the raw
@@ -26,18 +26,20 @@ export class ApiError extends Error {
 }
 
 /**
- * Configure how the client obtains an access token.
- * @param {{ getToken: () => Promise<string|null> }} options
+ * Configure how the client authorizes requests. The provider returns the full
+ * value for the Authorization header (e.g. "Bearer <jwt>" for Auth0, or
+ * "Basic <base64>" for the local no-Auth0 profile), or null when unauthenticated.
+ * @param {{ getAuthHeader: () => Promise<string|null> }} options
  */
-export function configureApiClient({ getToken }) {
-    tokenProvider = getToken;
+export function configureApiClient({ getAuthHeader }) {
+    authHeaderProvider = getAuthHeader;
 }
 
 async function buildHeaders(extraHeaders) {
     const headers = { ...extraHeaders };
-    const token = await tokenProvider();
-    if (token) {
-        headers.Authorization = `Bearer ${token}`;
+    const authHeader = await authHeaderProvider();
+    if (authHeader) {
+        headers.Authorization = authHeader;
     }
     return headers;
 }

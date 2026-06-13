@@ -61,6 +61,7 @@ public class EventRestController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyAuthority('Admin', 'User')")
     public ResponseEntity<List<EventResponseDto>> searchEvents(@RequestParam(name = "query") SanitizedString searchString) {
         var searchEvents = searchEventsUseCase.searchEvents(searchString.value())
                 .stream()
