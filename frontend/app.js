@@ -1,4 +1,6 @@
 import { createAuth0Client } from '@auth0/auth0-spa-js';
+import { configureApiClient } from './services/apiClient.js';
+import { eventService } from './services/eventService.js';
 
 // DOM elements
 const loading = document.getElementById('loading');
@@ -22,6 +24,16 @@ async function initAuth0() {
             authorizationParams: {
                 redirect_uri: window.location.origin
             }
+        });
+
+        // Let the API services obtain a fresh access token for the backend audience.
+        configureApiClient({
+            getToken: () => auth0Client.getTokenSilently({
+                authorizationParams: {
+                    audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+                    scope: 'openid profile email'
+                }
+            })
         });
 
         // Check if user is returning from login
@@ -54,7 +66,7 @@ async function updateUI() {
         if (isAuthenticated) {
             showLoggedIn();
             await displayProfile();
-            await getAccessToken();
+            await loadEvents();
 
         } else {
             showLoggedOut();
@@ -114,27 +126,14 @@ async function login() {
     }
 }
 
-async function getAccessToken() {
+// Demonstrates calling the backend through the typed service layer.
+// The bearer token is attached automatically by the configured apiClient.
+async function loadEvents() {
     try {
-        const token = await auth0Client.getTokenSilently({
-            authorizationParams: {
-                audience: import.meta.env.VITE_AUTH0_AUDIENCE,
-                scope: 'openid profile email'
-            }
-        });
-        console.log(token);
-
-        // Use the token to call your API
-        const response = await fetch('http://localhost:8080/api/events', {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-
-        const data = await response.json();
-        console.log(data);
+        const events = await eventService.getAllEvents();
+        console.log('Loaded events:', events);
     } catch (error) {
-        console.error('Error getting token:', error);
+        console.error('Error loading events:', error);
     }
 }
 
