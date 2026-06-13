@@ -6,11 +6,10 @@ import ch.ssdd.eventhub.ports.inbound.CreateNoteUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadNotesByUserUseCase;
 import ch.ssdd.eventhub.ports.outbound.NotePersistencePort;
 import ch.ssdd.eventhub.ports.outbound.UserPersistencePort;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class NoteService implements CreateNoteUseCase, LoadNotesByUserUseCase {

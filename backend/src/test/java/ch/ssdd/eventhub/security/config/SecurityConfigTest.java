@@ -8,15 +8,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import ch.ssdd.eventhub.TestSecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("auth0")
 @Import(TestSecurityConfig.class)
 class SecurityConfigTest {
 
@@ -31,9 +33,24 @@ class SecurityConfigTest {
 
     @Test
     void adminEndpointForbiddenForNonAdmin() throws Exception {
+        // A valid body is sent so the request reaches the @PreAuthorize check (otherwise body
+        // binding would fail first with 400); only the missing 'Admin' authority should reject it.
+        var request = """
+                {
+                  "title": "Integration Test Event",
+                  "description": "Test",
+                  "from": "2026-06-01T10:00:00",
+                  "to": "2026-06-01T12:00:00",
+                  "location": "Zurich",
+                  "username": "john_user"
+                }
+                """;
+
         mockMvc.perform(post("/api/events")
                 .with(jwt().jwt(userToken())
-                        .authorities(new SimpleGrantedAuthority(SecurityConfig.USER_AUTHORITY))))
+                        .authorities(new SimpleGrantedAuthority(SecurityConfig.USER_AUTHORITY)))
+                        .contentType("application/json")
+                        .content(request))
                 .andExpect(status().isForbidden());
     }
 

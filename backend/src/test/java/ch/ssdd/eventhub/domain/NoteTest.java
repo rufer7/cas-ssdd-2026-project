@@ -1,16 +1,15 @@
 package ch.ssdd.eventhub.domain;
 
-import ch.ssdd.eventhub.common.LocalDateTimeHelper;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
+import java.time.LocalDateTime;
+import org.junit.jupiter.api.Test;
+
 class NoteTest {
-    
+
     @Test
     void shouldCreateValidNote() {
         Note note = validNote();

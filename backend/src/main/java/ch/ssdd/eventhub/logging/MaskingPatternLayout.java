@@ -2,7 +2,6 @@ package ch.ssdd.eventhub.logging;
 
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;

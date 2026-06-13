@@ -6,12 +6,11 @@ import ch.ssdd.eventhub.ports.inbound.AddCommentUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadCommentsByEventUseCase;
 import ch.ssdd.eventhub.ports.outbound.CommentPersistencePort;
 import ch.ssdd.eventhub.ports.outbound.UserPersistencePort;
+import java.util.List;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class CommentService implements AddCommentUseCase, LoadCommentsByEventUseCase {

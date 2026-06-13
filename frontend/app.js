@@ -119,7 +119,7 @@ async function getAccessToken() {
         const token = await auth0Client.getTokenSilently({
             authorizationParams: {
                 audience: import.meta.env.VITE_AUTH0_AUDIENCE,
-                scope: 'read:messages'
+                scope: 'openid profile email'
             }
         });
         console.log(token);

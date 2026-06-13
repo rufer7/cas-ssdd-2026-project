@@ -1,6 +1,15 @@
 package ch.ssdd.eventhub;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.jayway.jsonpath.JsonPath;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,18 +18,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = "spring.flyway.clean-disabled=false")
 @AutoConfigureMockMvc
+@ActiveProfiles("local")
 class EventIntegrationTest {
 
     @Autowired
@@ -33,7 +36,7 @@ class EventIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "alice_admin", roles = {"ADMIN"})
+    @WithMockUser(username = "alice_admin", authorities = {"Admin"})
     void shouldCreateAndFetchEvent() throws Exception {
 
         var request = """
@@ -68,7 +71,7 @@ class EventIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "john_user", roles = {"USER"})
+    @WithMockUser(username = "john_user", authorities = {"User"})
     void shouldNotCreateEventBecauseNotAdmin() throws Exception {
 
         var request = """
@@ -93,7 +96,7 @@ class EventIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "alice_admin", roles = {"ADMIN"})
+    @WithMockUser(username = "alice_admin", authorities = {"Admin"})
     void shouldReturnBadRequestWhenCreatingEventWithInvalidData() throws Exception {
         var invalidRequest = """
                 {
@@ -114,7 +117,7 @@ class EventIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "alice_admin", roles = {"ADMIN"})
+    @WithMockUser(username = "alice_admin", authorities = {"Admin"})
     void shouldUploadFeaturedImageToEvent() throws Exception {
 
         var file = Files.readAllBytes(Path.of("src/test/resources/spring.png"));

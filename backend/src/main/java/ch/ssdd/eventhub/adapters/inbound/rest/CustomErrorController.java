@@ -2,14 +2,13 @@ package ch.ssdd.eventhub.adapters.inbound.rest;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.springframework.boot.webmvc.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @RestController
 public class CustomErrorController implements ErrorController {

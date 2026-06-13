@@ -1,7 +1,6 @@
 package ch.ssdd.eventhub.adapters.inbound.rest.dto;
 
 import ch.ssdd.eventhub.domain.Event;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 

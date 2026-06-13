@@ -1,22 +1,21 @@
 package ch.ssdd.eventhub.domain.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.ports.outbound.EventPersistencePort;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EventMutationServiceTest {

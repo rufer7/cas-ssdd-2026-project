@@ -1,5 +1,15 @@
 package ch.ssdd.eventhub.domain.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.domain.Role;
@@ -7,28 +17,16 @@ import ch.ssdd.eventhub.domain.User;
 import ch.ssdd.eventhub.domain.command.CreateEventCommand;
 import ch.ssdd.eventhub.ports.outbound.EventPersistencePort;
 import ch.ssdd.eventhub.ports.outbound.UserPersistencePort;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class EventCreationServiceTest {
@@ -88,12 +86,15 @@ class EventCreationServiceTest {
     }
 
     @Test
-    void shouldThrowWhenUserNotFound() {
-        // given
+    void shouldProvisionAdminUserWhenUserNotFound() {
+        // given: the authenticated (admin) principal has no local user record yet
         when(userPersistencePort.findByUsername("missing"))
                 .thenReturn(Optional.empty());
+        when(userPersistencePort.save(any(User.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+        when(eventPersistencePort.save(any(Event.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
-        // when + then
         LocalDateTime plusOne = LocalDateTimeHelper.utcNow().plusDays(1);
         LocalDateTime plusTwo = LocalDateTimeHelper.utcNow().plusDays(2);
         CreateEventCommand createEventCommand = new CreateEventCommand(
@@ -103,12 +104,20 @@ class EventCreationServiceTest {
                 plusTwo,
                 "Zurich",
                 "missing");
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class, () -> service.create(createEventCommand));
 
-        assertTrue(ex.getMessage().contains("User not found"));
+        // when
+        Event result = service.create(createEventCommand);
 
-        verify(eventPersistencePort, never()).save(any());
+        // then: a new admin user is provisioned and the event is created with it
+        assertNotNull(result);
+        assertEquals("missing", result.createdBy().username());
+        assertEquals(Role.ADMIN, result.createdBy().role());
+
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userPersistencePort, times(1)).save(userCaptor.capture());
+        assertEquals(Role.ADMIN, userCaptor.getValue().role());
+
+        verify(eventPersistencePort, times(1)).save(any(Event.class));
     }
 
     @Test

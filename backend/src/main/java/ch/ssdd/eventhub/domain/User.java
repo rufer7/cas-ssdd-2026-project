@@ -3,7 +3,6 @@ package ch.ssdd.eventhub.domain;
 import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.common.CommonValidators;
 import ch.ssdd.eventhub.domain.common.Constants;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 

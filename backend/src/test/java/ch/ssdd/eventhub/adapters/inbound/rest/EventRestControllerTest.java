@@ -1,5 +1,14 @@
 package ch.ssdd.eventhub.adapters.inbound.rest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import ch.ssdd.eventhub.adapters.inbound.rest.config.SanitizedString;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateEventRequestDto;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.EventResponseDto;
@@ -12,6 +21,11 @@ import ch.ssdd.eventhub.ports.inbound.DeleteEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
 import ch.ssdd.eventhub.ports.inbound.SearchEventsUseCase;
 import ch.ssdd.eventhub.ports.inbound.UpdateEventUseCase;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,25 +33,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EventRestControllerTest {
@@ -123,9 +122,10 @@ class EventRestControllerTest {
         );
 
         var event = mock(Event.class);
-        var principal = mock(UserDetails.class);
 
-        var authentication = new UsernamePasswordAuthenticationToken(principal, null, List.of());
+        // The controller derives the creator's username from the authenticated principal name,
+        // so the principal here must resolve to "john" (it is ignored in the request body).
+        var authentication = new UsernamePasswordAuthenticationToken("john", null, List.of());
 
         when(createEventUseCase.create(expectedCommand)).thenReturn(event);
 

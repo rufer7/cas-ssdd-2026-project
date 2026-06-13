@@ -1,11 +1,14 @@
+import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
 import org.gradle.testing.jacoco.tasks.JacocoReport
 
 plugins {
 	java
 	jacoco
+	checkstyle
 	id("org.springframework.boot") version "4.1.0"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("org.sonarqube") version "7.3.0.8198"
+	id("com.diffplug.spotless") version "7.2.1"
 }
 
 group = "ch.ssdd"
@@ -33,10 +36,13 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 
+	// OAuth2 resource server: validate Auth0-issued bearer tokens (JWT) on every request.
+	implementation("org.springframework.security:spring-security-oauth2-resource-server")
+	implementation("org.springframework.security:spring-security-oauth2-jose")
+
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.flywaydb:flyway-database-postgresql")
 
-	implementation("com.auth0:auth0-springboot-api:1.0.0-beta.1")
 	implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20260313.1")
 
 	implementation("commons-io:commons-io:2.22.0")
@@ -62,11 +68,48 @@ sonar {
   }
 }
 
+// --- Static analysis: Checkstyle ---
+checkstyle {
+	toolVersion = "10.21.2"
+	configFile = file("config/checkstyle/checkstyle.xml")
+	isIgnoreFailures = false
+	maxWarnings = 0
+}
+
+// --- Code formatting: Spotless ---
+spotless {
+	java {
+		target("src/**/*.java")
+		importOrder()
+		removeUnusedImports()
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+}
+
+// --- Coverage: JaCoCo with an 80% minimum gate ---
 tasks.named<JacocoReport>("jacocoTestReport") {
 	dependsOn(tasks.named("test"))
 	reports {
 		xml.required.set(true)
 	}
+}
+
+tasks.named<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
+	dependsOn(tasks.named("test"))
+	violationRules {
+		rule {
+			limit {
+				counter = "INSTRUCTION"
+				value = "COVEREDRATIO"
+				minimum = "0.80".toBigDecimal()
+			}
+		}
+	}
+}
+
+tasks.named("check") {
+	dependsOn(tasks.named("jacocoTestCoverageVerification"))
 }
 
 tasks.named("sonar") {

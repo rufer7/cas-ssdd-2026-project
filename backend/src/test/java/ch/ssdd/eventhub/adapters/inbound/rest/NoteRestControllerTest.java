@@ -1,11 +1,19 @@
 package ch.ssdd.eventhub.adapters.inbound.rest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.CreateNoteRequestDto;
 import ch.ssdd.eventhub.adapters.inbound.rest.dto.NoteResponseDto;
 import ch.ssdd.eventhub.domain.Note;
 import ch.ssdd.eventhub.domain.User;
 import ch.ssdd.eventhub.ports.inbound.CreateNoteUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadNotesByUserUseCase;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,15 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class NoteRestControllerTest {

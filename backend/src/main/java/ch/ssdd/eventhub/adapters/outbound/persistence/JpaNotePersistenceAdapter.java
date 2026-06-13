@@ -3,9 +3,8 @@ package ch.ssdd.eventhub.adapters.outbound.persistence;
 import ch.ssdd.eventhub.domain.Note;
 import ch.ssdd.eventhub.domain.User;
 import ch.ssdd.eventhub.ports.outbound.NotePersistencePort;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class JpaNotePersistenceAdapter implements NotePersistencePort {

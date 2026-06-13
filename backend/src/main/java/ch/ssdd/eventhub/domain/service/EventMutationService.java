@@ -4,12 +4,11 @@ import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.ports.inbound.DeleteEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.UpdateEventUseCase;
 import ch.ssdd.eventhub.ports.outbound.EventPersistencePort;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 public class EventMutationService implements UpdateEventUseCase, DeleteEventUseCase {

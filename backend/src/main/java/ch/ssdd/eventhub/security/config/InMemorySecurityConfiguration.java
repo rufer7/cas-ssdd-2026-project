@@ -48,13 +48,16 @@ public class InMemorySecurityConfiguration {
 
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
+        // Grant the authorities verbatim (no ROLE_ prefix) so that local users match the same
+        // hasAuthority('Admin') / hasAnyAuthority('Admin','User') checks as the Auth0 roles claim
+        // in production. See Auth0RolesAuthoritiesConverter and the REST controllers' @PreAuthorize.
         UserDetails admin = User.withUsername(adminUsername)
                 .password("{noop}" + adminPassword)
-                .roles(adminRole)
+                .authorities(adminRole)
                 .build();
         UserDetails user = User.withUsername(username)
                 .password("{noop}" + userPassword)
-                .roles(userRole)
+                .authorities(userRole)
                 .build();
         return new InMemoryUserDetailsManager(admin, user);
     }
