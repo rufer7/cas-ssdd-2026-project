@@ -49,7 +49,7 @@ public class SecurityConfig {
     // CSP for serving the bundled single-page app plus the API. Scripts/styles/fonts are loaded
     // only from this origin; images allow data URIs and https (e.g. Auth0 profile pictures);
     // connect-src allows this origin and https (Auth0 token endpoint). No inline scripts.
-    private static final String CSP_DIRECTIVES = "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https:; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'";
+    private static final String CSP_DIRECTIVES = "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https:; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; worker-src 'self' blob:;";
 
     private final String issuerUri;
     private final String audience;
