@@ -9,7 +9,7 @@ import { createAuth0Client } from '@auth0/auth0-spa-js';
 import { configureApiClient } from './services/apiClient.js';
 
 // Must match auth0.roles-claim on the backend (Auth0RolesAuthoritiesConverter).
-const ROLES_CLAIM = 'https://eventhub.ssdd.ch/roles';
+const ROLES_CLAIM = `${import.meta.env.VITE_AUTH0_AUDIENCE}/roles`;
 
 let client;
 
@@ -21,9 +21,7 @@ export async function initAuth() {
             redirect_uri: window.location.origin,
             audience: import.meta.env.VITE_AUTH0_AUDIENCE,
         },
-        // Persist the session across reloads (dev convenience).
-        cacheLocation: 'localstorage',
-        useRefreshTokens: true,
+        useRefreshTokens: true
     });
 
     // Complete the login redirect, then strip the ?code/&state query params.
@@ -52,11 +50,14 @@ export function getUser() {
 }
 
 export async function getRoles() {
-    const user = await client.getUser();
-    const roles = user?.[ROLES_CLAIM];
+    const token = await client.getTokenSilently();
+    const payload = parseJwtPayload(token);
+    const roles = payload?.[ROLES_CLAIM];
     return Array.isArray(roles) ? roles : [];
 }
 
+// Decode a JWT payload without verifying the signature.
+// Verification happens server-side; the SPA only needs the claims for UI gating
 export async function isAdmin() {
     return (await getRoles()).includes('Admin');
 }
@@ -75,5 +76,10 @@ export function login() {
 }
 
 export function logout() {
-    return client.logout({ logoutParams: { returnTo: window.location.origin } });
+    return client.logout({logoutParams: {returnTo: window.location.origin}});
+}
+
+function parseJwtPayload(token) {
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(base64));
 }
