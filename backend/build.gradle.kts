@@ -36,7 +36,6 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 
-	// OAuth2 resource server: validate Auth0-issued bearer tokens (JWT) on every request.
 	implementation("org.springframework.security:spring-security-oauth2-resource-server")
 	implementation("org.springframework.security:spring-security-oauth2-jose")
 
