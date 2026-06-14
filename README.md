@@ -206,3 +206,13 @@ To update the `gradle.lockfile` and `verification-metadata.xml` files, you can u
 ./gradlew --write-verification-metadata sha256 dependencies
 ./gradlew build --write-locks
 ```
+
+## Spotless
+
+We use **Spotless** plugin to enforce a unified coding style across the repository.
+
+```bash
+./gradlew spotlessApply
+```
+
+
