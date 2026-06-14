@@ -42,7 +42,7 @@ public class EventMutationService implements UpdateEventUseCase, DeleteEventUseC
                 });
 
         var updatedEvent = existingEvent.updateDetails(title, description, from, to, location);
-        var savedEvent = eventPersistencePort.save(updatedEvent);
+        var savedEvent = eventPersistencePort.updateById(eventId, updatedEvent);
 
         logger.info("Processing event update business logic for event with ID '{}' SUCCEEDED",
                 eventId);
@@ -61,7 +61,7 @@ public class EventMutationService implements UpdateEventUseCase, DeleteEventUseC
                 });
 
         var updatedEvent = existingEvent.updateFeaturedImage(featuredImage);
-        eventPersistencePort.save(updatedEvent);
+        eventPersistencePort.updateById(eventId, updatedEvent);
 
         logger.info("Processing featuredImage update business logic for event with ID '{}' SUCCEEDED",
                 eventId);
