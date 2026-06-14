@@ -31,7 +31,6 @@ public class NoteRestController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('Admin', 'User')")
     public ResponseEntity<List<NoteResponseDto>> getNotesByUser(Authentication authentication) {
-        // Notes are scoped to the authenticated principal; a user can only ever see their own.
         var noteDtos = loadNotesByUserUseCase.loadNotesByUser(authentication.getName())
                 .stream()
                 .map(NoteResponseDto::of)
@@ -44,7 +43,6 @@ public class NoteRestController {
     public ResponseEntity<NoteResponseDto> createNote(
             Authentication authentication,
             @RequestBody CreateNoteRequestDto request) {
-        // The owner is the authenticated principal — never trust a client-supplied identity.
         var note = createNoteUseCase.createNote(request.content(), authentication.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(NoteResponseDto.of(note));
     }
