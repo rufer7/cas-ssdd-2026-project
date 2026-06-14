@@ -46,7 +46,6 @@ public class CommentRestController {
             Authentication authentication,
             @PathVariable UUID eventId,
             @RequestBody CreateCommentRequestDto request) {
-        // The author is the authenticated principal — never trust a client-supplied identity.
         var comment = addCommentUseCase.addComment(
                 eventId,
                 request.content(),
