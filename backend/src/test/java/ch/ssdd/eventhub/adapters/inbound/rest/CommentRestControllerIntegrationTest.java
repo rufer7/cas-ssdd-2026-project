@@ -1,6 +1,5 @@
 package ch.ssdd.eventhub.adapters.inbound.rest;
 
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -89,7 +88,7 @@ class CommentRestControllerIntegrationTest {
         LocalDateTime localDateTime = LocalDateTime.of(2026, Month.JUNE, 7, 23, 0);
 
         Comment emptyComment = new Comment("a", mockUser, localDateTime, mockUser, localDateTime);
-        when(addCommentUseCase.addComment(eq(eventId), eq(expectedCleanContent), eq("bob_user")))
+        when(addCommentUseCase.addComment(eventId, expectedCleanContent, "bob_user"))
                 .thenReturn(emptyComment);
 
         // Act & Assert

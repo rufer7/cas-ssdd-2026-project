@@ -49,9 +49,11 @@ public class SecurityConfig {
     public static final String USER_AUTHORITY = "User";
 
     private static final String PERMISSIONS_POLICY = "accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=()";
-    // CSP for serving the bundled single-page app plus the API. Scripts/styles/fonts are loaded
-    // only from this origin; images allow data URIs and https (e.g. Auth0 profile pictures);
-    // connect-src allows this origin and https (Auth0 token endpoint). No inline scripts.
+    // Content Security Policy (CSP) for serving the bundled single-page app plus the API.
+    // Scripts, styles and fonts are only allowed to be loaded from the application's origin.
+    // Data URIs and https allowed as image source (e.g. Auth0 profile pictures).
+    // connect-src allows the application's origin and https (Auth0 token endpoint).
+    // No inline scripts allowed.
     private static final String CSP_DIRECTIVES = "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https:; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; worker-src 'self' blob:;";
 
     private final String issuerUri;
