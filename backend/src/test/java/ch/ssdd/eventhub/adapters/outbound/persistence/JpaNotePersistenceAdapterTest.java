@@ -1,19 +1,5 @@
 package ch.ssdd.eventhub.adapters.outbound.persistence;
 
-import ch.ssdd.eventhub.common.LocalDateTimeHelper;
-import ch.ssdd.eventhub.domain.Note;
-import ch.ssdd.eventhub.domain.Role;
-import ch.ssdd.eventhub.domain.User;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -23,6 +9,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
+import ch.ssdd.eventhub.domain.Note;
+import ch.ssdd.eventhub.domain.Role;
+import ch.ssdd.eventhub.domain.User;
+import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class JpaNotePersistenceAdapterTest {

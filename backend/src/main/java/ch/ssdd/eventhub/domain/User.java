@@ -1,8 +1,8 @@
 package ch.ssdd.eventhub.domain;
 
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.common.CommonValidators;
 import ch.ssdd.eventhub.domain.common.Constants;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -45,5 +45,18 @@ public record User(
         if (!CommonValidators.isNotInFuture(createdAt)) {
             throw new IllegalArgumentException("CreatedAt cannot be in the future");
         }
+    }
+
+    public static User createNewProvisionedAdminUser(String username) {
+        return new User(username, username, Role.ADMIN, LocalDateTimeHelper.utcNow(), LocalDateTimeHelper.utcNow());
+    }
+
+    /**
+     * Just-in-time provisioning of an authenticated principal with the least-privilege
+     * {@link Role#USER} role. Used by the comment/note flows where the username is the trusted
+     * authenticated principal (never client-supplied), so no privilege escalation is possible.
+     */
+    public static User createNewProvisionedUser(String username) {
+        return new User(username, username, Role.USER, LocalDateTimeHelper.utcNow(), LocalDateTimeHelper.utcNow());
     }
 }

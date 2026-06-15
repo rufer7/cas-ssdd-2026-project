@@ -1,16 +1,19 @@
 package ch.ssdd.eventhub.domain;
 
-import ch.ssdd.eventhub.common.LocalDateTimeHelper;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
-
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
+import ch.ssdd.eventhub.domain.command.CreateEventCommand;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
 
 class EventTest {
 
@@ -135,6 +138,117 @@ class EventTest {
         Event result = event.withoutComment(comment);
 
         assertSame(event, result);
+    }
+
+    @Test
+    void shouldUpdateDetailsImmutably() {
+        Event event = validEvent();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
+
+        Event updated = event.updateDetails(
+                "New Title", "New Description", now.plusDays(3), now.plusDays(4), "Bern");
+
+        assertEquals("New Title", updated.title());
+        assertEquals("New Description", updated.description());
+        assertEquals("Bern", updated.location());
+        // original is untouched
+        assertEquals("Title", event.title());
+        assertEquals(event.id(), updated.id());
+    }
+
+    @Test
+    void shouldThrowWhenUpdateDetailsTitleBlank() {
+        Event event = validEvent();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
+        LocalDateTime fromDate = now.plusDays(3);
+        LocalDateTime toDate = now.plusDays(4);
+
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> event.updateDetails("", "d", fromDate, toDate, "Bern"));
+
+        assertTrue(ex.getMessage().contains("title"));
+    }
+
+    @Test
+    void shouldThrowWhenUpdateDetailsFromAfterTo() {
+        Event event = validEvent();
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
+        LocalDateTime fromDate = now.plusDays(5);
+        LocalDateTime toDate = now.plusDays(4);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> event.updateDetails("t", "d", fromDate, toDate, "Bern"));
+    }
+
+    @Test
+    void shouldUpdateFeaturedImageImmutably() {
+        Event event = validEvent();
+        byte[] image = {1, 2, 3};
+
+        Event updated = event.updateFeaturedImage(image);
+
+        assertArrayEquals(image, updated.featuredImage());
+        assertEquals(event.id(), updated.id());
+    }
+
+    @Test
+    void shouldCreateFromCommand() {
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
+        User creator = dummyUser();
+        CreateEventCommand command = new CreateEventCommand(
+                "Conf", "Desc", now.plusDays(1), now.plusDays(2), "Zurich", creator.username());
+
+        Event event = Event.createFromCommand(command, creator);
+
+        assertEquals("Conf", event.title());
+        assertSame(creator, event.createdBy());
+        assertSame(creator, event.modifiedBy());
+        assertNotNull(event.id());
+    }
+
+    @Test
+    void shouldRejectCommandWithToBeforeFrom() {
+        LocalDateTime now = LocalDateTimeHelper.utcNow();
+        LocalDateTime fromDate = now.plusDays(2);
+        LocalDateTime toDate = now.plusDays(1);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new CreateEventCommand(
+                        "Conf", "Desc", fromDate, toDate, "Zurich", "john"));
+    }
+
+    @Test
+    void shouldBeEqualWhenAllFieldsExceptIdMatch() {
+        UUID id1 = UUID.fromString("00000000-0000-0000-0000-000000000001");
+        UUID id2 = UUID.fromString("00000000-0000-0000-0000-000000000002");
+        LocalDateTime base = LocalDateTime.of(2026, Month.JANUARY, 1, 10, 0);
+        User user = dummyUser();
+
+        Event first = new Event(id1, "T", "D", base.plusDays(1), base.plusDays(2),
+                "Zurich", user, base, user, base, null);
+        Event sameButDifferentId = new Event(id2, "T", "D", base.plusDays(1), base.plusDays(2),
+                "Zurich", user, base, user, base, null);
+
+        assertEquals(first, sameButDifferentId);
+        assertEquals(first.hashCode(), sameButDifferentId.hashCode());
+        assertEquals(first, first);
+        assertNotEquals(null, first);
+        //noinspection AssertBetweenInconvertibleTypes
+        assertNotEquals("not an event", first);
+
+        Event differentTitle = new Event(id1, "Other", "D", base.plusDays(1), base.plusDays(2),
+                "Zurich", user, base, user, base, null);
+        assertNotEquals(first, differentTitle);
+    }
+
+    @Test
+    void shouldIncludeTitleInToString() {
+        Event event = validEvent();
+
+        assertTrue(event.toString().contains("Title"));
     }
 
     private Comment dummyComment() {

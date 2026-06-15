@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -48,13 +49,16 @@ public class InMemorySecurityConfiguration {
 
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
+        // Grant the authorities verbatim (no ROLE_ prefix) so that local users match the same
+        // hasAuthority('Admin') / hasAnyAuthority('Admin','User') checks as the Auth0 roles claim
+        // in production. See Auth0RolesAuthoritiesConverter and the REST controllers' @PreAuthorize.
         UserDetails admin = User.withUsername(adminUsername)
                 .password("{noop}" + adminPassword)
-                .roles(adminRole)
+                .authorities(adminRole)
                 .build();
         UserDetails user = User.withUsername(username)
                 .password("{noop}" + userPassword)
-                .roles(userRole)
+                .authorities(userRole)
                 .build();
         return new InMemoryUserDetailsManager(admin, user);
     }
@@ -65,7 +69,11 @@ public class InMemorySecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET,
+                                "/", "/index.html", "/assets/**", "/favicon.ico", "/*.svg")
+                        .permitAll()
+                        .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }

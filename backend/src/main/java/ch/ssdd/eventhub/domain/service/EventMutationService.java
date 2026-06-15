@@ -4,12 +4,11 @@ import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.ports.inbound.DeleteEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.UpdateEventUseCase;
 import ch.ssdd.eventhub.ports.outbound.EventPersistencePort;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 public class EventMutationService implements UpdateEventUseCase, DeleteEventUseCase {
@@ -43,7 +42,7 @@ public class EventMutationService implements UpdateEventUseCase, DeleteEventUseC
                 });
 
         var updatedEvent = existingEvent.updateDetails(title, description, from, to, location);
-        var savedEvent = eventPersistencePort.save(updatedEvent);
+        var savedEvent = eventPersistencePort.updateById(eventId, updatedEvent);
 
         logger.info("Processing event update business logic for event with ID '{}' SUCCEEDED",
                 eventId);
@@ -62,7 +61,7 @@ public class EventMutationService implements UpdateEventUseCase, DeleteEventUseC
                 });
 
         var updatedEvent = existingEvent.updateFeaturedImage(featuredImage);
-        eventPersistencePort.save(updatedEvent);
+        eventPersistencePort.updateById(eventId, updatedEvent);
 
         logger.info("Processing featuredImage update business logic for event with ID '{}' SUCCEEDED",
                 eventId);

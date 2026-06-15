@@ -10,13 +10,15 @@ import ch.ssdd.eventhub.ports.inbound.DeleteEventUseCase;
 import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
 import ch.ssdd.eventhub.ports.inbound.SearchEventsUseCase;
 import ch.ssdd.eventhub.ports.inbound.UpdateEventUseCase;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,10 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/events")
@@ -53,7 +51,8 @@ public class EventRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EventResponseDto>> getAllEvents() {
+    @PreAuthorize("hasAnyAuthority('Admin', 'User')")
+    public ResponseEntity<List<EventResponseDto>> getAllEvents(Authentication authentication) {
         var eventDtos = loadAllEventsUseCase.loadAllEvents()
                 .stream()
                 .map(EventResponseDto::of)
@@ -62,6 +61,7 @@ public class EventRestController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyAuthority('Admin', 'User')")
     public ResponseEntity<List<EventResponseDto>> searchEvents(@RequestParam(name = "query") SanitizedString searchString) {
         var searchEvents = searchEventsUseCase.searchEvents(searchString.value())
                 .stream()
@@ -71,11 +71,11 @@ public class EventRestController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<EventResponseDto> createEvent(@AuthenticationPrincipal UserDetails principal,
+    @PreAuthorize("hasAuthority('Admin')")
+    public ResponseEntity<EventResponseDto> createEvent(Authentication authentication,
                                                         @RequestBody CreateEventRequestDto request) {
 
-        var event = createEventUseCase.create(request.toCommand());
+        var event = createEventUseCase.create(request.toCommand(authentication.getName()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(EventResponseDto.of(event));
     }
@@ -92,8 +92,8 @@ public class EventRestController {
      * @return 200 OK, if upload succeeded
      */
     @PostMapping("/{id}/uploadFeaturedImage")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> uploadFeaturedImage(@AuthenticationPrincipal UserDetails principal,
+    @PreAuthorize("hasAuthority('Admin')")
+    public ResponseEntity<String> uploadFeaturedImage(Authentication authentication,
                                                       @PathVariable UUID id,
                                                       @RequestParam("file") MultipartFile file) {
 
@@ -118,8 +118,8 @@ public class EventRestController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<EventResponseDto> updateEvent(@AuthenticationPrincipal UserDetails principal,
+    @PreAuthorize("hasAuthority('Admin')")
+    public ResponseEntity<EventResponseDto> updateEvent(Authentication authentication,
                                                         @PathVariable UUID id,
                                                         @RequestBody UpdateEventRequestDto request) {
 
@@ -129,8 +129,8 @@ public class EventRestController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<EventResponseDto> deleteEvent(@AuthenticationPrincipal UserDetails principal,
+    @PreAuthorize("hasAuthority('Admin')")
+    public ResponseEntity<EventResponseDto> deleteEvent(Authentication authentication,
                                                         @PathVariable UUID id) {
         deleteEventUseCase.deleteEvent(id);
 

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>EventHub</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="app-header">
+    <div class="app-header__inner">
+        <a class="brand" href="#/events">EventHub</a>
+        <nav class="nav" id="nav" aria-label="Primary"></nav>
+        <div class="auth-controls" id="auth-controls"></div>
+    </div>
+</header>
+
+<main id="main" class="main" tabindex="-1" aria-label="Main content"></main>
+
+<!-- Polite status updates (e.g. loading messages) for assistive tech -->
+<div id="status" class="visually-hidden" role="status" aria-live="polite"></div>
+<!-- Assertive transient notifications -->
+<div id="toast-region" class="toast-region" aria-live="assertive" aria-atomic="true"></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

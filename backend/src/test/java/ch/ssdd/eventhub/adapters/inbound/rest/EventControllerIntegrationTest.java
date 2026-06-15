@@ -1,27 +1,5 @@
 package ch.ssdd.eventhub.adapters.inbound.rest;
 
-import ch.ssdd.eventhub.domain.Event;
-import ch.ssdd.eventhub.domain.command.CreateEventCommand;
-import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
-import ch.ssdd.eventhub.ports.inbound.DeleteEventUseCase;
-import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
-import ch.ssdd.eventhub.ports.inbound.SearchEventsUseCase;
-import ch.ssdd.eventhub.ports.inbound.UpdateEventUseCase;
-import ch.ssdd.eventhub.security.config.InMemorySecurityConfiguration;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.List;
-import java.util.UUID;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -33,8 +11,31 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import ch.ssdd.eventhub.domain.Event;
+import ch.ssdd.eventhub.domain.command.CreateEventCommand;
+import ch.ssdd.eventhub.ports.inbound.CreateEventUseCase;
+import ch.ssdd.eventhub.ports.inbound.DeleteEventUseCase;
+import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
+import ch.ssdd.eventhub.ports.inbound.SearchEventsUseCase;
+import ch.ssdd.eventhub.ports.inbound.UpdateEventUseCase;
+import ch.ssdd.eventhub.security.config.InMemorySecurityConfiguration;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.List;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+
 @WebMvcTest(EventRestController.class)
 @Import(InMemorySecurityConfiguration.class)
+@ActiveProfiles("local")
 class EventControllerIntegrationTest {
 
     @Autowired
@@ -52,7 +53,7 @@ class EventControllerIntegrationTest {
     SearchEventsUseCase searchEventsUseCase;
 
     @Test
-    @WithMockUser(username = "alice_admin", roles = {"ADMIN"})
+    @WithMockUser(username = "alice_admin", authorities = {"Admin"})
     void should_PassSanitizedDataToUseCase_When_ControllerReceivesUnsafePayload() throws Exception {
         // Arrange
         var unsafePayload = """
@@ -76,19 +77,20 @@ class EventControllerIntegrationTest {
                         .content(unsafePayload))
                 .andExpect(status().isCreated());
 
+        // The username is taken from the authenticated principal, not the (untrusted) request body.
         CreateEventCommand expectedPassedObject = new CreateEventCommand(
                 "Concert",
                 "Party time click",
                 LocalDateTime.of(2026, Month.JUNE, 7, 20, 0),
                 LocalDateTime.of(2026, Month.JUNE, 7, 23, 0),
                 "Club ",
-                "user123"
+                "alice_admin"
         );
         verify(createEventUseCase).create(expectedPassedObject);
     }
 
     @Test
-    @WithMockUser(username = "regular_user", roles = {"USER"})
+    @WithMockUser(username = "regular_user", authorities = {"User"})
     void should_AllowPublicAccess_When_GettingAllEvents() throws Exception {
         when(loadAllEventsUseCase.loadAllEvents()).thenReturn(List.of());
 
@@ -97,7 +99,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "regular_user", roles = {"USER"})
+    @WithMockUser(username = "regular_user", authorities = {"User"})
     void should_AllowPublicAccessAndSanitize_When_SearchingEvents() throws Exception {
         // Assuming your SanitizedString or custom converter strips html tags during parameter binding
         when(searchEventsUseCase.searchEvents("concert")).thenReturn(List.of());
@@ -110,7 +112,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "regular_user", roles = {"USER"})
+    @WithMockUser(username = "regular_user", authorities = {"User"})
     void should_ReturnForbidden_When_NonAdminAttemptsToCreateEvent() throws Exception {
         var payload = """
                 {
@@ -131,7 +133,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "alice_admin", roles = {"ADMIN"})
+    @WithMockUser(username = "alice_admin", authorities = {"Admin"})
     void should_AllowUpdate_When_UserIsAdmin() throws Exception {
         UUID id = UUID.randomUUID();
         var payload = """
@@ -164,7 +166,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "regular_user", roles = {"USER"})
+    @WithMockUser(username = "regular_user", authorities = {"User"})
     void should_ReturnForbidden_When_NonAdminAttemptsToUpdateEvent() throws Exception {
         UUID id = UUID.randomUUID();
         var payload = "{}";
@@ -177,7 +179,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "alice_admin", roles = {"ADMIN"})
+    @WithMockUser(username = "alice_admin", authorities = {"Admin"})
     void should_AllowDelete_When_UserIsAdmin() throws Exception {
         UUID id = UUID.randomUUID();
 
@@ -189,7 +191,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "regular_user", roles = {"USER"})
+    @WithMockUser(username = "regular_user", authorities = {"User"})
     void should_ReturnForbidden_When_NonAdminAttemptsToDeleteEvent() throws Exception {
         UUID id = UUID.randomUUID();
 
@@ -199,7 +201,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "regular_user", roles = {"USER"})
+    @WithMockUser(username = "regular_user", authorities = {"User"})
     void should_ReturnOkAndCallUseCase_When_SearchingEventsWithValidQuery() throws Exception {
         // Arrange
         String searchQuery = "TechConference";
@@ -217,7 +219,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "regular_user", roles = {"USER"})
+    @WithMockUser(username = "regular_user", authorities = {"User"})
     void should_PassSanitizedQueryToUseCase_When_SearchQueryContainsUnsafeHtml() throws Exception {
         // Arrange
         String unsafeQuery = "<script>alert('XSS')</script>ZüriFest<iframe src='bad-url'></iframe>";

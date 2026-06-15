@@ -1,7 +1,6 @@
 package ch.ssdd.eventhub.adapters.inbound.rest.dto;
 
 import ch.ssdd.eventhub.domain.Comment;
-
 import java.time.LocalDateTime;
 
 public record CommentResponseDto(

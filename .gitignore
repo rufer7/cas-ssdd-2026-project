@@ -123,6 +123,9 @@ build/
 
 .gradle/
 
+# Frontend SPA bundle assembled into the backend at build time (CI / Docker)
+backend/src/main/resources/static/
+
 ### Windows ###
 # Windows operating system specific files
 

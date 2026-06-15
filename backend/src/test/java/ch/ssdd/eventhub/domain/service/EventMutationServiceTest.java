@@ -1,22 +1,22 @@
 package ch.ssdd.eventhub.domain.service;
 
-import ch.ssdd.eventhub.common.LocalDateTimeHelper;
-import ch.ssdd.eventhub.domain.Event;
-import ch.ssdd.eventhub.ports.outbound.EventPersistencePort;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
+import ch.ssdd.eventhub.domain.Event;
+import ch.ssdd.eventhub.ports.outbound.EventPersistencePort;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class EventMutationServiceTest {
@@ -45,20 +45,20 @@ class EventMutationServiceTest {
         LocalDateTime to = LocalDateTimeHelper.utcNow().plusHours(2);
         String location = "Zurich";
 
-        Event existingEvent = org.mockito.Mockito.mock(Event.class);
-        Event updatedEvent = org.mockito.Mockito.mock(Event.class);
-        Event savedEvent = org.mockito.Mockito.mock(Event.class);
+        Event existingEvent = Mockito.mock(Event.class);
+        Event updatedEvent = Mockito.mock(Event.class);
+        Event savedEvent = Mockito.mock(Event.class);
 
         when(eventPersistencePort.findById(eventId)).thenReturn(Optional.of(existingEvent));
         when(existingEvent.updateDetails(title, description, from, to, location)).thenReturn(updatedEvent);
-        when(eventPersistencePort.save(updatedEvent)).thenReturn(savedEvent);
+        when(eventPersistencePort.updateById(eventId, updatedEvent)).thenReturn(savedEvent);
 
         Event result = eventMutationService.update(eventId, title, description, from, to, location);
 
         assertEquals(savedEvent, result);
         verify(eventPersistencePort).findById(eventId);
         verify(existingEvent).updateDetails(title, description, from, to, location);
-        verify(eventPersistencePort).save(updatedEvent);
+        verify(eventPersistencePort).updateById(eventId, updatedEvent);
     }
 
     @Test

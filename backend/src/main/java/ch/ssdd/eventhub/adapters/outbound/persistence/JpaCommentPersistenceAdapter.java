@@ -3,10 +3,9 @@ package ch.ssdd.eventhub.adapters.outbound.persistence;
 import ch.ssdd.eventhub.domain.Comment;
 import ch.ssdd.eventhub.domain.User;
 import ch.ssdd.eventhub.ports.outbound.CommentPersistencePort;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.UUID;
+import org.springframework.stereotype.Component;
 
 @Component
 public class JpaCommentPersistenceAdapter implements CommentPersistencePort {

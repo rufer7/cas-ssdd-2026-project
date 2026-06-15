@@ -8,11 +8,10 @@ import ch.ssdd.eventhub.ports.inbound.LoadAllEventsUseCase;
 import ch.ssdd.eventhub.ports.inbound.SearchEventsUseCase;
 import ch.ssdd.eventhub.ports.outbound.EventPersistencePort;
 import ch.ssdd.eventhub.ports.outbound.UserPersistencePort;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class EventCreationService implements LoadAllEventsUseCase, CreateEventUseCase, SearchEventsUseCase {
@@ -34,9 +33,10 @@ public class EventCreationService implements LoadAllEventsUseCase, CreateEventUs
         logger.debug("Processing event creation business logic for user '{}' ...", username);
 
         User user = userPersistencePort.findByUsername(username)
-                .orElseThrow(() -> {
-                    logger.error("Processing event creation business logic for user '{}' FAILED as the user does not exist in the system", username);
-                    return new IllegalArgumentException("User not found for username: " + username);
+                .orElseGet(() -> {
+                    logger.info("User '{}' not found locally. Creating new admin user before creating new event.", username);
+                    User newUser = User.createNewProvisionedAdminUser(username);
+                    return userPersistencePort.save(newUser);
                 });
 
         Event eventFromCommand = Event.createFromCommand(createEventCommand, user);

@@ -1,7 +1,6 @@
 package ch.ssdd.eventhub.domain.common;
 
 import ch.ssdd.eventhub.common.LocalDateTimeHelper;
-
 import java.time.LocalDateTime;
 
 public class CommonValidators {

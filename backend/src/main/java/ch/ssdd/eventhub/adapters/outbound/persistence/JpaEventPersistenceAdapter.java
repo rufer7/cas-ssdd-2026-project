@@ -2,11 +2,10 @@ package ch.ssdd.eventhub.adapters.outbound.persistence;
 
 import ch.ssdd.eventhub.domain.Event;
 import ch.ssdd.eventhub.ports.outbound.EventPersistencePort;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.stereotype.Component;
 
 @Component
 public class JpaEventPersistenceAdapter implements EventPersistencePort {

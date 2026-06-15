@@ -165,6 +165,39 @@ Once the application is running, you can access the following URL:
 
 - http://localhost:8080/api/events
 
+## Authentication (Auth0 via OIDC)
+
+Authentication is delegated to `Auth0`. The backend is configured as an OAuth2 resource server and validates the bearer access tokens issued by `Auth0` on each request.
+
+### Behaviour
+
+- requests without a bearer token → `401 Unauthorized`
+- requests to admin endpoints with a token that does not carry the `Admin` app role → `403 Forbidden`
+- requests with a valid bearer token and the required role → `200 OK` / `201 CREATED`
+
+### Create Auth0 applications
+
+- step `Setup your Auth0 App` in https://auth0.com/docs/quickstart/spa/vanillajs
+- step `Setup your Auth0 API` in https://auth0.com/docs/quickstart/backend/java-spring-security5
+
+### Required environment variables
+
+For frontend part, see `frontend\env.local.example`
+
+For backend part, see here.
+
+| Variable               | Description                            |
+|------------------------|----------------------------------------|
+| `AUTH0_DOMAIN`         | Auth0 tenant (`YOUR_TENANT.auth0.com`) |
+| `AUTH0_AUDIENCE`       | Auth0 identifier                       |
+
+### Start locally with Auth0 integration
+
+To start the application locally with `Auth0` integration, proceed as follows.
+
+- set the environment variables prefixed with `AUTH0_` (see table above) in your IDE configuration
+- copy `frontend\env.local.example` to a new file `frontend\.env.local` and set the variables
+
 ## Update gradle.lockfile and verification-metadata.xml
 
 To update the `gradle.lockfile` and `verification-metadata.xml` files, you can use the following commands:
@@ -173,3 +206,13 @@ To update the `gradle.lockfile` and `verification-metadata.xml` files, you can u
 ./gradlew --write-verification-metadata sha256 dependencies
 ./gradlew build --write-locks
 ```
+
+## Spotless
+
+We use **Spotless** plugin to enforce a unified coding style across the repository.
+
+```bash
+./gradlew spotlessApply
+```
+
+

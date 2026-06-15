@@ -19,6 +19,12 @@ services:
       context: .
       dockerfile: Dockerfile
       target: debug
+      args:
+        - VITE_AUTH_MODE=${VITE_AUTH_MODE}
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+        - VITE_AUTH0_DOMAIN=${VITE_AUTH0_DOMAIN}
+        - VITE_AUTH0_CLIENT_ID=${VITE_AUTH0_CLIENT_ID}
+        - VITE_AUTH0_AUDIENCE=${VITE_AUTH0_AUDIENCE}
     image: eventhub:debug
     container_name: eventhub
     depends_on:
@@ -26,5 +32,8 @@ services:
         condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      AUTH0_DOMAIN: ${AUTH0_DOMAIN}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      AUTH0_ROLES_CLAIM: ${AUTH0_ROLES_CLAIM}
     ports:
       - "8080:8080"

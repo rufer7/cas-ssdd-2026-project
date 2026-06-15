@@ -1,12 +1,11 @@
 package ch.ssdd.eventhub.domain;
 
-import ch.ssdd.eventhub.common.LocalDateTimeHelper;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import ch.ssdd.eventhub.common.LocalDateTimeHelper;
+import java.time.LocalDateTime;
+import org.junit.jupiter.api.Test;
 
 class UserTest {
 
@@ -147,6 +146,15 @@ class UserTest {
 
         assertEquals("a", user.username());
         assertEquals("b", user.externalId());
+    }
+
+    @Test
+    void shouldCreateProvisionedAdminUserWithAdminRole() {
+        User user = User.createNewProvisionedAdminUser("alice_admin");
+
+        assertEquals("alice_admin", user.username());
+        assertEquals("alice_admin", user.externalId());
+        assertEquals(Role.ADMIN, user.role());
     }
 
     private User validUser() {
