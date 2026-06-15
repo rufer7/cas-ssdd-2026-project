@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import ch.ssdd.eventhub.common.LocalDateTimeHelper;
 import ch.ssdd.eventhub.domain.command.CreateEventCommand;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
@@ -159,10 +160,12 @@ class EventTest {
     void shouldThrowWhenUpdateDetailsTitleBlank() {
         Event event = validEvent();
         LocalDateTime now = LocalDateTimeHelper.utcNow();
+        LocalDateTime fromDate = now.plusDays(3);
+        LocalDateTime toDate = now.plusDays(4);
 
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> event.updateDetails("", "d", now.plusDays(3), now.plusDays(4), "Bern"));
+                () -> event.updateDetails("", "d", fromDate, toDate, "Bern"));
 
         assertTrue(ex.getMessage().contains("title"));
     }
@@ -171,10 +174,12 @@ class EventTest {
     void shouldThrowWhenUpdateDetailsFromAfterTo() {
         Event event = validEvent();
         LocalDateTime now = LocalDateTimeHelper.utcNow();
+        LocalDateTime fromDate = now.plusDays(5);
+        LocalDateTime toDate = now.plusDays(4);
 
         assertThrows(
                 IllegalArgumentException.class,
-                () -> event.updateDetails("t", "d", now.plusDays(5), now.plusDays(4), "Bern"));
+                () -> event.updateDetails("t", "d", fromDate, toDate, "Bern"));
     }
 
     @Test
@@ -206,18 +211,20 @@ class EventTest {
     @Test
     void shouldRejectCommandWithToBeforeFrom() {
         LocalDateTime now = LocalDateTimeHelper.utcNow();
+        LocalDateTime fromDate = now.plusDays(2);
+        LocalDateTime toDate = now.plusDays(1);
 
         assertThrows(
                 IllegalArgumentException.class,
                 () -> new CreateEventCommand(
-                        "Conf", "Desc", now.plusDays(2), now.plusDays(1), "Zurich", "john"));
+                        "Conf", "Desc", fromDate, toDate, "Zurich", "john"));
     }
 
     @Test
     void shouldBeEqualWhenAllFieldsExceptIdMatch() {
         UUID id1 = UUID.fromString("00000000-0000-0000-0000-000000000001");
         UUID id2 = UUID.fromString("00000000-0000-0000-0000-000000000002");
-        LocalDateTime base = LocalDateTime.of(2026, 1, 1, 10, 0);
+        LocalDateTime base = LocalDateTime.of(2026, Month.JANUARY, 1, 10, 0);
         User user = dummyUser();
 
         Event first = new Event(id1, "T", "D", base.plusDays(1), base.plusDays(2),
@@ -228,8 +235,9 @@ class EventTest {
         assertEquals(first, sameButDifferentId);
         assertEquals(first.hashCode(), sameButDifferentId.hashCode());
         assertEquals(first, first);
-        assertNotEquals(first, null);
-        assertNotEquals(first, "not an event");
+        assertNotEquals(null, first);
+        //noinspection AssertBetweenInconvertibleTypes
+        assertNotEquals("not an event", first);
 
         Event differentTitle = new Event(id1, "Other", "D", base.plusDays(1), base.plusDays(2),
                 "Zurich", user, base, user, base, null);

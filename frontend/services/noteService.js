@@ -2,8 +2,8 @@
 //
 // Notes belong to the authenticated user.
 // Endpoints:
-//   GET  /api/notes  (authenticated; returns the current user's notes)
-//   POST /api/notes  (authenticated)
+//   GET  /api/notes  (Admin or User; returns the current user's notes)
+//   POST /api/notes  (Admin or User)
 
 import { apiClient } from './apiClient.js';
 

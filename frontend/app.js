@@ -65,7 +65,7 @@ async function boot() {
     } catch (err) {
         console.error('Auth initialisation failed', err);
         mount(errorState({
-            message: 'Authentication could not be initialised. Check the VITE_AUTH0_* settings in .env.local.',
+            message: 'Auth could not be initialised. Check the VITE_AUTH0_* settings environment variables',
         }));
         return;
     }

@@ -1,8 +1,8 @@
 // Service for the events API (ch.ssdd.eventhub.adapters.inbound.rest.EventRestController).
 //
 // Endpoints:
-//   GET    /api/events                         (Admin or User)
-//   GET    /api/events/search?query=...         (authenticated)
+//   GET    /api/events                          (Admin or User)
+//   GET    /api/events/search?query=...         (Admin or User)
 //   POST   /api/events                          (Admin)
 //   PUT    /api/events/{id}                     (Admin)
 //   DELETE /api/events/{id}                     (Admin)

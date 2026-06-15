@@ -69,7 +69,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http, JwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
+            HttpSecurity http, JwtAuthenticationConverter jwtAuthenticationConverter) {
         http
                 // Stateless resource server: clients authenticate on every request with a
                 // bearer token in the Authorization header.
