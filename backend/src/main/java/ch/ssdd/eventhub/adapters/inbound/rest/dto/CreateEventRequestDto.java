@@ -26,8 +26,7 @@ public record CreateEventRequestDto(
         @NotBlank
         @Size(max = 255)
         @JsonDeserialize(using = SanitizerDeserializer.class)
-        String location,
-        String username) {
+        String location) {
 
     public CreateEventCommand toCommand(String username) {
         return new CreateEventCommand(title, description, from, to, location, username);
