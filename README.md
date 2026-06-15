@@ -167,14 +167,13 @@ Once the application is running, you can access the following URL:
 
 ## Authentication (Auth0 via OIDC)
 
-Authentication is delegated to `Auth0`. The backend is configured as an OAuth2 resource server and validates incoming bearer tokens against the configured Auth0 tenant.
+Authentication is delegated to `Auth0`. The backend is configured as an OAuth2 resource server and validates the bearer access tokens issued by `Auth0` on each request.
 
 ### Behaviour
 
 - requests without a bearer token → `401 Unauthorized`
 - requests to admin endpoints with a token that does not carry the `Admin` app role → `403 Forbidden`
-- requests to user endpoints with a token that does not carry the `User` app role → `403 Forbidden`
-- requests to with a valid bearer token and the required role → `200 OK` / `201 CREATED`
+- requests with a valid bearer token and the required role → `200 OK` / `201 CREATED`
 
 ### Create Auth0 applications
 
@@ -183,20 +182,21 @@ Authentication is delegated to `Auth0`. The backend is configured as an OAuth2 r
 
 ### Required environment variables
 
+For frontend part, see `frontend\env.local.example`
+
+For backend part, see here.
+
 | Variable               | Description                            |
 |------------------------|----------------------------------------|
 | `AUTH0_DOMAIN`         | Auth0 tenant (`YOUR_TENANT.auth0.com`) |
 | `AUTH0_AUDIENCE`       | Auth0 identifier                       |
-| `VITE_AUTH0_CLIENT_ID` | Auth0 client Id                        |
-| `VITE_AUTH0_DOMAIN`    | Auth0 domain                           |
-| `VITE_AUTH0_AUDIENCE`  | Auth0 API identifier                   |
 
 ### Start locally with Auth0 integration
 
 To start the application locally with `Auth0` integration, proceed as follows.
 
 - set the environment variables prefixed with `AUTH0_` (see table above) in your IDE configuration
-- add `.env.local` file to frontend folder and set the variables
+- copy `frontend\env.local.example` to a new file `frontend\.env.local` and set the variables
 
 ## Update gradle.lockfile and verification-metadata.xml
 
