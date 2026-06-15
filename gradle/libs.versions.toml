@@ -1,0 +1,7 @@
+[versions]
+owasp-sanitizer = "20260313.1"
+commons-io = "2.22.0"
+
+[libraries]
+owasp-java-html-sanitizer = { module = "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer", version.ref = "owasp-sanitizer" }
+commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }

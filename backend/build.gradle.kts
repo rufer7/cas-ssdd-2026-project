@@ -28,6 +28,19 @@ dependencyLocking {
 	lockAllConfigurations()
 }
 
+// Un-lock configurations that IntelliJ or Gradle tooling resolve on their own
+configurations.configureEach {
+	if (name.endsWith("Sources")           // *Sources variants IntelliJ downloads
+		|| name.endsWith("Javadoc")        // *Javadoc variants
+		|| name.endsWith("javadoc")
+		|| name.endsWith("sources")
+		|| name == "incrementalScalaAnalysisElements"
+		|| !isCanBeResolved                // non-resolvable configs have no lock
+	) {
+		resolutionStrategy.deactivateDependencyLocking()
+	}
+}
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-h2console")
 	implementation("org.springframework.boot:spring-boot-starter-flyway")
@@ -42,9 +55,8 @@ dependencies {
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.flywaydb:flyway-database-postgresql")
 
-	implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20260313.1")
-
-	implementation("commons-io:commons-io:2.22.0")
+	implementation(libs.owasp.java.html.sanitizer)
+	implementation(libs.commons.io)
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
