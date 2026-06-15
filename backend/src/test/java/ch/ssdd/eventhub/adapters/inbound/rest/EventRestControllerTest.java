@@ -108,9 +108,7 @@ class EventRestControllerTest {
                 "desc",
                 LocalDateTimeHelper.utcNow().plusDays(1),
                 LocalDateTimeHelper.utcNow().plusDays(2),
-                "Zurich",
-                "john"
-        );
+                "Zurich");
 
         var expectedCommand = new CreateEventCommand(
                 request.title(),
