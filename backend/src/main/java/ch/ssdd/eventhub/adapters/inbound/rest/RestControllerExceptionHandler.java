@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class RestControllerExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(RestControllerExceptionHandler.class);
 
-
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleException(IllegalArgumentException ex) {
