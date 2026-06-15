@@ -24,6 +24,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy;
 import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
+import java.util.List;
+
 /**
  * Security configuration for every profile except {@code local}. The backend acts as a stateless
  * OAuth2 resource server that validates the bearer access tokens issued by Auth0 on each request.
@@ -117,7 +119,7 @@ public class SecurityConfig {
                 .withJwkSetUri(issuerUri + ".well-known/jwks.json")
                 .build();
 
-        OAuth2TokenValidator<Jwt> audienceValidator = new JwtClaimValidator<>(JwtClaimNames.AUD,
+        OAuth2TokenValidator<Jwt> audienceValidator = new JwtClaimValidator<List<String>>(JwtClaimNames.AUD,
                 aud -> aud.contains(audience));
         OAuth2TokenValidator<Jwt> withAudience = new DelegatingOAuth2TokenValidator<>(
                 JwtValidators.createDefaultWithIssuer(issuerUri),
