@@ -28,6 +28,20 @@ dependencyLocking {
 	lockAllConfigurations()
 }
 
+// Un-lock configurations that IntelliJ or Gradle tooling resolve on their
+// own and that you can't (or don't want to) pin:
+configurations.configureEach {
+	if (name.endsWith("Sources")           // *Sources variants IntelliJ downloads
+		|| name.endsWith("Javadoc")        // *Javadoc variants
+		|| name.endsWith("javadoc")
+		|| name.endsWith("sources")
+		|| name == "incrementalScalaAnalysisElements"
+		|| !isCanBeResolved                // non-resolvable configs have no lock
+	) {
+		resolutionStrategy.deactivateDependencyLocking()
+	}
+}
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-h2console")
 	implementation("org.springframework.boot:spring-boot-starter-flyway")
