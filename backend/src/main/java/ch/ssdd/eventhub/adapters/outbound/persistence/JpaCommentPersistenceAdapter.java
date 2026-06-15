@@ -27,7 +27,6 @@ public class JpaCommentPersistenceAdapter implements CommentPersistencePort {
         EventEntity eventEntity = eventRepository.findById(eventId)
                 .orElseThrow(() -> new IllegalArgumentException("Event not found: " + eventId));
 
-        // TODO: resolve user from authentication context once security is in place
         UserEntity userEntity = userRepository.findByUsername(createdBy.username())
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + createdBy.username()));
 

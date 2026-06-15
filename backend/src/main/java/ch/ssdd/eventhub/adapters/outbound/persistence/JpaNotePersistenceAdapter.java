@@ -20,7 +20,6 @@ public class JpaNotePersistenceAdapter implements NotePersistencePort {
 
     @Override
     public Note save(Note note, User createdBy) {
-        // TODO: resolve user from authentication context once security is in place
         UserEntity userEntity = userRepository.findByUsername(createdBy.username())
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + createdBy.username()));
 

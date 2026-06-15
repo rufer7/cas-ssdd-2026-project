@@ -20,7 +20,6 @@ public class JpaEventPersistenceAdapter implements EventPersistencePort {
 
     @Override
     public Event save(Event event) {
-        // TODO: to be refactored as soon as we get the user from authentication context
         String usernameCreatedBy = event.createdBy().username();
 
         UserEntity createdBy = userRepository.findByUsername(usernameCreatedBy)
