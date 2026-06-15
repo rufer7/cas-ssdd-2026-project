@@ -28,8 +28,7 @@ dependencyLocking {
 	lockAllConfigurations()
 }
 
-// Un-lock configurations that IntelliJ or Gradle tooling resolve on their
-// own and that you can't (or don't want to) pin:
+// Un-lock configurations that IntelliJ or Gradle tooling resolve on their own
 configurations.configureEach {
 	if (name.endsWith("Sources")           // *Sources variants IntelliJ downloads
 		|| name.endsWith("Javadoc")        // *Javadoc variants
