@@ -99,7 +99,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Static single-page app assets are public; the API stays authenticated.
                         .requestMatchers(HttpMethod.GET,
-                                "/", "/index.html", "/assets/**", "/favicon.ico", "/*.svg")
+                                "/", "/index.html", "/assets/**", "/favicon.ico", "/*.svg","/.well-known/security.txt")
                         .permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
