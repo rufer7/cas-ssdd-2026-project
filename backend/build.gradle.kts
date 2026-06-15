@@ -42,9 +42,8 @@ dependencies {
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.flywaydb:flyway-database-postgresql")
 
-	implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20260313.1")
-
-	implementation("commons-io:commons-io:2.22.0")
+	implementation(libs.owasp.java.html.sanitizer)
+	implementation(libs.commons.io)
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
