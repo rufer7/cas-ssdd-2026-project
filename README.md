@@ -44,13 +44,13 @@ The main focus of the application is on security aspects, ensuring that all func
 
 ## Requirements and Design Decisions
 
-- API: The application will expose a RESTful API for all functionalities, allowing for easy integration with various frontend technologies
-- Login functionality: Open ID Connect (OIDC) will be used for authentication, providing a secure and standardized way to manage user identities and access control via an external identity provider (Auth0)
-- Role-based access control (RBAC): The application will implement RBAC to differentiate between regular users and administrators, ensuring that only authorized users can access specific functionalities
-- Secret user data: Personal notes created by users will be stored encrypted to ensure that sensitive information is protected at rest
-- File upload: Administrators will be able to upload featured images for events, with proper validation and security measures in place to prevent malicious file uploads
-- Blog/comment functionality: Users will be able to write comments on events, with input validation and sanitization to prevent XSS and other injection attacks
-- Input-dependent database queries: The search functionality will be implemented with prepared statements to prevent SQL injection
+- **API:** The application will expose a RESTful API for all functionalities, allowing for easy integration with various frontend technologies
+- **Login functionality:** Open ID Connect (OIDC) will be used for authentication, providing a secure and standardized way to manage user identities and access control via an external identity provider (`Auth0`)
+- **Role-based access control (RBAC):** The application will implement RBAC to differentiate between regular users and administrators, ensuring that only authorized users can access specific functionalities
+- **Secret user data:** Personal notes created by users will be stored encrypted to ensure that sensitive information is protected at rest
+- **File upload:** Administrators will be able to upload featured images for events, with proper validation and security measures in place to prevent malicious file uploads
+- **Blog/comment functionality:** Users will be able to write comments on events, with input validation and sanitization to prevent XSS and other injection attacks
+- **Input-dependent database queries:** The search functionality will be implemented with prepared statements to prevent SQL injection
 
 ### Domain Model
 
@@ -104,9 +104,9 @@ erDiagram
 > [!NOTE]
 > The following design decisions relate to the domain model and its implementation
 
-- The `User` record will have an `externalId` field to store the unique identifier from the external identity provider (Auth0), allowing for seamless integration with OIDC authentication
+- The `User` record will have an `ExternalId` field to store the unique identifier from the external identity provider (`Auth0`), allowing for seamless integration with OIDC authentication
 - The `Role` field in the `User` record will be an enum to clearly define the different user roles (`USER`, `ADMIN`) and facilitate role-based access control - `ADMIN` role includes user permissions
-- The `Event` record acts as a aggregate root with `Comment` records being associated with it. This allows for a clear separation of concerns and encapsulation of related data
+- The `Event` record acts as an aggregate root with `Comment` records being associated with it. This allows for a clear separation of concerns and encapsulation of related data
 - The `Note` record is associated with the `User` record, allowing users to have their own personal notes that are not directly related to events
 - All records will include `createdAt`, and `modifiedAt` fields to track the creation and modification history of each record
 - All records except `User` will include `createdBy` and `modifiedBy` fields to track which user created or modified the record
@@ -126,6 +126,46 @@ erDiagram
 
 > [!IMPORTANT]
 > Java 25 is required (see for example https://openjdk.org/install/)
+> Node 22 is required (see for example https://nodejs.org/en/download)
+
+### Set up Authentication (Auth0 via OIDC)
+
+Authentication is delegated to `Auth0`. The backend is configured as an OAuth2 resource server and validates the bearer access tokens issued by `Auth0` on each request.
+
+#### Create Auth0 Applications
+
+- Step `Setup your Auth0 API` in https://auth0.com/docs/quickstart/backend/java-spring-security5
+- Step `Setup your Auth0 App` in https://auth0.com/docs/quickstart/spa/vanillajs
+  - Grant access to the before created API application via `API Access` tab
+- Create roles `User` and `Admin` under `User Management` -> `Roles`
+- Create a test user (`User Management` -> `Users`) and assign one of the before created roles to the test user
+- Create custom action `setRoles` under `Actions` -> `Library` (Trigger: `Login / Post Login`)
+
+   ```javascript
+   exports.onExecutePostLogin = async (event, api) => {
+     const namespace = 'AUDIENCE_HERE';
+     const roles = event.authorization?.roles ?? [];
+     api.accessToken.setCustomClaim(`${namespace}/roles`, roles);
+     api.accessToken.setCustomClaim(`${namespace}/email`, event.user.email);
+   };
+   ```
+
+- `Deploy`
+- Create new `post-login` trigger and drag custom action between `User Logged In` and `Complete`
+- `Apply`
+
+#### Required Environment Variables
+
+For frontend, see `frontend\env.local.example`.
+
+For backend, set the following environment variables i.e. by temporarily manipulating `application-auth0.properties`
+
+| Variable             | Description                                                          |
+|----------------------|----------------------------------------------------------------------|
+| `AUTH0_DOMAIN`       | Auth0 tenant (`YOUR_TENANT.auth0.com`)                               |
+| `AUTH0_AUDIENCE`     | Auth0 identifier                                                     |
+| `AUTH0_ROLES_CLAIM`  | Auth0 identifier + `/roles`                                          |
+| `APP_ENCRYPTION_KEY` | Encryption key for `Notes` (create one using `openssl rand -hex 32`) |
 
 ### Standalone
 
@@ -136,14 +176,23 @@ To build the project and run the application locally, follow these steps:
 1. Use the following commands to build and run the application
 
    ```bash
+   # Backend
    .\gradlew build
-   .\gradlew bootRun
+   .\gradlew bootRun --args='--spring.profiles.active=auth0'
+   ```
+   
+   ```bash
+   # Frontend
+   cd frontend
+   npm install --ignore-scripts
+   npm run dev
    ```
 
 Once the application is running, you can access the following URLs:
 
-- http://localhost:8080/h2-console
+- http://localhost:5173/
 - http://localhost:8080/api/events
+- http://localhost:8080/h2-console
 
 ### Docker
 
@@ -163,40 +212,8 @@ To build the project and run the application locally using Docker, follow these 
 
 Once the application is running, you can access the following URL:
 
+- http://localhost:8080
 - http://localhost:8080/api/events
-
-## Authentication (Auth0 via OIDC)
-
-Authentication is delegated to `Auth0`. The backend is configured as an OAuth2 resource server and validates the bearer access tokens issued by `Auth0` on each request.
-
-### Behaviour
-
-- requests without a bearer token → `401 Unauthorized`
-- requests to admin endpoints with a token that does not carry the `Admin` app role → `403 Forbidden`
-- requests with a valid bearer token and the required role → `200 OK` / `201 CREATED`
-
-### Create Auth0 applications
-
-- step `Setup your Auth0 App` in https://auth0.com/docs/quickstart/spa/vanillajs
-- step `Setup your Auth0 API` in https://auth0.com/docs/quickstart/backend/java-spring-security5
-
-### Required environment variables
-
-For frontend part, see `frontend\env.local.example`
-
-For backend part, see here.
-
-| Variable               | Description                            |
-|------------------------|----------------------------------------|
-| `AUTH0_DOMAIN`         | Auth0 tenant (`YOUR_TENANT.auth0.com`) |
-| `AUTH0_AUDIENCE`       | Auth0 identifier                       |
-
-### Start locally with Auth0 integration
-
-To start the application locally with `Auth0` integration, proceed as follows.
-
-- set the environment variables prefixed with `AUTH0_` (see table above) in your IDE configuration
-- copy `frontend\env.local.example` to a new file `frontend\.env.local` and set the variables
 
 ## Update gradle.lockfile and verification-metadata.xml
 
@@ -214,5 +231,3 @@ We use **Spotless** plugin to enforce a unified coding style across the reposito
 ```bash
 ./gradlew spotlessApply
 ```
-
-
